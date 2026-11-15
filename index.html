@@ -36,10 +36,15 @@ select,input,textarea{font-size:16px!important}
 .summary th,.summary td{padding:6px 2px;text-align:center;border-top:1px solid var(--line)}
 .summary thead th{border-top:0;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;line-height:1.2;vertical-align:bottom}
 .summary tbody th{width:44px;text-align:left;font-size:11px;color:#5b7065}
-.summary td{font-size:14px}.summary td i{font-style:normal;color:#b9c5bc;margin:0 4px}
-.summary td b.zero{opacity:.3;font-weight:400}
+.summary td{white-space:nowrap}
+.summary td b,.summary-title .key{display:inline-block;min-width:30px;padding:4px 6px;margin:0 2px;border-radius:6px;font-size:17px;font-weight:800;line-height:1.15;background:var(--c);color:var(--k);box-shadow:inset 0 0 0 1px #132e3833}
+.summary td b.zero{background:transparent;color:#8a9a94;font-weight:600;box-shadow:inset 0 0 0 1px var(--line)}
+.summary-title .key{font-size:10px;letter-spacing:.5px;min-width:0;padding:3px 7px}
+.summary tbody th{font-size:13px!important;font-weight:800;color:var(--ink)!important}
+.summary thead th{font-size:10px!important;color:#4d6168!important}
 .summary tr.now th,.summary tr.now td{background:#f0f7cf}.summary tr.now th{color:var(--ink);padding-left:5px}
-.summary tr.total th,.summary tr.total td{border-top:2px solid #c6d0c6;font-weight:800}
+.summary tr.total th,.summary tr.total td{border-top:2px solid #9fb0a8}
+.game-no{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:11px;color:#61756d;font-weight:700}.game-no small{font-weight:400}.game-no input{width:120px;min-height:42px;border:1px solid #d4ded2;border-radius:7px;background:white;padding:8px 10px;color:var(--ink);text-align:center;font-weight:700}
 .topbar{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--line);gap:12px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:13px;letter-spacing:1.5px;background:none;color:var(--ink);padding:0;text-align:left}
 .brand b{font-weight:800}
@@ -185,6 +190,7 @@ dialog::backdrop{background:#102b36aa;backdrop-filter:blur(3px)}
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:white;padding:13px 20px;border-radius:9px;font-size:12px;max-width:90vw;opacity:0;pointer-events:none;transition:.2s;z-index:10;box-shadow:0 4px 30px #0002}
 #toast.visible{opacity:1;transform:translate(-50%,0)}
 @media(min-width:600px){.summary{padding:16px 30px 18px}.setup{padding:45px}.setup h1{font-size:46px}.team-pick{padding:22px}.board{padding:22px 30px 28px;gap:38px}.action{height:110px;padding:17px}.action strong{font-size:34px}.action small{font-size:12px}.jersey{height:58px}.feed{padding:0 30px 20px}.topbar{padding:0 30px}.stage-label{padding:22px 30px 0}.toolbar{padding:20px 30px 12px}.period-picker{margin:0 30px}.period-buttons button{min-width:48px}.swatch{height:42px}.clock-panel{margin-left:30px;margin-right:30px}.field-select{margin-top:22px}.scoreboard{margin:5px 30px 0}.match-footer{padding:0 30px 16px}}
+@media(max-width:520px){.summary{padding-left:12px;padding-right:12px}.summary tbody th{width:38px}.summary td b{min-width:22px;padding:3px 3px;margin:0 1px;font-size:14px}}
 @media(max-width:420px){.field-select{gap:8px}.field-buttons{gap:5px}.field-buttons button{min-width:88px;padding:8px 9px}.clock-panel{margin-left:15px;margin-right:15px;padding:12px}.clock-panel-head .field-buttons button{min-width:60px;padding:6px}.clock-values strong{font-size:24px}.tool{padding:9px 8px}}
 @media(max-width:350px){.topbar{padding:0 15px}.board{padding:15px;gap:14px}.toolbar{padding-left:15px;padding-right:15px}.toolbar-label{letter-spacing:0;font-size:8px}.action{padding:11px 8px}.action small{font-size:9px}.setup{padding:28px 16px}.jerseys{gap:5px}.team-pick{padding:14px 8px}.swatch{padding:3px;min-width:24px}.swatches{grid-template-columns:repeat(4,minmax(24px,1fr))}.period-picker{margin:0 15px}.period-buttons{gap:4px}.period-buttons button{min-width:37px}}
 @media(min-width:1000px) and (orientation:landscape){
@@ -192,10 +198,10 @@ dialog::backdrop{background:#102b36aa;backdrop-filter:blur(3px)}
 .topbar{height:60px}
 .match-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;align-items:start}
 .match-main{display:block}
-.match-side{display:flex;flex-direction:column;border-left:1px solid var(--line);min-height:calc(100dvh - 61px - env(safe-area-inset-top) - env(safe-area-inset-bottom));background:#eff2eb}
+.match-side{display:flex;flex-direction:column;border-left:1px solid var(--line);position:sticky;top:0;height:calc(100dvh - 61px - env(safe-area-inset-top) - env(safe-area-inset-bottom));background:#eff2eb}
 .match-side .clock-panel{margin:16px 20px;background:#f7f8f3}
-.match-side .summary{background:transparent;padding:10px 20px 12px}.match-side .summary th,.match-side .summary td{padding:4px 2px}
-.match-side .feed{border-top:1px solid var(--line);padding:0 20px 16px;flex:1}
+.match-side .summary{background:transparent;padding:10px 20px 12px}.match-side .summary th,.match-side .summary td{padding:3px 1px}.match-side .summary td b{min-width:24px;padding:3px 4px;margin:0 1px;font-size:15px}
+.match-side .feed{border-top:1px solid var(--line);padding:0 20px 16px;flex:1;min-height:0;overflow:auto}
 .match-side .feed-handle{visibility:hidden;margin:4px auto}
 .match-side .match-footer{padding:6px 20px 12px}
 .toolbar{padding-top:14px}.scoreboard{padding-top:10px;padding-bottom:14px}
@@ -241,6 +247,7 @@ ukr|Ukraine|9|0:Polishchuk, Artem;3:Povar, Illia;9:Demchenko, Denys;10:Miniailo,
 
 const data = {
   competition: 'ESLC 2026 · Men · Salou',
+  code: 'eslcm', // competition code used in the XML file name
   source: 'https://worldlacrosse.sport/eslc26-men/',
   fetchedAt: '2026-11-13T17:00:00+00:00',
   teams: ROSTERS.split('\n').map(line => {
@@ -312,27 +319,93 @@ function csvFor(m) {
   });
   return '﻿' + rows.map(r => r.map(quote).join(';')).join('\r\n');
 }
+// PointBench player ids, where known (team id -> jersey number -> id).
+// Players not listed here are exported with an empty id.
+const PB_IDS = {"esp": {"0": "kg4ftomk", "50": "ij3up5eq", "9": "k5hxzxbs", "6": "t8ah6k7b", "31": "w44x5izp", "96": "chiozsp3", "5": "diejobxr", "13": "68bdw8sd", "11": "uu6aznqw", "25": "qgtr7hsm", "22": "dt7gpnem", "15": "zz8wh3oh"}, "fin": {"9": "cn6p7puz", "3": "jsa6okup", "32": "pda7s5gx", "8": "61egtsjr", "13": "wu4ooibz", "21": "gzc5khrh", "48": "8zadpxhq", "27": "bjnxkiob", "45": "ercg8zoe", "0": "x9uqzhnq", "10": "m34u6gz4", "1": "a7pom3ii"}};
+
+// XML export in the PointBench game-file layout.
 function xmlFor(m) {
-  const escX = v => String(v ?? '').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
-  const at = (n, v) => ` ${n}="${escX(v)}"`;
-  const rows = ['<?xml version="1.0" encoding="UTF-8"?>', `<lacrosseMatch schemaVersion="1.0"${at('id', m.id)}${at('date', m.date)}${at('competition', data.competition)}${at('currentPeriod', periodLabel(m.currentPeriod, 'unknown'))}>`, '  <teams>'];
+  const x = v => String(v ?? '').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const pad = (n, w = 2) => String(n).padStart(w, '0');
+  const pid = (teamId, no) => PB_IDS[teamId]?.[no] ?? '';
+  const who = (tag, teamId, no) => `      <${tag} id="${x(pid(teamId, no))}" no="${x(no)}"/>`;
+  // Local time with its UTC offset, e.g. 2026-11-15T15:32:29.846+01:00
+  const stamp = iso => {
+    const d = iso ? new Date(iso) : new Date(), off = -d.getTimezoneOffset(), a = Math.abs(off);
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(), 3)}${off < 0 ? '-' : '+'}${pad(Math.floor(a / 60))}:${pad(a % 60)}`;
+  };
+  // Game time counted up from the start of the match (Q2 at 6:30 left = 9:30).
+  const timeTag = (period, clock, at) => {
+    let secs = 0;
+    const parts = /^(\d+):(\d\d)$/.exec(clock?.gameTime ?? '');
+    if (parts && Number.isInteger(period)) secs = (period - 1) * QUARTER_MS / 1000 + Math.max(0, QUARTER_MS / 1000 - (Number(parts[1]) * 60 + Number(parts[2])));
+    return `      <time min="${Math.floor(secs / 60)}" sec="${secs % 60}" ts="${stamp(at ?? clock?.capturedAt)}"/>`;
+  };
+  const start = new Date(m.date), no = m.gameNo ?? '';
+  const out = [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    `<game id="${x(no)}" ids="${no ? 'M' + x(no) : ''}">`,
+    `  <!-- Last change: ${new Date().toUTCString()} -->`,
+    `  <timestamp>${Math.floor(Date.now() / 1000)}</timestamp>`,
+    `  <date year="${start.getFullYear()}" day="${start.getDate()}" month="${start.getMonth() + 1}"/>`,
+    `  <time hour="${start.getHours()}" min="${start.getMinutes()}"/>`,
+    '  <status>finished</status>',
+  ];
+
   m.teams.forEach((t, i) => {
-    rows.push(`    <team${at('id', t.id)}${at('name', t.name)}${at('color', teamPalette(t, i).hex)}>`, '      <players>');
-    for (const p of t.players) rows.push(`        <player${at('number', p.number)}${at('name', p.name)}/>`);
-    rows.push('      </players>', '    </team>');
+    out.push(`  <team role="${i ? 'visiting' : 'home'}" id="${x(t.id)}">`);
+    for (const p of t.players) out.push(`    <player id="${x(pid(t.id, p.number))}">`, `      <no>${x(p.number)}</no>`, `      <full-name>${x(p.name)}</full-name>`, '    </player>');
+    out.push('  </team>');
   });
-  rows.push('  </teams>', `  <events count="${m.events.length}">`);
-  m.events.forEach((e, i) => {
-    const t = m.teams.find(t => t.id === e.teamId), p = t?.players.find(p => p.number === e.player), a = t?.players.find(p => p.number === e.assist);
-    rows.push(`    <event sequence="${i + 1}"${at('id', e.id)}${at('period', periodLabel(e.period, 'unknown'))}${at('teamId', e.teamId)}${at('action', e.action)}>`, `      <player${at('number', e.player)}${at('name', p?.name ?? '')}/>`);
-    if (e.clock) { const c = e.clock; rows.push(`      <clock${at('field', c.field == null ? 'unknown' : `Field ${c.field}`)}${at('gameTime', c.gameTime ?? '')}${at('shotTime', c.shotTime ?? '')}${at('status', c.status ?? 'unknown')}${at('capturedAt', c.capturedAt ?? '')}/>`); }
-    if (e.action === 'SS' && e.save) { const d = m.teams.find(t => t.id === e.save.teamId), g = d?.players.find(p => p.number === e.save.player); rows.push(`      <save${at('teamId', e.save.teamId)}${at('teamName', d?.name ?? '')}${at('goalkeeperNumber', e.save.player ?? '')}${at('goalkeeperName', g?.name ?? '')}${at('status', g ? 'assigned' : 'unassigned')}/>`); }
-    if (e.action === 'G') rows.push(e.assist != null ? `      <assist${at('number', e.assist)}${at('name', a?.name ?? '')}/>` : '      <assist status="none"/>');
-    if (e.action === 'PEN' && e.penalty) rows.push(`      <penalty${at('offense', e.penalty.offense)}${at('class', offenseClass(e.penalty.offense))}${at('card', e.penalty.card ?? 'none')}/>`);
-    rows.push('    </event>');
+
+  // Goalkeeper changes are slotted in before the first action recorded after them.
+  const changes = (m.goalieLog?.length ? m.goalieLog : m.teams.filter(t => m.goalies?.[t.id]).map(t => ({ teamId: t.id, player: m.goalies[t.id], period: 1, clock: null, at: m.date }))).filter(g => g.player);
+  const timeline = m.events.map(e => ({ e }));
+  for (const g of changes) {
+    const k = timeline.findIndex(item => item.e && (item.e.clock?.capturedAt ?? '') > g.at);
+    timeline.splice(k < 0 ? timeline.length : k, 0, { g });
+  }
+  out.push('  <events>');
+  for (const { e, g } of timeline) {
+    if (g) { out.push(`    <goalie-change team-id="${x(g.teamId)}">`, timeTag(g.period, g.clock, g.at), who('p', g.teamId, g.player), '    </goalie-change>'); continue; }
+    const time = timeTag(e.period, e.clock), open = tag => `    <${tag} team-id="${x(e.teamId)}">`;
+    if (e.action === 'GB') out.push(open('ground-ball'), time, who('p', e.teamId, e.player), '    </ground-ball>');
+    if (e.action === 'SW' || e.action === 'SS') out.push(open('shot'), time, who('p', e.teamId, e.player), `      <type>${e.action === 'SS' ? 'S' : 'W'}</type>`, '    </shot>');
+    if (e.action === 'SS' && e.save?.player != null) out.push(`    <save team-id="${x(e.save.teamId)}">`, time, who('p', e.save.teamId, e.save.player), '    </save>');
+    if (e.action === 'G') { out.push(open('goal'), time, who('s', e.teamId, e.player)); if (e.assist != null) out.push(who('a', e.teamId, e.assist)); out.push('    </goal>'); }
+    if (e.action === 'PEN') out.push(open('card'), time, who('p', e.teamId, e.player), `      <description>${x(e.penalty?.offense ?? '')}</description>`, `      <color>${{ green: 'G', yellow: 'Y', red: 'R' }[e.penalty?.card] ?? ''}</color>`, '    </card>');
+  }
+  out.push('  </events>');
+
+  // Summary: one <cnt> per quarter, then overtime (always 0 here).
+  const counts = (attrs, values) => out.push(`    <${attrs}>`, ...values.map(v => `      <cnt>${v}</cnt>`), `    </${attrs.split(' ')[0]}>`);
+  const perQuarter = test => [1, 2, 3, 4].map(q => m.events.filter(e => e.period === q && test(e)).length).concat(0);
+  const zeros = n => Array(n).fill(0);
+  const eachTeam = fn => m.teams.forEach(t => fn(t));
+  out.push('  <summary>');
+  eachTeam(t => counts(`goal team-id="${x(t.id)}"`, zeros(8)));
+  for (const tag of ['fo', 'draw-ctrl', 'shot']) eachTeam(t => counts(`${tag} team-id="${x(t.id)}"`, zeros(5)));
+  eachTeam(t => counts(`shot-wide team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'SW')));
+  eachTeam(t => counts(`ground-ball team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'GB')));
+  for (const tag of ['turnover', 'caused-turnover', 'unforced-error']) eachTeam(t => counts(`${tag} team-id="${x(t.id)}"`, zeros(5)));
+  for (const g of [1, 0]) eachTeam(t => counts(`pp team-id="${x(t.id)}" g="${g}"`, zeros(5)));
+  eachTeam(t => {
+    const keepers = [...new Set(m.events.filter(e => e.action === 'SS' && e.save?.teamId === t.id && e.save.player != null).map(e => e.save.player))];
+    for (const k of keepers) counts(`save team-id="${x(t.id)}" no="${x(k)}" id="${x(pid(t.id, k))}"`, perQuarter(e => e.action === 'SS' && e.save?.teamId === t.id && e.save.player === k));
   });
-  rows.push('  </events>', '</lacrosseMatch>');
-  return rows.join('\n');
+  out.push('  </summary>');
+
+  eachTeam(t => {
+    out.push(`  <player-stats team-id="${x(t.id)}">`);
+    for (const p of t.players) {
+      out.push(`    <player id="${x(pid(t.id, p.number))}" no="${x(p.number)}">`);
+      for (const tag of ['ground-ball', 'turnover', 'caused-turnover']) out.push(`      <${tag}>`, '        <cnt>0</cnt>', `      </${tag}>`);
+      out.push('    </player>');
+    }
+    out.push('  </player-stats>');
+  });
+  out.push('</game>', '');
+  return out.join('\n');
 }
 
 /* ---------- Minimal PDF writer (A4, Helvetica) ---------- */
@@ -414,7 +487,7 @@ const undoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const exportIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>';
 const wide = window.matchMedia('(min-width:1000px) and (orientation:landscape)');
 let db = { matches: [], activeId: null }, match = null, draft = null;
-let setupPicks = ['', ''], setupColors = ['blue', 'red'], setupGoalies = ['', ''], setupField = null;
+let setupPicks = ['', ''], setupColors = ['blue', 'red'], setupGoalies = ['', ''], setupField = null, setupGameNo = '';
 let clock = { game: QUARTER_MS, shot: SHOT_MS, running: false, at: 0 }, toastTimer, storageOkay = true, downloads = null;
 
 try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved && Array.isArray(saved.matches)) db = saved; } catch { storageOkay = false; }
@@ -474,7 +547,7 @@ function renderSetup() {
   main.innerHTML = `<section class="setup"><p class="eyebrow">Watch. Call. Review.</p><h1>Every play.<br>Just a few taps.</h1><p class="intro">Choose the teams and field. The first goalkeeper listed by Pointbench is selected automatically; select the shooter after Shot Saved; the opposing goalkeeper receives the save. Change the active goalkeeper in Roster.</p><div class="competition"><span class="pill">SIXES</span><span>${esc(data.competition)}</span></div><div class="team-selectors">${[0, 1].map(i => {
     const t = data.teams.find(t => t.id === setupPicks[i]);
     return `<div class="team-pick" style="${paletteStyle({ color: setupColors[i] }, i)}"><label for="pick-${i}">Team ${i + 1}</label><select id="pick-${i}">${teamOptions(setupPicks[i], setupPicks[1 - i])}</select>${t?.goalie ? `<p class="goalie-default">Starting goalkeeper · #${esc(t.goalie.number)} · ${esc(t.goalie.name)}</p>` : ''}<p class="color-label">Jersey colour</p>${swatches(setupColors[i], i)}<p class="roster-summary">${t ? `${t.players.length} jersey numbers available` : 'Select a team to load its roster'}</p></div>`;
-  }).join('')}</div>${fieldPicker('setup', setupField)}<button class="primary start" data-do="start" ${ready ? '' : 'disabled'}>Start match <span>↗</span></button>${db.matches.length ? `<button class="secondary" style="width:100%;margin-top:12px" data-do="archives">Match archive (${db.matches.length})</button>` : ''}<p class="setup-note">Rosters from <a href="${esc(data.source)}" target="_blank" rel="noopener">World Lacrosse / Pointbench ↗</a>.<br>Data imported ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}. Jersey numbers can be edited during the match.</p></section>`;
+  }).join('')}</div>${fieldPicker('setup', setupField)}<label class="game-no"><span>Game number <small>(optional, used in the XML export)</small></span><input id="game-no" inputmode="numeric" maxlength="4" placeholder="e.g. 59" value="${esc(setupGameNo)}"></label><button class="primary start" data-do="start" ${ready ? '' : 'disabled'}>Start match <span>↗</span></button>${db.matches.length ? `<button class="secondary" style="width:100%;margin-top:12px" data-do="archives">Match archive (${db.matches.length})</button>` : ''}<p class="setup-note">Rosters from <a href="${esc(data.source)}" target="_blank" rel="noopener">World Lacrosse / Pointbench ↗</a>.<br>Data imported ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}. Jersey numbers can be edited during the match.</p></section>`;
 }
 
 /* ---------- Match screen ---------- */
@@ -533,9 +606,14 @@ function undo() {
 function summaryHtml() {
   const codes = Object.keys(ACTIONS), ids = match.teams.map(t => t.id), pal = match.teams.map((t, i) => teamPalette(t, i));
   const count = (q, code, id) => match.events.filter(e => e.action === code && e.teamId === id && (q == null || e.period === q)).length;
-  const pair = (q, code) => ids.map((id, i) => { const n = count(q, code, id); return `<b class="${n ? '' : 'zero'}" style="color:${pal[i].accent}">${n}</b>`; }).join('<i>·</i>');
+  const pair = (q, code) => ids.map((id, i) => { const n = count(q, code, id); return `<b class="${n ? '' : 'zero'}" style="--c:${pal[i].hex};--k:${pal[i].ink};--a:${pal[i].accent}">${n}</b>`; }).join('');
   const row = (label, q, cls = '') => `<tr class="${cls}"><th scope="row">${label}</th>${codes.map(c => `<td>${pair(q, c)}</td>`).join('')}</tr>`;
-  return `<section class="summary" aria-label="Summary by quarter"><div class="summary-title"><h2>Summary</h2><span>${match.teams.map((t, i) => `<b style="color:${pal[i].accent}">${esc(t.id.toUpperCase())}</b>`).join(' · ')}</span></div><table><thead><tr><th></th>${codes.map(c => `<th scope="col">${ACTIONS[c]}</th>`).join('')}</tr></thead><tbody>${[1, 2, 3, 4].map(q => row('Q' + q, q, currentPeriod() === q ? 'now' : '')).join('')}${row('Total', null, 'total')}</tbody></table></section>`;
+  return `<section class="summary" aria-label="Summary by quarter"><div class="summary-title"><h2>Summary</h2><span>${match.teams.map((t, i) => `<b class="key" style="--c:${pal[i].hex};--k:${pal[i].ink}">${esc(t.id.toUpperCase())}</b>`).join('')}</span></div><table><thead><tr><th></th>${codes.map(c => `<th scope="col">${ACTIONS[c]}</th>`).join('')}</tr></thead><tbody>${[1, 2, 3, 4].map(q => row('Q' + q, q, currentPeriod() === q ? 'now' : '')).join('')}${row('Total', null, 'total')}</tbody></table></section>`;
+}
+
+function setGoalie(teamId, number) {
+  match.goalies = { ...(match.goalies || {}), [teamId]: number || null };
+  if (number) (match.goalieLog ||= []).push({ teamId, player: number, period: currentPeriod(), clock: captureClock(), at: new Date().toISOString() });
 }
 
 /* ---------- Dialogs ---------- */
@@ -587,7 +665,8 @@ async function saveFile(filename, fileData, label, textFallback) {
 }
 const exportPdf = () => saveFile(fileBase() + '.pdf', new Blob([createMatchPdf(match)]), 'PDF', null);
 const exportCsv = () => { const csv = csvFor(match); saveFile(fileBase() + '.csv', csv, 'CSV', csv.slice(1)); };
-const exportXml = () => standalone ? nativeSave(fileBase() + '.xml', xmlFor(match), MIME.XML, 'XML') : showExportText('XML export', xmlFor(match));
+const xmlName = () => match.gameNo ? `${match.date.slice(0, 4)}-${data.code}-game-${String(match.gameNo).padStart(3, '0')}.xml` : fileBase() + '.xml';
+const exportXml = () => standalone ? nativeSave(xmlName(), xmlFor(match), MIME.XML, 'XML') : showExportText('XML export', xmlFor(match));
 
 /* ---------- Events ---------- */
 document.addEventListener('click', e => {
@@ -611,7 +690,8 @@ document.addEventListener('click', e => {
     case 'period': if (!draft) { match.currentPeriod = Number(b.dataset.period); persist(); renderMatch(); } break;
     case 'start': {
       const [a, c] = setupPicks; if (!a || !c || a === c || !setupField) return;
-      match = { id: crypto.randomUUID(), date: new Date().toISOString(), field: setupField, teams: [a, c].map((id, i) => ({ ...structuredClone(data.teams.find(t => t.id === id)), color: setupColors[i] })), goalies: { [a]: setupGoalies[0] || null, [c]: setupGoalies[1] || null }, currentPeriod: 1, events: [], undo: [] };
+      match = { id: crypto.randomUUID(), date: new Date().toISOString(), field: setupField, teams: [a, c].map((id, i) => ({ ...structuredClone(data.teams.find(t => t.id === id)), color: setupColors[i] })), goalies: { [a]: setupGoalies[0] || null, [c]: setupGoalies[1] || null }, currentPeriod: 1, events: [], undo: [], gameNo: /^\d+$/.test(setupGameNo.trim()) ? String(Number(setupGameNo.trim())) : null };
+      match.goalieLog = match.teams.filter(t => match.goalies[t.id]).map(t => ({ teamId: t.id, player: match.goalies[t.id], period: 1, clock: null, at: match.date }));
       loadClock(); persist(); renderMatch(); break;
     }
     case 'archives': showArchives(); break;
@@ -649,13 +729,13 @@ document.addEventListener('click', e => {
     case 'change-goalie': showQuickGoalie(b.dataset.team); break;
     case 'save-quick-goalie': {
       const t = match.teams.find(t => t.id === b.dataset.team), number = $('#quick-goalie').value;
-      match.goalies = { ...(match.goalies || {}), [t.id]: number || null }; persist(); closeModal(); renderMatch();
+      setGoalie(t.id, number); persist(); closeModal(); renderMatch();
       notify(number ? `${t.name} · Goalkeeper #${number}` : `${t.name} · No active goalkeeper`); break;
     }
     case 'rosters': showRosters(); break;
     case 'save-goalie': {
       const teamId = $('#roster-team').value, goalie = $('#roster-goalie').value, t = team(teamId);
-      match.goalies = { ...(match.goalies || {}), [teamId]: goalie || null }; persist(); closeModal(); renderMatch();
+      setGoalie(teamId, goalie); persist(); closeModal(); renderMatch();
       notify(goalie ? `Goalkeeper #${goalie} set for ${t.name}` : `Active goalkeeper cleared for ${t.name}`); break;
     }
     case 'save-player': {
@@ -668,10 +748,11 @@ document.addEventListener('click', e => {
     case 'new': showModal(`${head('Start a new match?')}<p class="dialog-note">This match stays saved in the Match archive. You can resume it and export it later.</p><div class="dialog-actions"><button class="primary" data-do="confirm-new">Set up another match</button><button class="secondary" data-do="close">Back</button></div>`); break;
     case 'confirm-new':
       clock.running = false; persist(); db.activeId = null; match = null; draft = null; persist(); closeModal();
-      setupPicks = ['', '']; setupColors = ['blue', 'red']; setupGoalies = ['', '']; setupField = null;
+      setupPicks = ['', '']; setupColors = ['blue', 'red']; setupGoalies = ['', '']; setupField = null; setupGameNo = '';
       $('#save-status').innerHTML = '<i></i> Ready'; renderSetup(); break;
   }
 });
+document.addEventListener('input', e => { if (e.target.id === 'game-no') setupGameNo = e.target.value; });
 document.addEventListener('change', e => {
   const id = e.target.id;
   if (id === 'draft-offense') { if (draft) draft.offense = e.target.value; const c = $('.confirm-penalty'); if (c) c.disabled = !e.target.value; return; }
