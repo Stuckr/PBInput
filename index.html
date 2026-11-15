@@ -55,6 +55,28 @@ select,input,textarea{font-size:16px!important}
 .brand-mark{width:32px;height:36px;border:2px solid var(--ink);border-radius:8px 2px;display:grid;place-items:center;font-size:24px;font-weight:900;position:relative}
 .brand-mark span{position:absolute;top:-9px;right:-6px;background:#f7f8f3;line-height:18px}
 .local-status{font-size:10px;color:#526c62;white-space:nowrap}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.settings-btn{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 14px;border-radius:8px;background:var(--ink);color:#fff;font-size:12px;font-weight:700;letter-spacing:.3px;flex-shrink:0;box-shadow:0 1px 3px #132e3833}
+.settings-btn svg{width:18px;height:18px;color:var(--green)}
+.settings-btn:active{transform:scale(.97)}
+.clock-manual{font-size:11px;font-weight:700;color:#7a5a16;background:#fff6dd;border:1px solid #e7d79a;border-radius:6px;padding:7px 11px}
+/* Settings dialog */
+.set-group{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}
+.set-group:first-of-type{border-top:0;margin-top:10px}
+.set-group h3{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.set-num{display:grid;gap:6px;font-size:12px;color:#51656b;font-weight:600}
+.set-num input,.set-num select{min-height:46px;border:1px solid #d4dcd4;border-radius:7px;background:white;padding:9px 11px;color:var(--ink);font-size:16px;font-weight:600}
+.set-num small{font-weight:400;color:var(--muted);font-size:10.5px}
+.set-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.set-toggle>span{font-size:13px;font-weight:600}
+.seg2{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#eef2ea}
+.seg2 button{min-height:40px;padding:8px 14px;font-size:12px;font-weight:700;color:#5b7065;background:transparent;border:0}
+.seg2 button.on{background:var(--ink);color:white}
+.set-events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.set-check{display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid var(--line);border-radius:7px;background:#fbfcf9;font-size:13px;font-weight:600;cursor:pointer}
+.set-check input{width:19px;height:19px;flex-shrink:0;accent-color:var(--ink)}
+.set-check small{margin-left:auto;font-size:10px;font-weight:700;color:#9aa8a2;letter-spacing:.5px}
 .local-status i{display:inline-block;width:6px;height:6px;background:#668a4c;border-radius:50%;margin-right:4px}
 .setup{padding:34px 24px}
 .eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:10px;color:var(--muted);font-weight:700;margin:0 0 12px}
@@ -196,7 +218,9 @@ dialog::backdrop{background:#102b36aa;backdrop-filter:blur(3px)}
 #toast.visible{opacity:1;transform:translate(-50%,0)}
 @media(min-width:600px){.summary{padding:16px 30px 18px}.setup{padding:45px}.setup h1{font-size:46px}.team-pick{padding:22px}.board{padding:22px 30px 28px;gap:38px}.action{height:110px;padding:17px}.action strong{font-size:34px}.action small{font-size:12px}.jersey{height:58px}.feed{padding:0 30px 20px}.topbar{padding:0 30px}.stage-label{padding:22px 30px 0}.toolbar{padding:20px 30px 12px}.period-picker{margin:0 30px}.period-buttons button{min-width:48px}.swatch{height:42px}.clock-panel{margin-left:30px;margin-right:30px}.field-select{margin-top:22px}.scoreboard{margin:5px 30px 0}.match-footer{padding:0 30px 16px}}
 @media(max-width:520px){.summary{padding-left:12px;padding-right:12px}.summary tbody th{width:38px}.summary td b{min-width:22px;padding:3px 3px;margin:0 1px;font-size:14px}}
+@media(max-width:480px){.set-grid,.set-events{grid-template-columns:1fr}}
 @media(max-width:420px){.field-select{gap:8px}.field-buttons{gap:5px}.field-buttons button{min-width:88px;padding:8px 9px}.clock-panel{margin-left:15px;margin-right:15px;padding:12px}.clock-panel-head .field-buttons button{min-width:60px;padding:6px}.clock-values strong{font-size:24px}.tool{padding:9px 8px}}
+@media(max-width:360px){.settings-btn span{display:none}.settings-btn{padding:9px 11px}}
 @media(max-width:350px){.topbar{padding:0 15px}.board{padding:15px;gap:14px}.toolbar{padding-left:15px;padding-right:15px}.toolbar-label{letter-spacing:0;font-size:8px}.action{padding:11px 8px}.action small{font-size:9px}.setup{padding:28px 16px}.jerseys{gap:5px}.team-pick{padding:14px 8px}.swatch{padding:3px;min-width:24px}.swatches{grid-template-columns:repeat(4,minmax(24px,1fr))}.period-picker{margin:0 15px}.period-buttons{gap:4px}.period-buttons button{min-width:37px}}
 @media(min-width:1000px) and (orientation:landscape){
 .app{max-width:1240px}
@@ -218,7 +242,10 @@ dialog::backdrop{background:#102b36aa;backdrop-filter:blur(3px)}
 <div class="app">
   <header class="topbar">
     <button class="brand" data-do="home" aria-label="Home"><span><b>SIXES</b> · SPOTTER</span></button>
-    <span class="local-status" id="save-status"><i></i> Ready</span>
+    <div class="topbar-right">
+      <span class="local-status" id="save-status"><i></i> Ready</span>
+      <button class="settings-btn" data-do="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v2.2M12 19.3v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.5 19.5 6.1 17.9M17.9 6.1 19.5 4.5"/></svg><span>Settings</span></button>
+    </div>
   </header>
   <main id="main"></main>
 </div>
@@ -262,7 +289,33 @@ const data = {
   })
 };
 
-const ACTIONS = { GB: 'Ground Ball', SW: 'Shot Wide', SS: 'Shot Saved', G: 'Goal', PEN: 'Penalty' };
+// Master catalog of every event type the app can record.
+//   code    short code stored with each event and used in exports
+//   label   full name (shown in the feed, exports, summary)
+//   button  text on the big action button (defaults to code)
+//   note    small text under the button (defaults to label)
+//   kind    'goal'   scores a point, asks for an assist
+//           'shot'   a missed shot (type W in the XML)
+//           'save'   a saved shot: asks the shooter, credits the opposing goalie (type S)
+//           'card'   a penalty: asks for card colour and offense
+//           'plain'  just a player (ground ball, turnover, …)
+//   look    'goal' or 'penalty' give the button special colours; 'wide' = full-width
+const ACTION_CATALOG = [
+  { code: 'GB',  label: 'Ground Ball',      kind: 'plain' },
+  { code: 'SW',  label: 'Shot Wide',        kind: 'shot' },
+  { code: 'SS',  label: 'Shot Saved',       kind: 'save' },
+  { code: 'G',   label: 'Goal', button: 'Goal', kind: 'goal', look: 'goal' },
+  { code: 'TO',  label: 'Turnover',         kind: 'plain' },
+  { code: 'CT',  label: 'Caused Turnover',  button: 'CT', note: 'Caused TO', kind: 'plain' },
+  { code: 'FP',  label: 'Free Position',    button: 'FP', note: 'Free pos.', kind: 'plain' },
+  { code: 'FO',  label: 'Faceoff Won',      button: 'FO', note: 'Faceoff', kind: 'plain' },
+  { code: 'PEN', label: 'Penalty', button: 'Penalty', note: 'Foul · card', kind: 'card', look: 'penalty' },
+];
+const catalogByCode = c => ACTION_CATALOG.find(a => a.code === c);
+// Actions currently switched on, in catalog order. ACTIONS is {code: label}.
+let enabledActions = () => ACTION_CATALOG.filter(a => settings.enabled.includes(a.code));
+let ACTIONS = {};
+const refreshActions = () => { ACTIONS = Object.fromEntries(enabledActions().map(a => [a.code, a.label])); };
 const OFFENSES = {
   'Minor foul': ['Interference', 'Pushing', 'Illegal Pick', 'Holding', 'Withholding the Ball from Play', 'Illegal Actions with the Stick', 'Illegal Actions by Team Officials', 'Illegal Procedure', 'Illegal Equipment', 'Offside', 'Warding'],
   'Major foul': ['Illegal Body-Check', 'Slashing', 'Cross-Check', 'Tripping', 'Unnecessary Roughness', 'Illegal Stick', 'Unsportsmanlike Conduct', 'Walling'],
@@ -283,14 +336,23 @@ const COLORS = [
   { id: 'black', name: 'Black', hex: '#1c2023', ink: '#ffffff', soft: '#e9ebed', accent: '#1c2023', border: '#c4cbd0' },
   { id: 'white', name: 'White', hex: '#ffffff', ink: '#132e38', soft: '#ffffff', accent: '#132e38', border: '#b9c6c4' }
 ];
-const QUARTER_MS = 8 * 60 * 1000, OT_MS = 4 * 60 * 1000, SHOT_MS = 30 * 1000;
-const QUARTERS = 4, MAX_OT = 4; // regulation quarters, and how many OT periods allowed
-const isOT = p => Number.isInteger(p) && p > QUARTERS;
-const periodMs = p => isOT(p) ? OT_MS : QUARTER_MS;
+// Rules presets for each discipline. Picking a discipline fills these,
+// then the user can still override any single value.
+const DISCIPLINES = {
+  sixes:  { name: 'Sixes',        quarters: 4, quarterMinutes: 8,  otMinutes: 4, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'PEN'] },
+  field:  { name: 'Field',        quarters: 4, quarterMinutes: 15, otMinutes: 4, shotClockSeconds: 80, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FO', 'PEN'] },
+  box:    { name: 'Box',          quarters: 3, quarterMinutes: 20, otMinutes: 5, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'PEN'] },
+  women:  { name: "Women's Field", quarters: 2, quarterMinutes: 25, otMinutes: 3, shotClockSeconds: 90, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FP', 'PEN'] },
+};
+const MAX_OT = 4;        // how many OT periods the picker can add
+const SHOT_MS = () => settings.shotClockSeconds * 1000;
+const QUARTERS = () => settings.quarters;
+const isOT = p => Number.isInteger(p) && p > QUARTERS();
+const periodMs = p => (isOT(p) ? settings.otMinutes : settings.quarterMinutes) * 60 * 1000;
 
 /* ---------- Core logic ---------- */
 const teamPalette = (t, index = 0) => COLORS.find(c => c.id === t?.color) || COLORS.find(c => c.id === (index ? 'red' : 'blue'));
-const periodLabel = (p, unknown = '-') => !Number.isInteger(p) || p < 1 ? unknown : p <= QUARTERS ? 'Q' + p : p === QUARTERS + 1 ? 'OT' : 'OT' + (p - QUARTERS);
+const periodLabel = (p, unknown = '-') => !Number.isInteger(p) || p < 1 ? unknown : p <= QUARTERS() ? 'Q' + p : p === QUARTERS() + 1 ? 'OT' : 'OT' + (p - QUARTERS());
 function saveForShot(m, teamId) {
   const opp = m.teams.find(t => t.id !== teamId);
   if (!opp) throw Error('Opposing team unavailable.');
@@ -299,7 +361,7 @@ function saveForShot(m, teamId) {
 }
 function validateEvent(ev, teams) {
   const t = teams.find(t => t.id === ev.teamId);
-  if (ev.period != null && (!Number.isInteger(ev.period) || ev.period < 1 || ev.period > QUARTERS + MAX_OT)) throw Error('Choose a valid period.');
+  if (ev.period != null && (!Number.isInteger(ev.period) || ev.period < 1 || ev.period > QUARTERS() + MAX_OT)) throw Error('Choose a valid period.');
   if (!t || !ACTIONS[ev.action]) throw Error('Invalid team or action.');
   if (!t.players.some(p => p.number === ev.player)) throw Error('Choose a player from the team.');
   if (ev.action !== 'G' && ev.assist !== null) throw Error('An assist can only be recorded for a goal.');
@@ -381,6 +443,10 @@ function xmlFor(m) {
     if (g) { out.push(`    <goalie-change team-id="${x(g.teamId)}">`, timeTag(g.period, g.clock, g.at), who('p', g.teamId, g.player), '    </goalie-change>'); continue; }
     const time = timeTag(e.period, e.clock), open = tag => `    <${tag} team-id="${x(e.teamId)}">`;
     if (e.action === 'GB') out.push(open('ground-ball'), time, who('p', e.teamId, e.player), '    </ground-ball>');
+    if (e.action === 'TO') out.push(open('turnover'), time, who('p', e.teamId, e.player), '    </turnover>');
+    if (e.action === 'CT') out.push(open('caused-turnover'), time, who('p', e.teamId, e.player), '    </caused-turnover>');
+    if (e.action === 'FO') out.push(open('fo'), time, who('p', e.teamId, e.player), '    </fo>');
+    if (e.action === 'FP') out.push(open('free-position'), time, who('p', e.teamId, e.player), '    </free-position>');
     if (e.action === 'SW' || e.action === 'SS') out.push(open('shot'), time, who('p', e.teamId, e.player), `      <type>${e.action === 'SS' ? 'S' : 'W'}</type>`, '    </shot>');
     if (e.action === 'SS' && e.save?.player != null) out.push(`    <save team-id="${x(e.save.teamId)}">`, time, who('p', e.save.teamId, e.save.player), '    </save>');
     if (e.action === 'G') { out.push(open('goal'), time, who('s', e.teamId, e.player)); if (e.assist != null) out.push(who('a', e.teamId, e.assist)); out.push('    </goal>'); }
@@ -397,10 +463,13 @@ function xmlFor(m) {
   const eachTeam = fn => m.teams.forEach(t => fn(t));
   out.push('  <summary>');
   eachTeam(t => counts(`goal team-id="${x(t.id)}"`, zeros(8)));
-  for (const tag of ['fo', 'draw-ctrl', 'shot']) eachTeam(t => counts(`${tag} team-id="${x(t.id)}"`, zeros(5)));
+  eachTeam(t => counts(`fo team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'FO')));
+  for (const tag of ['draw-ctrl', 'shot']) eachTeam(t => counts(`${tag} team-id="${x(t.id)}"`, zeros(5)));
   eachTeam(t => counts(`shot-wide team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'SW')));
   eachTeam(t => counts(`ground-ball team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'GB')));
-  for (const tag of ['turnover', 'caused-turnover', 'unforced-error']) eachTeam(t => counts(`${tag} team-id="${x(t.id)}"`, zeros(5)));
+  eachTeam(t => counts(`turnover team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'TO')));
+  eachTeam(t => counts(`caused-turnover team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'CT')));
+  eachTeam(t => counts(`unforced-error team-id="${x(t.id)}"`, zeros(5)));
   for (const g of [1, 0]) eachTeam(t => counts(`pp team-id="${x(t.id)}" g="${g}"`, zeros(5)));
   eachTeam(t => {
     const keepers = [...new Set(m.events.filter(e => e.action === 'SS' && e.save?.teamId === t.id && e.save.player != null).map(e => e.save.player))];
@@ -494,16 +563,29 @@ function createMatchPdf(m) {
 }
 
 /* ---------- App state ---------- */
-const $ = s => document.querySelector(s), main = $('#main'), modal = $('#modal'), KEY = 'lax-observer-ui-v1';
+const $ = s => document.querySelector(s), main = $('#main'), modal = $('#modal'), KEY = 'lax-observer-ui-v1', SETTINGS_KEY = 'lax-observer-settings-v1';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const undoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 10l6 6M3 10h11a7 7 0 0 1 0 14" transform="translate(0 -2)"/></svg>';
 const exportIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>';
 const wide = window.matchMedia('(min-width:1000px) and (orientation:landscape)');
 let db = { matches: [], activeId: null }, match = null, draft = null;
 let setupPicks = ['', ''], setupColors = ['blue', 'red'], setupGoalies = ['', ''], setupField = null, setupGameNo = '';
-let clock = { game: QUARTER_MS, shot: SHOT_MS, running: false, at: 0 }, toastTimer, storageOkay = true, downloads = null;
+let clock = { game: 0, shot: 0, running: false, at: 0 }, toastTimer, storageOkay = true, downloads = null;
 
 try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved && Array.isArray(saved.matches)) db = saved; } catch { storageOkay = false; }
+
+// ---------- Settings (persist on this device) ----------
+const defaultSettings = () => {
+  const d = DISCIPLINES.sixes;
+  return { discipline: 'sixes', quarters: d.quarters, quarterMinutes: d.quarterMinutes, otMinutes: d.otMinutes, shotClockSeconds: d.shotClockSeconds, countUp: false, autoClock: true, enabled: [...d.enabled] };
+};
+let settings = defaultSettings();
+try {
+  const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+  if (saved && typeof saved === 'object') settings = { ...settings, ...saved, enabled: Array.isArray(saved.enabled) && saved.enabled.length ? saved.enabled.filter(c => catalogByCode(c)) : settings.enabled };
+} catch {}
+refreshActions();
+function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch {} refreshActions(); }
 
 function notify(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('visible'), 2800); }
 function persist() {
@@ -517,8 +599,8 @@ function persist() {
   catch { storageOkay = false; $('#save-status').textContent = 'Saving unavailable'; notify('Unable to save in this browser. Export your match to keep a copy.'); }
 }
 const team = id => match?.teams.find(t => t.id === id) || data.teams.find(t => t.id === id);
-const maxPeriod = () => QUARTERS + MAX_OT;
-const periodsInPlay = () => Math.max(QUARTERS, match.currentPeriod || 1, ...match.events.map(e => e.period || 0));
+const maxPeriod = () => QUARTERS() + MAX_OT;
+const periodsInPlay = () => Math.max(QUARTERS(), match.currentPeriod || 1, ...match.events.map(e => e.period || 0));
 const currentPeriod = () => Number.isInteger(match.currentPeriod) && match.currentPeriod >= 1 && match.currentPeriod <= maxPeriod() ? match.currentPeriod : 1;
 const score = id => match.events.filter(e => e.teamId === id && e.action === 'G').length;
 function closeModal() { if (modal.open) modal.close(); modal.innerHTML = ''; }
@@ -530,19 +612,31 @@ const fmtGame = ms => { const s = Math.ceil(ms / 1000); return `${Math.floor(s /
 // Parse a m:ss or seconds string to milliseconds, or null if invalid.
 const parseGame = txt => { const m = /^\s*(\d{1,3})(?::([0-5]?\d))?\s*$/.exec(txt || ''); return m ? (m[2] == null ? Number(m[1]) : Number(m[1]) * 60 + Number(m[2])) * 1000 : null; };
 const fmtShot = ms => String(Math.ceil(ms / 1000));
+// Game time at the start of the current period: full length when counting
+// down, 0 when counting up.
+const startGame = period => settings.countUp ? 0 : periodMs(period);
+// The period is over when the clock reaches the end in either direction.
+const clockEnded = () => settings.countUp ? clock.game >= periodMs(currentPeriod()) : clock.game <= 0;
 function tick() {
   if (!clock.running) return;
   const now = Date.now(), d = now - clock.at; clock.at = now;
-  clock.game = Math.max(0, clock.game - d); clock.shot = Math.max(0, clock.shot - d);
-  if (clock.game === 0) { clock.running = false; persist(); if (match && !draft) renderMatch(); notify(`End of ${periodLabel(currentPeriod())}`); return; }
+  const len = periodMs(currentPeriod());
+  clock.game = settings.countUp ? Math.min(len, clock.game + d) : Math.max(0, clock.game - d);
+  clock.shot = Math.max(0, clock.shot - d);
+  if (clockEnded()) { clock.running = false; persist(); if (match && !draft) renderMatch(); notify(`End of ${periodLabel(currentPeriod())}`); return; }
   paintClock();
 }
 function paintClock() { const g = $('#game-clock'), s = $('#shot-clock'); if (g) g.textContent = fmtGame(clock.game); if (s) s.textContent = fmtShot(clock.shot); }
 setInterval(tick, 200);
-function loadClock() { clock = { game: match?.clock?.game ?? periodMs(currentPeriod()), shot: match?.clock?.shot ?? SHOT_MS, running: false, at: 0 }; }
+function loadClock() { clock = { game: match?.clock?.game ?? startGame(currentPeriod()), shot: match?.clock?.shot ?? SHOT_MS(), running: false, at: 0 }; }
 function captureClock() { return { field: match?.field ?? null, gameTime: fmtGame(clock.game), shotTime: fmtShot(clock.shot), status: clock.running ? 'running' : 'stopped', capturedAt: new Date().toISOString() }; }
 function clockPanel() {
-  return `<div class="clock-panel-head"><div><span class="eyebrow">Clock · Field ${match.field ?? '—'}</span><strong class="clock-connection ${clock.running ? 'live' : 'stale'}">${clock.running ? 'Running' : clock.game === 0 ? 'Period over' : 'Stopped'}</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}<button class="clock-read" data-do="clock-toggle" ${clock.game === 0 ? 'disabled' : ''}>${clock.running ? 'Stop' : 'Start'}</button></div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><div class="clock-links"><button data-do="clock-set-game">Set time</button><button data-do="clock-reset-game">Reset to ${fmtGame(periodMs(currentPeriod()))}</button></div></div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><div class="clock-links"><button data-do="clock-set-shot">Set</button><button data-do="clock-reset-shot">Reset to 30</button></div></div></div>`;
+  const resetLabel = settings.countUp ? '0:00' : fmtGame(periodMs(currentPeriod()));
+  const status = clock.running ? 'Running' : clockEnded() ? 'Period over' : 'Stopped';
+  const toggle = settings.autoClock
+    ? `<button class="clock-read" data-do="clock-toggle" ${clockEnded() && !clock.running ? 'disabled' : ''}>${clock.running ? 'Stop' : 'Start'}</button>`
+    : '<span class="clock-manual">Manual</span>';
+  return `<div class="clock-panel-head"><div><span class="eyebrow">Clock · Field ${match.field ?? '—'} · ${settings.countUp ? 'count up' : 'count down'}</span><strong class="clock-connection ${clock.running ? 'live' : 'stale'}">${status}</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}${toggle}</div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><div class="clock-links"><button data-do="clock-set-game">Set time</button><button data-do="clock-reset-game">Reset to ${resetLabel}</button></div></div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><div class="clock-links"><button data-do="clock-set-shot">Set</button><button data-do="clock-reset-shot">Reset to ${settings.shotClockSeconds}</button></div></div></div>`;
 }
 
 /* ---------- Shared fragments ---------- */
@@ -657,6 +751,46 @@ function showRosters() {
   const t = match.teams[0];
   showModal(`${head('Edit roster')}<p class="dialog-note">Set the active goalkeeper. Shots saved against the opposing team will credit this goalkeeper automatically. A goalkeeper change applies to the next saves; edit earlier actions in the history if needed.</p><div class="fields"><label>Team<select id="roster-team">${match.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></label><label>Active goalkeeper<select id="roster-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label></div><div class="dialog-actions"><button class="primary" data-do="save-goalie">Save goalkeeper</button></div><p class="dialog-note">Add or edit a player</p><div class="fields"><label>Jersey number<input id="roster-number" inputmode="numeric" maxlength="3" placeholder="e.g. 27"></label><label>Player name<input id="roster-name" maxlength="100" placeholder="First and last name"></label></div><p class="error" id="roster-error"></p><div class="dialog-actions"><button class="secondary" data-do="save-player">Add / edit player</button></div><p class="dialog-note" id="roster-list">${rosterList(t)}</p>`);
 }
+let settingsDraft = null;
+// Pull the number fields into the draft so they survive a re-render.
+function readSettingNumbers() {
+  if (!settingsDraft) return;
+  const read = (id, min, max, cur) => { const el = $('#' + id); if (!el) return cur; const n = Math.round(Number(el.value)); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : cur; };
+  settingsDraft.quarters = read('set-quarters', 1, 6, settingsDraft.quarters);
+  settingsDraft.quarterMinutes = read('set-qmin', 1, 60, settingsDraft.quarterMinutes);
+  settingsDraft.otMinutes = read('set-otmin', 1, 30, settingsDraft.otMinutes);
+  settingsDraft.shotClockSeconds = read('set-shot', 0, 120, settingsDraft.shotClockSeconds);
+}
+function showSettings() {
+  settingsDraft = settingsDraft || { ...settings, enabled: [...settings.enabled] };
+  const d = settingsDraft;
+  const num = (id, label, value, min, max, hint = '') => `<label class="set-num">${label}<input id="${id}" type="number" inputmode="numeric" min="${min}" max="${max}" value="${value}">${hint ? `<small>${hint}</small>` : ''}</label>`;
+  const toggle = (id, label, on, offLabel, onLabel) => `<div class="set-toggle"><span>${label}</span><div class="seg2" role="group" aria-label="${esc(label)}"><button data-do="set-flag" data-flag="${id}" data-val="0" class="${on ? '' : 'on'}" aria-pressed="${!on}">${esc(offLabel)}</button><button data-do="set-flag" data-flag="${id}" data-val="1" class="${on ? 'on' : ''}" aria-pressed="${on}">${esc(onLabel)}</button></div></div>`;
+  const discOptions = Object.entries(DISCIPLINES).map(([id, v]) => `<option value="${id}" ${d.discipline === id ? 'selected' : ''}>${esc(v.name)}</option>`).join('');
+  const events = ACTION_CATALOG.map(a => `<label class="set-check"><input type="checkbox" data-do="set-event" data-code="${a.code}" ${d.enabled.includes(a.code) ? 'checked' : ''}><span>${esc(a.label)}</span><small>${a.code}</small></label>`).join('');
+  showModal(`${head('Settings')}
+    <p class="dialog-note">These apply to the next match you start. A match already in progress keeps the settings it began with.</p>
+    <div class="set-group"><h3>Discipline</h3>
+      <label class="set-num" style="grid-column:1/-1">Lacrosse discipline<select id="set-discipline" data-do="set-discipline">${discOptions}</select><small>Picking one fills the defaults below; you can still change any value.</small></label>
+    </div>
+    <div class="set-group"><h3>Periods &amp; time</h3>
+      <div class="set-grid">
+        ${num('set-quarters', 'Number of periods', d.quarters, 1, 6)}
+        ${num('set-qmin', 'Minutes per period', d.quarterMinutes, 1, 60)}
+        ${num('set-otmin', 'Minutes per OT period', d.otMinutes, 1, 30)}
+        ${num('set-shot', 'Shot clock (seconds)', d.shotClockSeconds, 0, 120, '0 = no shot clock')}
+      </div>
+    </div>
+    <div class="set-group"><h3>Clock</h3>
+      ${toggle('countUp', 'Time direction', d.countUp, 'Count down', 'Count up')}
+      ${toggle('autoClock', 'Timing', d.autoClock, 'Manual', 'Automatic')}
+      <p class="dialog-note" style="margin-top:4px">Manual timing hides Start/Stop; you set the clock yourself with “Set time”.</p>
+    </div>
+    <div class="set-group"><h3>Events to collect</h3>
+      <div class="set-events">${events}</div>
+    </div>
+    <div class="dialog-actions"><button class="primary" data-do="save-settings">Save settings</button><button class="secondary" data-do="close">Cancel</button></div>`);
+}
 function showArchives() {
   showModal(`${head('Match archive')}<div class="fields">${[...db.matches].reverse().map(m => `<button class="secondary archive-item" data-do="resume" data-id="${m.id}">${esc(m.teams.map(t => t.name).join(' — '))}<small>${new Date(m.date).toLocaleDateString('en-GB')} · ${m.events.length} actions</small></button>`).join('')}</div>`);
 }
@@ -702,10 +836,10 @@ document.addEventListener('click', e => {
     case 'setup-field': setupField = b.dataset.field; renderSetup(); break;
     case 'field': match.field = b.dataset.field; persist(); renderMatch(); break;
     case 'clock-toggle': clock.running = !clock.running; clock.at = Date.now(); persist(); $('#clock-panel').innerHTML = clockPanel(); break;
-    case 'clock-reset-game': clock.game = periodMs(currentPeriod()); clock.shot = SHOT_MS; clock.running = false; persist(); $('#clock-panel').innerHTML = clockPanel(); break;
+    case 'clock-reset-game': clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); clock.running = false; persist(); $('#clock-panel').innerHTML = clockPanel(); break;
     case 'clock-set-game': { const v = prompt('Game clock remaining (m:ss or seconds):', fmtGame(clock.game)); if (v != null) { const ms = parseGame(v); if (ms == null) notify('Enter a time like 6:30 or 390.'); else { clock.game = ms; clock.running = false; persist(); $('#clock-panel').innerHTML = clockPanel(); } } break; }
     case 'clock-set-shot': { const v = prompt('Shot clock remaining (seconds):', fmtShot(clock.shot)); if (v != null) { const n = Number(v); if (!Number.isFinite(n) || n < 0) notify('Enter a number of seconds.'); else { clock.shot = Math.round(n) * 1000; clock.at = Date.now(); persist(); $('#clock-panel').innerHTML = clockPanel(); } } break; }
-    case 'clock-reset-shot': clock.shot = SHOT_MS; clock.at = Date.now(); persist(); paintClock(); break;
+    case 'clock-reset-shot': clock.shot = SHOT_MS(); clock.at = Date.now(); persist(); paintClock(); break;
     case 'color': {
       const i = Number(b.dataset.side), color = b.dataset.color;
       if (b.dataset.scope === 'setup') { setupColors[i] = color; renderSetup(); }
@@ -713,8 +847,8 @@ document.addEventListener('click', e => {
       break;
     }
     case 'choose-color': { const i = Number(b.dataset.side), t = match.teams[i]; showModal(`${head('Jersey colour')}<p class="dialog-note">${esc(t.name)}</p>${swatches(teamPalette(t, i).id, i, 'match')}`); break; }
-    case 'period': if (!draft) { match.currentPeriod = Number(b.dataset.period); if (!clock.running && clock.game === 0) { clock.game = periodMs(currentPeriod()); clock.shot = SHOT_MS; } persist(); renderMatch(); } break;
-    case 'add-ot': if (!draft) { match.currentPeriod = Math.min(maxPeriod(), periodsInPlay() + 1); clock.game = periodMs(currentPeriod()); clock.shot = SHOT_MS; clock.running = false; persist(); renderMatch(); } break;
+    case 'period': if (!draft) { match.currentPeriod = Number(b.dataset.period); if (!clock.running && clockEnded()) { clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); } persist(); renderMatch(); } break;
+    case 'add-ot': if (!draft) { match.currentPeriod = Math.min(maxPeriod(), periodsInPlay() + 1); clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); clock.running = false; persist(); renderMatch(); } break;
     case 'start': {
       const [a, c] = setupPicks; if (!a || !c || a === c || !setupField) return;
       match = { id: crypto.randomUUID(), date: new Date().toISOString(), field: setupField, teams: [a, c].map((id, i) => ({ ...structuredClone(data.teams.find(t => t.id === id)), color: setupColors[i] })), goalies: { [a]: setupGoalies[0] || null, [c]: setupGoalies[1] || null }, currentPeriod: 1, events: [], undo: [], gameNo: /^\d+$/.test(setupGameNo.trim()) ? String(Number(setupGameNo.trim())) : null };
@@ -722,6 +856,18 @@ document.addEventListener('click', e => {
       loadClock(); persist(); renderMatch(); break;
     }
     case 'archives': showArchives(); break;
+    case 'settings': settingsDraft = { ...settings, enabled: [...settings.enabled] }; showSettings(); break;
+    case 'set-flag': { readSettingNumbers(); settingsDraft[b.dataset.flag] = b.dataset.val === '1'; showSettings(); break; }
+    case 'save-settings': {
+      readSettingNumbers();
+      if (!settingsDraft.enabled.length) { notify('Keep at least one event type.'); return; }
+      settingsDraft.enabled = ACTION_CATALOG.filter(a => settingsDraft.enabled.includes(a.code)).map(a => a.code);
+      settings = settingsDraft; settingsDraft = null; saveSettings();
+      closeModal();
+      if (!match) renderSetup(); else renderMatch();
+      notify('Settings saved');
+      break;
+    }
     case 'resume': match = db.matches.find(m => m.id === b.dataset.id); draft = null; loadClock(); persist(); closeModal(); renderMatch(); break;
     case 'action': {
       if (!match.field) { notify('Choose Field 1 or Field 2 first.'); return; }
@@ -782,6 +928,19 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => { if (e.target.id === 'game-no') setupGameNo = e.target.value; });
 document.addEventListener('change', e => {
   const id = e.target.id;
+  if (id === 'set-discipline') {
+    readSettingNumbers();
+    const preset = DISCIPLINES[e.target.value];
+    if (preset) { settingsDraft = { ...settingsDraft, discipline: e.target.value, quarters: preset.quarters, quarterMinutes: preset.quarterMinutes, otMinutes: preset.otMinutes, shotClockSeconds: preset.shotClockSeconds, enabled: [...preset.enabled] }; showSettings(); }
+    return;
+  }
+  if (e.target.dataset?.do === 'set-event') {
+    readSettingNumbers();
+    const code = e.target.dataset.code;
+    if (e.target.checked) { if (!settingsDraft.enabled.includes(code)) settingsDraft.enabled.push(code); }
+    else settingsDraft.enabled = settingsDraft.enabled.filter(c => c !== code);
+    return;
+  }
   if (id === 'draft-offense') { if (draft) draft.offense = e.target.value; const c = $('.confirm-penalty'); if (c) c.disabled = !e.target.value; return; }
   if (id.startsWith('pick-')) { const i = Number(id.at(-1)); setupPicks[i] = e.target.value; setupGoalies[i] = data.teams.find(t => t.id === e.target.value)?.goalie?.number || ''; renderSetup(); return; }
   if (['edit-team', 'edit-player', 'edit-action'].includes(id)) {
