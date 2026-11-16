@@ -410,7 +410,7 @@ function xmlFor(m) {
   // Game time counted up from the start of the match (Q2 at 6:30 left = 9:30).
   const timeTag = (period, clock, at) => {
     let secs = 0;
-    const parts = /^(\d+):(\d\d)$/.exec(clock?.gameTime ?? '');
+    const parts = /^(\d+):(\d\d)$/.exec(clock?.gameTime ?? clock?.orderTime ?? '');
     if (parts && Number.isInteger(period)) {
       let before = 0; for (let q = 1; q < period; q++) before += periodMs(q) / 1000;
       secs = before + Math.max(0, periodMs(period) / 1000 - (Number(parts[1]) * 60 + Number(parts[2])));
@@ -615,6 +615,22 @@ const fmtGame = ms => { const s = Math.ceil(ms / 1000); return `${Math.floor(s /
 // Parse a m:ss or seconds string to milliseconds, or null if invalid.
 const parseGame = txt => { const m = /^\s*(\d{1,3})(?::([0-5]?\d))?\s*$/.exec(txt || ''); return m ? (m[2] == null ? Number(m[1]) : Number(m[1]) * 60 + Number(m[2])) * 1000 : null; };
 const fmtShot = ms => String(Math.ceil(ms / 1000));
+// Manual time entry: type digits only, the last two are seconds (0734 -> 07:34).
+const TIMED_ACTIONS = ['G', 'PEN'];
+const timeDigits = txt => String(txt ?? '').replace(/\D/g, '').slice(-4);
+const timeMask = txt => { const d = timeDigits(txt); return d.length > 2 ? `${d.slice(0, -2)}:${d.slice(-2)}` : d; };
+const parseClockEntry = txt => {
+  const d = timeDigits(txt); if (!d) return null;
+  const secs = Number(d.slice(-2)); if (d.length > 2 && secs > 59) return null;
+  const total = Number(d.slice(0, -2) || 0) * 60 + secs, two = n => String(n).padStart(2, '0');
+  return `${two(Math.floor(total / 60))}:${two(total % 60)}`;
+};
+// The last time typed in is kept with the match and offered again next time.
+const rememberTime = (text, period) => { match.lastTime = { text, period }; };
+// Untimed actions keep their place in exports: the last typed time of the
+// same period, or the start of the period when nothing was typed yet.
+const orderTime = period => match.lastTime?.period === period ? match.lastTime.text : fmtGame(periodMs(period));
+const TIME_HELP = 'Type the time as digits, e.g. 0734 for 07:34.';
 // Game time at the start of the current period: full length when counting
 // down, 0 when counting up.
 const startGame = period => settings.countUp ? 0 : periodMs(period);
@@ -677,7 +693,7 @@ function actionButtons(t, side) {
 function numberSide(t, side) {
   if (t.id !== draft.teamId) return `<div class="waiting"><span>· · ·</span>${esc(t.name)}</div>`;
   if (draft.stage === 'assist-choice') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">Goal: <b>#${esc(draft.player)}</b><br>Assist?</div><div class="assist-options"><button data-do="assist-yes">Assist</button><button class="no" data-do="assist-no">No</button></div></div>`;
-  if (draft.stage === 'game-time') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">${esc(ACTIONS[draft.action] || draft.action)}: <b>#${esc(draft.player)}</b><br>Game clock when it happened</div><input id="draft-gametime" class="time-input" inputmode="numeric" placeholder="MM:SS" value="${esc(draft.timeText ?? '')}" aria-label="Game clock time, minutes and seconds"><button class="primary confirm-time" data-do="time-confirm">Save action</button></div>`;
+  if (draft.stage === 'game-time') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">${esc(ACTIONS[draft.action] || draft.action)}: <b>#${esc(draft.player)}</b><br>Game clock when it happened</div><input id="draft-gametime" class="time-input" inputmode="numeric" placeholder="MM:SS" autocomplete="off" value="${esc(draft.timeText ?? '')}" aria-label="Game clock time, type four digits, minutes then seconds"><button class="primary confirm-time" data-do="time-confirm">Save to events log</button></div>`;
   if (draft.stage === 'penalty') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">Penalty: <b>#${esc(draft.player)}</b><br>Card given?</div>${cardButtons(draft.card)}<label class="offense-label" for="draft-offense">Offense</label><select id="draft-offense" class="offense-select">${offenseOptions(draft.offense)}</select><label class="offense-label" for="draft-pentime">Penalty time <small>(MM:SS, optional)</small></label><input id="draft-pentime" class="time-input" inputmode="numeric" placeholder="e.g. 1:00" value="${esc(draft.penTime ?? '')}"><button class="primary confirm-penalty" data-do="penalty-confirm" ${draft.offense ? '' : 'disabled'}>Save penalty</button></div>`;
   const assist = draft.stage === 'assist-player';
   return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="number-head"><span>${assist ? 'ASSIST' : 'NUMBER'}</span><span>${assist ? 'A' : draft.action}</span></div><div class="jerseys">${t.players.map(p => `<button class="jersey" data-do="number" data-number="${esc(p.number)}" ${assist && p.number === draft.player ? 'disabled' : ''} title="${esc(p.name)}" aria-label="Jersey number ${esc(p.number)}, ${esc(p.name)}">${esc(p.number)}</button>`).join('')}</div></div>`;
@@ -703,7 +719,7 @@ function renderMatch() {
   const [a, b] = match.teams, n = match.events.length, latest = 3;
   const clockHtml = `<section class="clock-panel" id="clock-panel">${clockPanel()}</section>`;
   let hint = !match.field ? 'Choose Field 1 or Field 2 before recording actions' : 'Select an action';
-  if (draft) hint = draft.stage === 'game-time' ? 'Enter the game clock (MM:SS)' : draft.stage === 'assist-choice' ? 'Confirm the assist' : draft.stage === 'assist-player' ? 'Select the assisting player' : draft.stage === 'penalty' ? 'Card, offense and time' : draft.action === 'SS' ? 'Select the shooter' : 'Select the player';
+  if (draft) hint = draft.stage === 'game-time' ? 'Type the game clock, e.g. 0734 = 07:34, then save' : draft.stage === 'assist-choice' ? 'Confirm the assist' : draft.stage === 'assist-player' ? 'Select the assisting player' : draft.stage === 'penalty' ? 'Card, offense and time' : draft.action === 'SS' ? 'Select the shooter' : 'Select the player';
   main.innerHTML = `<div class="match-grid"><div class="match-main"><div class="toolbar"><span class="toolbar-label">Match in progress</span><div class="tools"><button class="tool" data-do="undo" ${!draft && !match.undo?.length ? 'disabled' : ''}>${undoIcon}Undo</button><button class="tool" data-do="export" aria-label="Export PDF">${exportIcon}PDF</button><button class="tool" data-do="export-csv" aria-label="Export CSV">CSV</button><button class="tool" data-do="export-xml" aria-label="Export XML">XML</button></div></div><div class="scoreboard">${teamHeading(a, 0)}<div class="score" aria-label="Score ${score(a.id)} to ${score(b.id)}">${score(a.id)}<span>:</span>${score(b.id)}</div>${teamHeading(b, 1)}</div>${wide.matches ? '' : clockHtml}${periodButtons()}<div class="stage-label"><p>${draft ? `<b>${draft.action === 'G' ? 'Goal' : draft.action === 'PEN' ? 'Penalty' : draft.action}</b> · ` : ''}${hint}</p>${draft ? '<button class="cancel" data-do="cancel">Cancel</button>' : '<span class="eyebrow" style="font-size:8px;margin:0">Team → Action → #</span>'}</div><section class="board" aria-label="Action entry">${match.teams.map((t, i) => draft ? numberSide(t, i) : actionButtons(t, i)).join('')}</section></div><aside class="match-side">${wide.matches ? clockHtml : ''}${summaryHtml()}<section class="feed" id="feed"><span class="feed-handle"></span><div class="feed-title"><h2>Latest actions</h2><button data-do="history">View all (${n}) ↑</button></div>${n ? match.events.slice(-latest).map((e, i) => eventRow(e, Math.max(0, n - latest) + i)).join('') : '<div class="empty-feed">The match starts here.<br>Your most recent actions will stay visible.</div>'}</section><div class="match-footer"><button data-do="rosters">Roster</button><span>${n} action${n === 1 ? '' : 's'}</span><button data-do="new">New match</button></div></aside></div>`;
   let startY; const feed = $('#feed');
   feed.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
@@ -719,8 +735,11 @@ function afterPlayer() {
 // The last gate before an event is saved. In manual timing the game clock is
 // asked here — always the final input, after player, assist, card, etc.
 function finalize() {
-  if (!settings.autoClock) { draft.stage = 'game-time'; draft.timeText = ''; renderMatch(); setTimeout(() => $('#draft-gametime')?.focus(), 30); }
-  else commitDraft();
+  if (settings.autoClock) return commitDraft();
+  // Manual timing: only goals and penalties ask for the game clock.
+  if (!TIMED_ACTIONS.includes(draft.action)) { draft.clock = { ...draft.clock, gameTime: null, status: 'untimed', orderTime: orderTime(draft.period) }; return commitDraft(); }
+  draft.stage = 'game-time'; draft.timeText = match.lastTime?.text ?? ''; renderMatch();
+  setTimeout(() => { const i = $('#draft-gametime'); i?.focus(); i?.select(); }, 30);
 }
 function commitDraft() {
   try {
@@ -746,10 +765,15 @@ function summaryHtml() {
   return `<section class="summary" aria-label="Summary by period"><div class="summary-title"><h2>Summary</h2><span>${match.teams.map((t, i) => `<b class="key" style="--c:${pal[i].hex};--k:${pal[i].ink}">${esc(t.id.toUpperCase())}</b>`).join('')}</span></div><div class="summary-scroll"><table><thead><tr><th></th>${periods.map(q => `<th scope="col" class="${currentPeriod() === q ? 'now' : ''}">${periodLabel(q)}</th>`).join('')}<th scope="col" class="total">Total</th></tr></thead><tbody>${codes.map(bodyRow).join('')}</tbody></table></div></section>`;
 }
 
-function setGoalie(teamId, number) {
+function setGoalie(teamId, number, typedTime) {
   match.goalies = { ...(match.goalies || {}), [teamId]: number || null };
-  if (number) (match.goalieLog ||= []).push({ teamId, player: number, period: currentPeriod(), clock: captureClock(), at: new Date().toISOString() });
+  if (number) (match.goalieLog ||= []).push({ teamId, player: number, period: currentPeriod(), clock: typedTime ? { ...captureClock(), gameTime: typedTime } : captureClock(), at: new Date().toISOString() });
+  if (number && typedTime) rememberTime(typedTime, currentPeriod());
 }
+// Manual timing: a goalie change asks for the game clock in its dialog.
+const goalieTimeField = () => settings.autoClock ? '' : `<label>Game clock of the change<input id="goalie-time" inputmode="numeric" autocomplete="off" placeholder="MM:SS" value="${esc(match.lastTime?.text ?? '')}"></label>`;
+// Returns the typed time, undefined when none is needed, or false when invalid.
+const readGoalieTime = number => { if (settings.autoClock || !number) return undefined; const t = parseClockEntry($('#goalie-time')?.value); if (!t) notify(TIME_HELP); return t || false; };
 
 /* ---------- Dialogs ---------- */
 function showHistory() {
@@ -761,12 +785,12 @@ function showEdit(id) {
 }
 function showQuickGoalie(teamId) {
   const t = match.teams.find(t => t.id === teamId); if (!t) return;
-  showModal(`${head('Change the goalie')}<p class="dialog-note">${esc(t.name)} · Applies to the next saves.</p><div class="fields"><label>New goalkeeper<select id="quick-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label></div><div class="dialog-actions"><button class="primary" data-do="save-quick-goalie" data-team="${t.id}">Confirm goalkeeper</button><button class="secondary" data-do="close">Cancel</button></div>`);
+  showModal(`${head('Change the goalie')}<p class="dialog-note">${esc(t.name)} · Applies to the next saves.</p><div class="fields"><label>New goalkeeper<select id="quick-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label>${goalieTimeField()}</div><div class="dialog-actions"><button class="primary" data-do="save-quick-goalie" data-team="${t.id}">Confirm goalkeeper</button><button class="secondary" data-do="close">Cancel</button></div>`);
 }
 const rosterList = t => t.players.map(p => `#${esc(p.number)} ${esc(p.name)}`).join('<br>');
 function showRosters() {
   const t = match.teams[0];
-  showModal(`${head('Edit roster')}<p class="dialog-note">Set the active goalkeeper. Shots saved against the opposing team will credit this goalkeeper automatically. A goalkeeper change applies to the next saves; edit earlier actions in the history if needed.</p><div class="fields"><label>Team<select id="roster-team">${match.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></label><label>Active goalkeeper<select id="roster-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label></div><div class="dialog-actions"><button class="primary" data-do="save-goalie">Save goalkeeper</button></div><p class="dialog-note">Add or edit a player</p><div class="fields"><label>Jersey number<input id="roster-number" inputmode="numeric" maxlength="3" placeholder="e.g. 27"></label><label>Player name<input id="roster-name" maxlength="100" placeholder="First and last name"></label></div><p class="error" id="roster-error"></p><div class="dialog-actions"><button class="secondary" data-do="save-player">Add / edit player</button></div><p class="dialog-note" id="roster-list">${rosterList(t)}</p>`);
+  showModal(`${head('Edit roster')}<p class="dialog-note">Set the active goalkeeper. Shots saved against the opposing team will credit this goalkeeper automatically. A goalkeeper change applies to the next saves; edit earlier actions in the history if needed.</p><div class="fields"><label>Team<select id="roster-team">${match.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></label><label>Active goalkeeper<select id="roster-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label>${goalieTimeField()}</div><div class="dialog-actions"><button class="primary" data-do="save-goalie">Save goalkeeper</button></div><p class="dialog-note">Add or edit a player</p><div class="fields"><label>Jersey number<input id="roster-number" inputmode="numeric" maxlength="3" placeholder="e.g. 27"></label><label>Player name<input id="roster-name" maxlength="100" placeholder="First and last name"></label></div><p class="error" id="roster-error"></p><div class="dialog-actions"><button class="secondary" data-do="save-player">Add / edit player</button></div><p class="dialog-note" id="roster-list">${rosterList(t)}</p>`);
 }
 let settingsDraft = null;
 // Pull the number fields into the draft so they survive a re-render.
@@ -801,7 +825,7 @@ function showSettings() {
     <div class="set-group"><h3>Clock</h3>
       ${toggle('countUp', 'Time direction', d.countUp, 'Count down', 'Count up')}
       ${toggle('autoClock', 'Timing', d.autoClock, 'Manual', 'Automatic')}
-      <p class="dialog-note" style="margin-top:4px">Manual timing hides Start/Stop; you set the clock yourself with “Set time”.</p>
+      <p class="dialog-note" style="margin-top:4px">Manual timing hides Start/Stop; you set the clock yourself with “Set time”. The game clock is asked only for goals, penalties and goalie changes: type 0734 for 07:34.</p>
     </div>
     <div class="set-group"><h3>Events to collect</h3>
       <div class="set-events">${events}</div>
@@ -898,11 +922,11 @@ document.addEventListener('click', e => {
       afterPlayer();
       break;
     case 'time-confirm': {
-      const txt = ($('#draft-gametime')?.value || '').trim();
-      const ms = parseGame(txt);
-      if (ms == null) { notify('Enter a time like 6:30.'); return; }
-      draft.timeText = fmtGame(ms);
-      draft.clock = { ...draft.clock, gameTime: draft.timeText };
+      const typed = parseClockEntry($('#draft-gametime')?.value);
+      if (!typed) { notify(TIME_HELP); return; }
+      draft.timeText = typed;
+      draft.clock = { ...draft.clock, gameTime: typed };
+      rememberTime(typed, draft.period);
       commitDraft();
       break;
     }
@@ -932,13 +956,15 @@ document.addEventListener('click', e => {
     case 'change-goalie': showQuickGoalie(b.dataset.team); break;
     case 'save-quick-goalie': {
       const t = match.teams.find(t => t.id === b.dataset.team), number = $('#quick-goalie').value;
-      setGoalie(t.id, number); persist(); closeModal(); renderMatch();
+      const typed = readGoalieTime(number); if (typed === false) return;
+      setGoalie(t.id, number, typed); persist(); closeModal(); renderMatch();
       notify(number ? `${t.name} · Goalkeeper #${number}` : `${t.name} · No active goalkeeper`); break;
     }
     case 'rosters': showRosters(); break;
     case 'save-goalie': {
       const teamId = $('#roster-team').value, goalie = $('#roster-goalie').value, t = team(teamId);
-      setGoalie(teamId, goalie); persist(); closeModal(); renderMatch();
+      const typed = readGoalieTime(goalie); if (typed === false) return;
+      setGoalie(teamId, goalie, typed); persist(); closeModal(); renderMatch();
       notify(goalie ? `Goalkeeper #${goalie} set for ${t.name}` : `Active goalkeeper cleared for ${t.name}`); break;
     }
     case 'save-player': {
@@ -955,7 +981,10 @@ document.addEventListener('click', e => {
       $('#save-status').innerHTML = '<i></i> Ready'; renderSetup(); break;
   }
 });
-document.addEventListener('input', e => { if (e.target.id === 'game-no') setupGameNo = e.target.value; if (e.target.id === 'draft-gametime' && draft) draft.timeText = e.target.value; if (e.target.id === 'draft-pentime' && draft) draft.penTime = e.target.value; });
+const TIME_FIELDS = ['draft-gametime', 'draft-pentime', 'edit-pentime', 'goalie-time'];
+document.addEventListener('focusin', e => { if (TIME_FIELDS.includes(e.target.id)) e.target.select(); });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'draft-gametime') { e.preventDefault(); $('[data-do="time-confirm"]')?.click(); } });
+document.addEventListener('input', e => { if (TIME_FIELDS.includes(e.target.id)) e.target.value = timeMask(e.target.value); if (e.target.id === 'game-no') setupGameNo = e.target.value; if (e.target.id === 'draft-gametime' && draft) draft.timeText = e.target.value; if (e.target.id === 'draft-pentime' && draft) draft.penTime = e.target.value; });
 document.addEventListener('change', e => {
   const id = e.target.id;
   if (id === 'set-discipline') {
