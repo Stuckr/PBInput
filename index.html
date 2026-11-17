@@ -407,6 +407,11 @@ const PB_SOURCES = [
   { id: 'eslcw', label: "Women's Sixes", url: 'https://stats.pointbench.com/eu/eslcw/2026/index.php?cmd=send-data' },
 ];
 const DATA_KEY = 'lax-observer-rosterdata-v1';
+// The full set of files from the most recent download/load, kept in memory for
+// this session so games can be imported and the files saved to a folder.
+let pbFiles = null;
+// Period length/count for the loaded tournament, read from its config file.
+let pbRules = { periodCount: 4, periodLength: 8, otLength: 3 };
 
 // Minimal in-browser ZIP reader. Handles STORED (0) and DEFLATE (8) entries,
 // using the browser's built-in DecompressionStream for deflate. Returns a map
@@ -502,6 +507,17 @@ function parsePointbenchData(files, source) {
   // Pointbench player ids for the XML export (team id -> jersey -> id).
   const pbIds = {};
   for (const id of ordered) { pbIds[id] = {}; for (const p of rosters[id].players) if (p.pid) pbIds[id][p.number] = p.pid; }
+  // Period rules from the config file, so imported games split into the right periods.
+  let rules = { periodCount: 4, periodLength: 8, otLength: 3 };
+  const cfgName = Object.keys(files).find(n => /<config[\s>]/.test(files[n]));
+  if (cfgName) { try {
+    const C = parseXml(files[cfgName]);
+    rules = {
+      periodCount: Number(C.querySelector('period-count')?.textContent) || 4,
+      periodLength: Number(C.querySelector('period-length')?.textContent) || 8,
+      otLength: Number(C.querySelector('period-ot-length')?.textContent) || 3,
+    };
+  } catch {} }
   return {
     competition: `${leagueName}`,
     code,
@@ -509,6 +525,7 @@ function parsePointbenchData(files, source) {
     fetchedAt: new Date().toISOString(),
     teams,
     pbIds,
+    rules,
   };
 }
 
@@ -519,6 +536,7 @@ async function loadPointbenchData(source) {
   const buf = await res.arrayBuffer();
   const files = await readZip(buf);
   const fresh = parsePointbenchData(files, source);
+  pbFiles = files; pbRules = fresh.rules || pbRules;
   applyRosterData(fresh);
   try { localStorage.setItem(DATA_KEY, JSON.stringify({ sourceId: source.id, data: fresh })); } catch {}
   return fresh;
@@ -551,6 +569,7 @@ async function loadDataFromFiles(fileList) {
       || (guess && { id: guess, label: guess.toUpperCase(), url: '' })
       || PB_SOURCES.find(s => s.id === activeSourceId) || PB_SOURCES[0];
     const fresh = parsePointbenchData(files, src);
+    pbFiles = files; pbRules = fresh.rules || pbRules;
     activeSourceId = src.id;
     applyRosterData(fresh);
     try { localStorage.setItem(DATA_KEY, JSON.stringify({ sourceId: src.id, data: fresh })); } catch {}
@@ -561,6 +580,202 @@ async function loadDataFromFiles(fileList) {
     if ($('#data-status')) $('#data-status').textContent = 'Could not read file: ' + err.message;
     notify('Could not read file: ' + err.message);
   }
+}
+
+/* ---------- Save downloaded files to a chosen folder (desktop) ---------- */
+// The File System Access API (desktop Chrome/Edge) lets us write the unzipped
+// files into a folder the user picks, and remember that folder via IndexedDB.
+const fsSupported = () => typeof window.showDirectoryPicker === 'function';
+function idb() {
+  return new Promise((resolve, reject) => {
+    const r = indexedDB.open('lax-observer-fs', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('handles');
+    r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error);
+  });
+}
+async function idbGet(key) { try { const db = await idb(); return await new Promise((res, rej) => { const tx = db.transaction('handles', 'readonly').objectStore('handles').get(key); tx.onsuccess = () => res(tx.result); tx.onerror = () => rej(tx.error); }); } catch { return null; } }
+async function idbSet(key, val) { try { const db = await idb(); await new Promise((res, rej) => { const tx = db.transaction('handles', 'readwrite').objectStore('handles').put(val, key); tx.onsuccess = () => res(); tx.onerror = () => rej(tx.error); }); } catch {} }
+async function ensurePermission(handle) {
+  if (!handle) return false;
+  const opts = { mode: 'readwrite' };
+  if ((await handle.queryPermission?.(opts)) === 'granted') return true;
+  return (await handle.requestPermission?.(opts)) === 'granted';
+}
+// Get the remembered folder (asking permission), or pick a new one.
+async function getSaveFolder(forcePick = false) {
+  if (!fsSupported()) throw Error('Saving to a folder needs desktop Chrome or Edge.');
+  if (!forcePick) {
+    const saved = await idbGet('saveDir');
+    if (saved && await ensurePermission(saved)) return saved;
+  }
+  const dir = await window.showDirectoryPicker({ mode: 'readwrite' });
+  await idbSet('saveDir', dir);
+  return dir;
+}
+// Write every file from the last download into the chosen folder.
+async function saveFilesToFolder(forcePick = false) {
+  if (!pbFiles || !Object.keys(pbFiles).length) throw Error('Download or load a tournament first.');
+  const dir = await getSaveFolder(forcePick);
+  let n = 0;
+  for (const [name, text] of Object.entries(pbFiles)) {
+    const fh = await dir.getFileHandle(name, { create: true });
+    const w = await fh.createWritable(); await w.write(text); await w.close(); n++;
+  }
+  try { localStorage.setItem('lax-observer-savedir-name', dir.name); } catch {}
+  return { count: n, folder: dir.name };
+}
+
+/* ---------- Import games from the loaded tournament ---------- */
+// Read the schedule (game-list) into rows: id, home/visiting ids, date, field, pool.
+function parseGameList(files) {
+  const listName = Object.keys(files).find(n => /<game-list[\s>]/.test(files[n]));
+  if (!listName) return [];
+  let doc; try { doc = new DOMParser().parseFromString(files[listName], 'application/xml'); } catch { return []; }
+  return [...doc.querySelectorAll('game-list > game')].map(g => {
+    const teams = [...g.querySelectorAll('team')];
+    const home = teams.find(t => t.getAttribute('role') === 'home') || teams[0];
+    const vis = teams.find(t => t.getAttribute('role') === 'visiting') || teams[1];
+    const d = g.querySelector('date'), t = g.querySelector('time');
+    const loc = (g.querySelector('location')?.textContent || '').trim();
+    return {
+      id: g.getAttribute('id') || '',
+      home: home?.getAttribute('id') || '', visiting: vis?.getAttribute('id') || '',
+      year: Number(d?.getAttribute('year')) || null, month: Number(d?.getAttribute('month')) || null, day: Number(d?.getAttribute('day')) || null,
+      hour: Number(t?.getAttribute('hour')) || 0, min: Number(t?.getAttribute('min')) || 0,
+      field: /2/.test(loc) ? '2' : /1/.test(loc) ? '1' : null,
+      pool: (g.querySelector('description')?.textContent || '').trim(),
+    };
+  }).filter(g => g.id);
+}
+// Find the game XML file for a given game number within the loaded files.
+function gameFileFor(files, id) {
+  const n = String(id).padStart(3, '0');
+  const name = Object.keys(files).find(k => new RegExp(`game-0*${id}\\.xml$`, 'i').test(k) || k.includes(`game-${n}.xml`));
+  return name ? files[name] : null;
+}
+// Convert an absolute game time (minutes:seconds from the start of the match) to
+// the app's { period, gameTime(countdown) } using the tournament's period length.
+function splitGameTime(absSecs, rules) {
+  const regLen = rules.periodLength * 60, otLen = rules.otLength * 60;
+  let period = 1, start = 0;
+  while (true) {
+    const len = period <= rules.periodCount ? regLen : otLen;
+    if (absSecs < start + len || period >= rules.periodCount + 4) break;
+    start += len; period++;
+  }
+  const len = period <= rules.periodCount ? regLen : otLen;
+  const remaining = Math.max(0, len - (absSecs - start));
+  const mm = Math.floor(remaining / 60), ss = remaining % 60;
+  return { period, gameTime: `${mm}:${String(ss).padStart(2, '0')}` };
+}
+// Build a match object from a PointBench game XML (the inverse of xmlFor).
+function parseGameXml(text, rules, meta = {}) {
+  const doc = new DOMParser().parseFromString(text, 'application/xml');
+  if (doc.querySelector('parsererror')) throw Error('Could not read the game file.');
+  const gameEl = doc.querySelector('game'); if (!gameEl) throw Error('Not a game file.');
+  const teamEls = [...doc.querySelectorAll('game > team')];
+  if (teamEls.length < 2) throw Error('Game file has no teams.');
+  const COLOR_IDS = ['blue', 'red'];
+  const teams = teamEls.slice(0, 2).map((tEl, i) => {
+    const id = (tEl.getAttribute('id') || '').toLowerCase();
+    const known = (data.teams || []).find(t => t.id === id);
+    const players = [...tEl.querySelectorAll(':scope > player')].map(pl => {
+      const no = pl.querySelector('no')?.textContent?.trim() ?? '';
+      const full = pl.querySelector('full-name')?.textContent?.trim()
+        || [pl.querySelector('last-name')?.textContent, pl.querySelector('first-name')?.textContent].filter(Boolean).join(', ');
+      return { number: no, name: full || `#${no}` };
+    }).filter(p => p.number !== '');
+    players.sort((a, b) => Number(a.number) - Number(b.number));
+    return { id, name: known?.name || id.toUpperCase(), players, color: COLOR_IDS[i] };
+  });
+  const teamById = id => teams.find(t => t.id === id);
+  const timeOf = el => { const tt = el.querySelector(':scope > time'); const abs = (Number(tt?.getAttribute('min')) || 0) * 60 + (Number(tt?.getAttribute('sec')) || 0); const at = tt?.getAttribute('ts') || null; return { abs, at, ...splitGameTime(abs, rules) }; };
+  const clockFrom = (tm, field) => ({ field: field ?? null, gameTime: tm.gameTime, shotTime: null, status: 'imported', capturedAt: tm.at || null });
+  const field = meta.field ?? null;
+  const events = [], goalieLog = [], goalies = {};
+  const evEls = [...doc.querySelectorAll('game > events > *')];
+  for (let i = 0; i < evEls.length; i++) {
+    const el = evEls[i], tag = el.tagName.toLowerCase(), teamId = el.getAttribute('team-id');
+    const tm = timeOf(el), clock = clockFrom(tm, field);
+    const pno = el.querySelector(':scope > p')?.getAttribute('no') || null;
+    const mk = (action, extra = {}) => ({ id: crypto.randomUUID(), teamId, action, player: pno, period: tm.period, assist: null, save: null, penalty: null, clock, ...extra });
+    if (tag === 'goalie-change') {
+      const no = el.querySelector(':scope > p')?.getAttribute('no'); if (!no) continue;
+      goalies[teamId] = no; goalieLog.push({ teamId, player: no, period: tm.period, clock: { ...clock, gameTime: tm.gameTime }, at: tm.at || null });
+      continue;
+    }
+    if (tag === 'goal') {
+      const s = el.querySelector(':scope > s')?.getAttribute('no') || null;
+      const a = el.querySelector(':scope > a')?.getAttribute('no') || null;
+      if (!s) continue;
+      events.push(mk('G', { player: s, assist: a }));
+    } else if (tag === 'shot') {
+      const type = el.querySelector(':scope > type')?.textContent?.trim();
+      if (type === 'S') {
+        // A saved shot: the following <save> (same team-defending) carries the goalie.
+        const next = evEls[i + 1];
+        let save = null;
+        if (next && next.tagName.toLowerCase() === 'save') {
+          const sv = next, gkTeam = sv.getAttribute('team-id'), gk = sv.querySelector(':scope > p')?.getAttribute('no') || null;
+          save = { teamId: gkTeam, player: gk };
+          i++; // consume the save element
+        }
+        if (!pno) continue; // the app requires a shooter
+        if (!save) save = { teamId: teams.find(t => t.id !== teamId)?.id, player: null };
+        events.push(mk('SS', { save }));
+      } else { // 'W' = wide
+        if (!pno) continue;
+        events.push(mk('SW'));
+      }
+    } else if (tag === 'save') {
+      // A save not preceded by its shot (shooter unknown): record as the opponent's saved shot.
+      const shooterTeam = teams.find(t => t.id !== teamId)?.id;
+      events.push({ id: crypto.randomUUID(), teamId: shooterTeam, action: 'SS', player: null, period: tm.period, assist: null, save: { teamId, player: el.querySelector(':scope > p')?.getAttribute('no') || null }, penalty: null, clock });
+    } else if (tag === 'ground-ball') { if (pno) events.push(mk('GB'));
+    } else if (tag === 'turnover') { if (pno) events.push(mk('TO'));
+    } else if (tag === 'caused-turnover') { if (pno) events.push(mk('CT'));
+    } else if (tag === 'fo') { if (pno) events.push(mk('FO'));
+    } else if (tag === 'free-position') { if (pno) events.push(mk('FP'));
+    } else if (tag === 'card') {
+      if (!pno) continue;
+      const offense = el.querySelector(':scope > description')?.textContent?.trim() || 'Other';
+      const color = { G: 'green', Y: 'yellow', R: 'red' }[el.querySelector(':scope > color')?.textContent?.trim()] || null;
+      const pt = el.querySelector(':scope > penalty-time')?.textContent?.trim() || null;
+      events.push(mk('PEN', { penalty: { offense, card: color, time: pt } }));
+    }
+    // <timeout> and anything else: skipped (no app equivalent).
+  }
+  // Drop any saved-shot whose save references a player, keeping shooter-less ones only if they have a save player.
+  const cleaned = events.filter(e => e.player != null || (e.action === 'SS' && e.save?.player != null));
+  // Starting goalies: first goalie-change per team, else none.
+  const dEl = gameEl.querySelector(':scope > date'), hEl = gameEl.querySelector(':scope > time');
+  const date = meta.year ? new Date(meta.year, (meta.month || 1) - 1, meta.day || 1, meta.hour || 0, meta.min || 0)
+    : dEl ? new Date(Number(dEl.getAttribute('year')), (Number(dEl.getAttribute('month')) || 1) - 1, Number(dEl.getAttribute('day')) || 1, Number(hEl?.getAttribute('hour')) || 0, Number(hEl?.getAttribute('min')) || 0)
+    : new Date();
+  const lastPeriod = cleaned.reduce((m, e) => Math.max(m, e.period || 1), 1);
+  return {
+    id: crypto.randomUUID(),
+    date: date.toISOString(),
+    field,
+    teams,
+    goalies,
+    goalieLog,
+    currentPeriod: lastPeriod,
+    events: cleaned,
+    undo: [],
+    gameNo: meta.id ? String(Number(meta.id)) : (gameEl.getAttribute('id') || null),
+    imported: true,
+  };
+}
+// Import one scheduled game into the archive (db.matches); returns the match.
+function importOneGame(files, rules, meta) {
+  const text = gameFileFor(files, meta.id);
+  if (!text) throw Error(`No game file for game ${meta.id}.`);
+  const m = parseGameXml(text, rules, meta);
+  const existing = db.matches.findIndex(x => x.imported && String(x.gameNo) === String(m.gameNo) && x.teams.map(t => t.id).sort().join() === m.teams.map(t => t.id).sort().join());
+  if (existing >= 0) db.matches[existing] = { ...m, id: db.matches[existing].id };
+  else db.matches.push(m);
+  return m;
 }
 
 // Master catalog of every event type the app can record.
@@ -1091,14 +1306,16 @@ function showSettings() {
   const discOptions = Object.entries(DISCIPLINES).map(([id, v]) => `<option value="${id}" ${d.discipline === id ? 'selected' : ''}>${esc(v.name)}</option>`).join('');
   const events = ACTION_CATALOG.map(a => `<label class="set-check"><input type="checkbox" data-do="set-event" data-code="${a.code}" ${d.enabled.includes(a.code) ? 'checked' : ''}><span>${esc(a.label)}</span><small>${a.code}</small></label>`).join('');
   const sourceOptions = PB_SOURCES.map(s => `<option value="${s.id}" ${activeSourceId === s.id ? 'selected' : ''}>${esc(s.label)}</option>`).join('');
+  let savedFolderName = ''; try { savedFolderName = localStorage.getItem('lax-observer-savedir-name') || ''; } catch {}
   showModal(`${head('Settings')}
     <p class="dialog-note">These apply to the next match you start. A match already in progress keeps the settings it began with.</p>
     <div class="set-group"><h3>Tournament data (Pointbench)</h3>
-      <label class="set-num" style="grid-column:1/-1">Competition<select id="set-source">${sourceOptions}</select><small>Rosters and player numbers from stats.pointbench.com.</small></label>
-      <p class="dialog-note" id="data-status" style="margin:2px 0 10px">${esc(data.competition)} · ${data.teams.length} teams · loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}</p>
-      <div class="dialog-actions" style="margin-top:0"><button class="secondary" data-do="download-data">Download rosters</button><button class="secondary" data-do="pick-data-file">Load from file…</button></div>
+      <label class="set-num" style="grid-column:1/-1">Competition<select id="set-source">${sourceOptions}</select><small>Rosters, player numbers and games from stats.pointbench.com.</small></label>
+      <p class="dialog-note" id="data-status" style="margin:2px 0 10px">${esc(data.competition)} · ${data.teams.length} teams · loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}${pbFiles ? ` · ${Object.keys(pbFiles).length} files in this session` : ''}</p>
+      <div class="dialog-actions" style="margin-top:0"><button class="secondary" data-do="download-data">Download data</button><button class="secondary" data-do="pick-data-file">Load from file…</button><button class="secondary" data-do="import-games" ${pbFiles ? '' : 'disabled'}>Import games…</button></div>
       <input id="data-file-input" type="file" accept=".zip,.xml" multiple hidden>
-      <p class="dialog-note" style="margin-top:8px">Download fetches directly from Pointbench — this needs the site to allow it, which it may not when the app is installed or hosted elsewhere. If the download is blocked, use <b>Load from file</b> with the ZIP (or the roster XML files) saved by your Pointbench downloader.</p>
+      ${fsSupported() ? `<div class="set-toggle" style="margin-top:12px"><span>Save downloaded files to a folder${savedFolderName ? ` · <b>${esc(savedFolderName)}</b>` : ''}</span><div class="dialog-actions" style="margin:0"><button class="secondary" data-do="save-folder" ${pbFiles ? '' : 'disabled'}>${savedFolderName ? 'Save now' : 'Choose folder…'}</button>${savedFolderName ? '<button class="secondary" data-do="change-folder">Change</button>' : ''}</div></div>` : `<p class="dialog-note" style="margin-top:10px">Saving the files to a folder you choose needs desktop Chrome or Edge; this device can load them in-app but can't write them to a folder.</p>`}
+      <p class="dialog-note" style="margin-top:8px"><b>Download</b> fetches directly from Pointbench — the site must allow it, which it may not when the app is installed or hosted elsewhere. If the download is blocked, use <b>Load from file</b> with the ZIP (or the XML files) saved by your Pointbench downloader. <b>Import games</b> loads the tournament's games into your Match archive so you can open and keep scoring them.</p>
     </div>
     <div class="set-group"><h3>Discipline</h3>
       <label class="set-num" style="grid-column:1/-1">Lacrosse discipline<select id="set-discipline" data-do="set-discipline">${discOptions}</select><small>Picking one fills the defaults below; you can still change any value.</small></label>
@@ -1122,7 +1339,25 @@ function showSettings() {
     <div class="dialog-actions"><button class="primary" data-do="save-settings">Save settings</button><button class="secondary" data-do="close">Cancel</button></div>`);
 }
 function showArchives() {
-  showModal(`${head('Match archive')}<div class="fields">${[...db.matches].reverse().map(m => `<button class="secondary archive-item" data-do="resume" data-id="${m.id}">${esc(m.teams.map(t => t.name).join(' — '))}<small>${new Date(m.date).toLocaleDateString('en-GB')} · ${m.events.length} actions</small></button>`).join('')}</div>`);
+  showModal(`${head('Match archive')}<div class="fields">${[...db.matches].reverse().map(m => `<button class="secondary archive-item" data-do="resume" data-id="${m.id}">${esc(m.teams.map(t => t.name).join(' — '))}<small>${new Date(m.date).toLocaleDateString('en-GB')} · ${m.events.length} actions${m.imported ? ' · imported' : ''}</small></button>`).join('') || '<p class="dialog-note">No saved matches yet.</p>'}</div>`);
+}
+// Games read from the loaded tournament's schedule, cached for the import dialog.
+let gameListCache = [];
+const teamNameFor = id => (data.teams || []).find(t => t.id === id)?.name || id?.toUpperCase() || '?';
+function showImportGames() {
+  if (!pbFiles) { notify('Download or load a tournament first.'); return; }
+  gameListCache = parseGameList(pbFiles);
+  const importedKey = m => `${m.gameNo}`;
+  const importedNos = new Set(db.matches.filter(m => m.imported).map(importedKey));
+  const rows = gameListCache.map(g => {
+    const has = !!gameFileFor(pbFiles, g.id);
+    const done = importedNos.has(String(Number(g.id)));
+    const when = g.day ? `${String(g.day).padStart(2,'0')}/${String(g.month).padStart(2,'0')}` : '';
+    const meta = [g.pool, g.field ? `F${g.field}` : '', when].filter(Boolean).join(' · ');
+    return `<button class="secondary archive-item" data-do="import-game-one" data-id="${esc(g.id)}" ${has ? '' : 'disabled'}>${esc(String(g.id).padStart(2,' '))}. ${esc(teamNameFor(g.home))} — ${esc(teamNameFor(g.visiting))}<small>${esc(meta)}${done ? ' · ✓ imported' : has ? '' : ' · no data yet'}</small></button>`;
+  }).join('');
+  const n = gameListCache.filter(g => gameFileFor(pbFiles, g.id)).length;
+  showModal(`${head('Import games')}<p class="dialog-note">${esc(data.competition)} · ${n} game${n===1?'':'s'} available. Tap one to load it into your Match archive, where you can open it and keep scoring or editing. Re-importing refreshes that game.</p><div class="dialog-actions" style="margin-top:14px"><button class="primary" data-do="import-games-all" ${n ? '' : 'disabled'}>Import all ${n}</button><button class="secondary" data-do="close">Done</button></div><div class="fields" style="margin-top:14px;max-height:50dvh;overflow:auto">${rows || '<p class="dialog-note">No games found in this download.</p>'}</div>`);
 }
 
 /* ---------- Exports ---------- */
@@ -1205,6 +1440,31 @@ document.addEventListener('click', e => {
       break;
     }
     case 'pick-data-file': $('#data-file-input')?.click(); break;
+    case 'save-folder': case 'change-folder': {
+      b.disabled = true;
+      saveFilesToFolder(act === 'change-folder').then(r => {
+        notify(`Saved ${r.count} files to “${r.folder}”`);
+        if (modal.open) showSettings();
+      }).catch(err => { b.disabled = false; if (err?.name !== 'AbortError') notify('Could not save files: ' + err.message); });
+      break;
+    }
+    case 'import-games': showImportGames(); break;
+    case 'import-game-one': {
+      try {
+        const meta = gameListCache.find(g => String(g.id) === b.dataset.id);
+        const m = importOneGame(pbFiles, pbRules, meta);
+        persist(); notify(`Imported game ${meta.id}: ${m.teams.map(t => t.name).join(' — ')}`);
+        showImportGames();
+      } catch (err) { notify('Import failed: ' + err.message); }
+      break;
+    }
+    case 'import-games-all': {
+      let ok = 0, fail = 0;
+      for (const meta of gameListCache) { try { if (gameFileFor(pbFiles, meta.id)) { importOneGame(pbFiles, pbRules, meta); ok++; } } catch { fail++; } }
+      persist(); notify(`Imported ${ok} game${ok === 1 ? '' : 's'}${fail ? `, ${fail} skipped` : ''}`);
+      closeModal(); if (!match) renderSetup();
+      break;
+    }
     case 'save-settings': {
       readSettingNumbers();
       if (!settingsDraft.enabled.length) { notify('Keep at least one event type.'); return; }
