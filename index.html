@@ -247,8 +247,8 @@ dialog{background:#f4f5f6}
 dialog .summary{padding:0;border:0;background:transparent;margin-top:14px}
 dialog .summary tbody th{background:#f4f5f6}
 .summary td.now,.summary thead th.now{background:#e2e6e9}
-html:has(body.in-match){background:#15181b}
-body.in-match .app{max-width:none;background:#15181b;box-shadow:none}
+html:has(body.in-match){background:#e6e9eb}
+body.in-match .app{max-width:none;background:#f5f6f6;box-shadow:none}
 body.in-match .topbar{display:none}
 body.in-match #main{height:100%}
 .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"spine spine" "a b";min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
@@ -262,10 +262,10 @@ body.in-match #main{height:100%}
 .half .country-name{font-size:18px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
 .half .kit-picker{color:inherit;min-height:44px;font-size:12px;font-weight:600;padding:4px 0;margin-top:0}
 .half .kit-picker i{border-color:currentColor}
-.half-body{flex:1;min-height:0;display:flex;flex-direction:column}
-.half-body>*{flex:1}
+.half-body{flex:0 0 auto;min-height:0;display:flex;flex-direction:column}
+.half-body>*{flex:0 0 auto}
 .half .team-actions{display:flex;flex-direction:column;gap:10px}
-.action-grid{flex:0 1 auto;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(60px,76px);gap:10px}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:92px;gap:10px}
 .half .team-actions .action{min-width:0;overflow:hidden;height:auto;min-height:64px;border-radius:14px;padding:10px 8px;background:var(--team-tile);color:var(--half-ink);border:1px solid color-mix(in srgb,var(--half-ink) 22%,transparent)}
 .half .action strong{font-size:26px;font-weight:900}
 .half .action small{font-size:12px;font-weight:600}
@@ -279,7 +279,7 @@ body.in-match #main{height:100%}
 .half .team-actions .change-goalie{flex-shrink:0;min-height:52px;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 10px;padding:8px 14px;border-radius:14px;background:transparent;border:2px solid var(--half-ink);color:var(--half-ink)}
 .half .change-goalie span{font-size:14px;font-weight:800}
 .half .change-goalie small{font-size:13px;font-weight:600}
-.half-last{flex-shrink:0;border-top:1px solid color-mix(in srgb,var(--half-ink) 60%,transparent);padding-top:10px;min-height:32px;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.half-log{flex:1 1 0;min-height:60px;overflow-y:auto;border-top:1px solid color-mix(in srgb,var(--half-ink) 35%,transparent);display:flex;flex-direction:column}.half-log-empty{padding:12px 2px;font-size:13px;font-weight:700;color:color-mix(in srgb,var(--half-ink) 70%,transparent)}.half-log-row{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;min-height:44px;padding:7px 2px;border:0;border-bottom:1px solid color-mix(in srgb,var(--half-ink) 15%,transparent);background:transparent;color:var(--half-ink);text-align:left;cursor:pointer}.half-log-row:last-child{border-bottom:0}.hl-period{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--team-accent)}.hl-action{display:flex;flex-direction:column;gap:1px;min-width:0;font-size:14px;font-weight:800;line-height:1.15}.hl-action small{font-size:11px;font-weight:600;color:color-mix(in srgb,var(--half-ink) 75%,transparent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hl-action .card-chip{display:inline-block;width:9px;height:12px;border-radius:2px;margin-left:6px;vertical-align:-1px}.hl-num{font-size:15px;font-weight:900;font-variant-numeric:tabular-nums}
 .half .number-head{color:inherit;font-size:13px}
 .half .number-side .jersey{height:auto;min-height:60px;border-radius:12px;background:var(--team-tile);color:var(--half-ink);border:1px solid color-mix(in srgb,var(--half-ink) 22%,transparent);font-size:24px;font-weight:900}
 .half .draft-details{color:inherit;font-size:15px}
@@ -288,41 +288,42 @@ body.in-match #main{height:100%}
 .half .assist-options button{background:var(--team-goal-bg);color:var(--team-goal-ink);border:0;border-radius:14px}
 .half .assist-options button.no{background:transparent;color:var(--half-ink);border:2px solid var(--half-ink)}
 .half .primary{background:var(--team-goal-bg);color:var(--team-goal-ink)}
-.spine{grid-area:spine;background:#15181b;color:#f2f4f5;display:flex;flex-direction:column;gap:8px;padding:10px 12px}
+.spine{grid-area:spine;background:#edeeef;color:var(--ink);display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
 .spine>*{order:0;flex-shrink:0}
-.spine .brand{background:#fff;border-radius:10px;min-height:44px;padding:6px 10px;justify-content:center}
+.spine .brand{background:#fff;border:1px solid var(--line);border-radius:10px;min-height:44px;padding:6px 10px;justify-content:center}
 .spine .brand-logo{height:24px}
-.spine .clock-panel{margin:0;padding:10px;border:0;border-radius:12px;background:#23282d;color:#f2f4f5}
+.spine .clock-panel{margin:0;padding:10px;border:1px solid var(--line);border-radius:12px;background:#f5f6f6;color:var(--ink)}
 .spine .clock-panel-head .eyebrow{display:none}
 .spine .clock-connection{font-size:12px}
-.spine .clock-connection.live{color:#7be0a0}.spine .clock-connection.stale{color:#f0c36b}
+.spine .clock-connection.live{color:#17683c}.spine .clock-connection.stale{color:#87621a}
 .spine .clock-controls{width:100%}
 .spine .clock-panel-head .field-select{flex:1}
 .spine .field-buttons{flex:1}
-.spine .clock-panel-head .field-buttons button{flex:1;min-width:0;min-height:44px;padding:6px;font-size:12px;background:#15181b;border-color:#4a535b;color:#b9c2c8}
-.spine .clock-panel-head .field-buttons button.selected{background:#f2f4f5;border-color:#f2f4f5;color:#15181b}
-.spine .clock-read{flex:1;min-height:44px;background:#f2f4f5;color:#15181b;font-size:14px;font-weight:800;text-align:center}
+.spine .clock-panel-head .field-buttons button{flex:1;min-width:0;min-height:44px;padding:6px;font-size:12px;background:#e6e8e9;border:1px solid #d6d8da;color:#575d63}
+.spine .clock-panel-head .field-buttons button.selected{background:var(--ink);border-color:var(--ink);color:#fff}
+.spine .clock-read{flex:1;min-height:44px;background:var(--ink);color:#fff;font-size:14px;font-weight:800;text-align:center;border-radius:6px}
 .spine .clock-values{gap:8px;margin-top:10px}
-.spine .clock-values span{color:#b9c2c8;font-size:11px}
+.spine .clock-values span{color:#686f76;font-size:11px}
 .spine .clock-values strong{font-size:30px;font-weight:900}
 .spine .clock-links{flex-direction:column;gap:0}
-.spine .clock-values button{color:#f2f4f5;font-size:12px;min-height:28px;padding:4px 0;text-align:left}
+.spine .clock-values button{color:#5a6066;font-size:12px;min-height:28px;padding:4px 0;text-align:left}
 .spine .period-picker{margin:0;padding:0;display:block}
 .spine .period-picker>span{display:none}
 .spine .period-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.spine .period-buttons button{min-width:0;min-height:44px;border:0;border-radius:10px;background:#23282d;color:#b9c2c8;font-size:15px;font-weight:800}
-.spine .period-buttons button.selected{background:#f2f4f5;color:#15181b}
-.spine .period-buttons .add-ot{background:transparent;border:1px dashed #6d7880;color:#b9c2c8}
+.spine .period-buttons button{min-width:0;min-height:44px;border:1px solid #d6d8da;border-radius:10px;background:#e6e8e9;color:#5f666c;font-size:15px;font-weight:800}
+.spine .period-buttons button.selected{background:var(--green);border-color:#828a91;color:var(--ink)}
+.spine .period-buttons .add-ot{background:#fff;border:1px dashed #9aa1a7;color:#555b60}
 .spine .stage-label{padding:0;display:block;text-align:center}
-.spine .stage-label p{color:#f2f4f5;font-size:13px;font-weight:600;line-height:1.35}
-.spine .stage-label b{color:#fff}
-.spine .cancel{display:block;width:100%;min-height:44px;margin-top:8px;padding:0;border:1px solid #6d7880;border-radius:10px;color:#f2f4f5;font-size:14px;font-weight:800;text-align:center;text-decoration:none}
+.spine .stage-label p{color:#4a5056;font-size:13px;font-weight:600;line-height:1.35}
+.spine .stage-label b{color:var(--ink)}
+.spine .cancel{display:block;width:100%;min-height:44px;margin-top:8px;padding:0;border:1px solid #c2c8cd;border-radius:10px;color:#4a5056;font-size:14px;font-weight:800;text-align:center;text-decoration:none;background:#fff}
 .spine-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
-.spine .tool{min-height:44px;padding:6px;border:0;border-radius:10px;background:#23282d;color:#f2f4f5;font-size:13px;font-weight:700;text-align:center}
-.spine .tool.undo{grid-column:1/-1;min-height:52px;background:#f2f4f5;color:#15181b;font-size:16px;font-weight:900}
+.spine .tool{min-height:44px;padding:6px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:13px;font-weight:700;text-align:center}
+.spine .tool.undo{grid-column:1/-1;min-height:52px;background:var(--ink);color:#fff;border-color:var(--ink);font-size:16px;font-weight:900}
 .spine .tool.full{grid-column:1/-1}
 .spine .tool-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.spine .local-status{color:#b9c2c8;text-align:center;font-size:11px;white-space:normal}
+.spine .local-status{color:#5d666d;text-align:center;font-size:11px;white-space:normal}
+.spine .local-status i{background:#668a4c}
 @media(min-width:700px){
 .split{grid-template-columns:minmax(0,1fr) 204px minmax(0,1fr);grid-template-areas:"a spine b"}
 .half{padding:18px}
@@ -333,7 +334,7 @@ body.in-match #main{height:100%}
 .half .action small{font-size:14px}
 .half .action.goal strong{font-size:46px}
 .half .action.penalty strong{font-size:19px}
-.action-grid{grid-auto-rows:minmax(64px,124px)}
+.action-grid{grid-auto-rows:116px}
 }
 @media(min-width:700px) and (min-height:600px){
 body.in-match .app{height:100dvh;overflow:hidden}
@@ -385,7 +386,7 @@ sui|Switzerland|92|6:Giger, Marvin;7:Hug, Noé;8:Ernst, Roger;12:Hänni, Tim;13:
 tur|Turkiye|0|0:Ünlü, Ozan;1:Ertek, Berk;3:Zeybek, Ege;6:Marusa, Taner;7:Yılmaz, Emir;10:Onur, Onur;13:Dogrul, Cem;14:Edil Jr, Barış;17:Unal, Bertan;36:Twining, Ata;42:Ceylan, Kaan;55:Can, Alperen
 ukr|Ukraine|9|0:Polishchuk, Artem;3:Povar, Illia;9:Demchenko, Denys;10:Miniailo, Dmytro;11:Lukianchuk, Yevhenii;17:Panin, Nazarii;21:Dorobiichuk, Maksym;24:Zazulevych, Heorhii;31:Zhabotynskyi, Davyd;35:Yakymchuk, Oleksii;44:Liashenko, Ostap;95:Humeniuk, Vladyslav`;
 
-const data = {
+let data = {
   competition: 'ESLC 2026 · Men · Salou',
   code: 'eslcm', // competition code used in the XML file name
   source: 'https://worldlacrosse.sport/eslc26-men/',
@@ -396,6 +397,171 @@ const data = {
     return { id, name, players, goalie: players.find(p => p.number === g) || null };
   })
 };
+
+/* ---------- Pointbench data download ---------- */
+// Tournament data sources on stats.pointbench.com. Each send-data URL returns a
+// ZIP of the tournament's XML files (rosters, config, game list). These presets
+// come from the user's downloads.json.
+const PB_SOURCES = [
+  { id: 'eslcm', label: "Men's Sixes", url: 'https://stats.pointbench.com/eu/eslcm/2026/index.php?cmd=send-data' },
+  { id: 'eslcw', label: "Women's Sixes", url: 'https://stats.pointbench.com/eu/eslcw/2026/index.php?cmd=send-data' },
+];
+const DATA_KEY = 'lax-observer-rosterdata-v1';
+
+// Minimal in-browser ZIP reader. Handles STORED (0) and DEFLATE (8) entries,
+// using the browser's built-in DecompressionStream for deflate. Returns a map
+// of { filename: text }. No external library needed.
+async function readZip(buf) {
+  const dv = new DataView(buf), bytes = new Uint8Array(buf), out = {};
+  // Find the End Of Central Directory record (signature 0x06054b50), scanning back.
+  let eocd = -1;
+  for (let i = bytes.length - 22; i >= 0 && i >= bytes.length - 22 - 65536; i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) throw Error('Not a valid ZIP file.');
+  const count = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true); // offset of first central-directory record
+  const dec = new TextDecoder('utf-8');
+  const inflate = async slice => {
+    if (typeof DecompressionStream !== 'function') throw Error('This browser cannot unzip the data.');
+    const ds = new DecompressionStream('deflate-raw');
+    const stream = new Blob([slice]).stream().pipeThrough(ds);
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  };
+  for (let n = 0; n < count; n++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break; // central-directory header
+    const method = dv.getUint16(p + 10, true);
+    const compSize = dv.getUint32(p + 20, true);
+    const nameLen = dv.getUint16(p + 28, true);
+    const extraLen = dv.getUint16(p + 30, true);
+    const commentLen = dv.getUint16(p + 32, true);
+    const localOff = dv.getUint32(p + 42, true);
+    const name = dec.decode(bytes.subarray(p + 46, p + 46 + nameLen));
+    // Jump to the local file header to find where the data actually starts.
+    const lNameLen = dv.getUint16(localOff + 26, true), lExtraLen = dv.getUint16(localOff + 28, true);
+    const dataStart = localOff + 30 + lNameLen + lExtraLen;
+    const comp = bytes.subarray(dataStart, dataStart + compSize);
+    let raw;
+    if (method === 0) raw = comp;
+    else if (method === 8) raw = await inflate(comp);
+    else { p += 46 + nameLen + extraLen + commentLen; continue; }
+    out[name.split('/').pop()] = dec.decode(raw);
+    p += 46 + nameLen + extraLen + commentLen;
+  }
+  return out;
+}
+
+// Build a fresh `data`-shaped object from the unzipped tournament files.
+// Reads the master league file for the competition name and team order, then
+// each per-team roster file for players (number, name, Pointbench id).
+function parsePointbenchData(files, source) {
+  const parser = new DOMParser();
+  const parseXml = text => { const d = parser.parseFromString(text, 'application/xml'); if (d.querySelector('parsererror')) throw Error('Could not read a data file.'); return d; };
+  const code = source.id;
+  // The master file is the one with <league> at its root (e.g. 2026-eslcm.xml).
+  const masterName = Object.keys(files).find(n => /<league[\s>]/.test(files[n]));
+  let leagueName = source.label, teamOrder = null;
+  if (masterName) {
+    const L = parseXml(files[masterName]);
+    leagueName = L.querySelector('league > name')?.textContent?.trim() || leagueName;
+    const refs = [...L.querySelectorAll('teams > *')].map(el =>
+      el.getAttribute('href') || el.getAttribute('id') || '');
+    teamOrder = refs.map(r => (r.match(/roster-([a-z]{2,4})\.xml/i)?.[1] || r).toLowerCase()).filter(Boolean);
+  }
+  // Collect only the dedicated per-team roster files (…-roster-xx.xml). Game and
+  // game-list files also contain <team id="…"> elements but no team <name> or
+  // per-player names, so they must not be mistaken for rosters.
+  const rosters = {};
+  for (const [name, text] of Object.entries(files)) {
+    if (!/roster-[a-z]{2,4}\.xml$/i.test(name)) continue;
+    if (!/<team[\s>]/.test(text) || /<league[\s>]/.test(text)) continue;
+    let doc; try { doc = parseXml(text); } catch { continue; }
+    const teamEl = doc.querySelector('team'); if (!teamEl) continue;
+    const id = (teamEl.getAttribute('id') || name.match(/roster-([a-z]{2,4})/i)?.[1] || '').toLowerCase();
+    if (!id) continue;
+    const teamName = teamEl.querySelector('name')?.textContent?.trim() || id.toUpperCase();
+    const players = [...teamEl.querySelectorAll('player')].map(pl => {
+      const no = pl.querySelector('no')?.textContent?.trim() ?? '';
+      const last = pl.querySelector('last-name')?.textContent?.trim() ?? '';
+      const first = pl.querySelector('first-name')?.textContent?.trim() ?? '';
+      const full = pl.querySelector('full-name')?.textContent?.trim();
+      const nm = full || [last, first].filter(Boolean).join(', ');
+      return { number: no, name: nm, pid: pl.getAttribute('id') || '' };
+    }).filter(p => p.number !== '');
+    players.sort((a, b) => Number(a.number) - Number(b.number));
+    if (players.length) rosters[id] = { id, name: teamName, players };
+  }
+  const ids = Object.keys(rosters);
+  if (!ids.length) throw Error('No team rosters found in the download.');
+  const ordered = (teamOrder && teamOrder.length ? teamOrder.filter(id => rosters[id]) : [])
+    .concat(ids.filter(id => !teamOrder || !teamOrder.includes(id)));
+  const teams = ordered.map(id => {
+    const r = rosters[id];
+    return { id, name: r.name, players: r.players.map(p => ({ number: p.number, name: p.name })), goalie: r.players[0] || null };
+  });
+  // Pointbench player ids for the XML export (team id -> jersey -> id).
+  const pbIds = {};
+  for (const id of ordered) { pbIds[id] = {}; for (const p of rosters[id].players) if (p.pid) pbIds[id][p.number] = p.pid; }
+  return {
+    competition: `${leagueName}`,
+    code,
+    source: source.url,
+    fetchedAt: new Date().toISOString(),
+    teams,
+    pbIds,
+  };
+}
+
+// Fetch, unzip and apply a source. Replaces the live rosters and the export id map.
+async function loadPointbenchData(source) {
+  const res = await fetch(source.url, { cache: 'no-store' });
+  if (!res.ok) throw Error(`Download failed (HTTP ${res.status}).`);
+  const buf = await res.arrayBuffer();
+  const files = await readZip(buf);
+  const fresh = parsePointbenchData(files, source);
+  applyRosterData(fresh);
+  try { localStorage.setItem(DATA_KEY, JSON.stringify({ sourceId: source.id, data: fresh })); } catch {}
+  return fresh;
+}
+
+// Swap the current rosters/competition/export-ids in and reset any setup picks
+// that no longer match a team.
+function applyRosterData(fresh) {
+  data = { competition: fresh.competition, code: fresh.code, source: fresh.source, fetchedAt: fresh.fetchedAt, teams: fresh.teams };
+  PB_IDS = fresh.pbIds || {};
+  const valid = new Set(data.teams.map(t => t.id));
+  setupPicks = setupPicks.map(id => valid.has(id) ? id : '');
+  setupGoalies = setupPicks.map((id, i) => data.teams.find(t => t.id === id)?.goalie?.number || '');
+}
+
+// Load rosters from files the user picks: a Pointbench ZIP, or one or more of
+// the unzipped XML files (rosters + optionally the master league file).
+async function loadDataFromFiles(fileList) {
+  const status = $('#data-status'); if (status) status.textContent = 'Reading file…';
+  try {
+    let files = {};
+    for (const f of fileList) {
+      if (/\.zip$/i.test(f.name)) Object.assign(files, await readZip(await f.arrayBuffer()));
+      else if (/\.xml$/i.test(f.name)) files[f.name.split(/[\\/]/).pop()] = await f.text();
+    }
+    if (!Object.keys(files).length) throw Error('Choose a .zip or .xml file.');
+    // Work out which competition this is: the chosen dropdown, else a filename code.
+    const guess = Object.keys(files).join(' ').match(/\b(eslc[mw])\b/i)?.[1]?.toLowerCase();
+    const src = PB_SOURCES.find(s => s.id === ($('#set-source')?.value || guess))
+      || (guess && { id: guess, label: guess.toUpperCase(), url: '' })
+      || PB_SOURCES.find(s => s.id === activeSourceId) || PB_SOURCES[0];
+    const fresh = parsePointbenchData(files, src);
+    activeSourceId = src.id;
+    applyRosterData(fresh);
+    try { localStorage.setItem(DATA_KEY, JSON.stringify({ sourceId: src.id, data: fresh })); } catch {}
+    notify(`Loaded ${fresh.teams.length} teams from file`);
+    if (modal.open && $('#data-status')) showSettings();
+    if (!match) renderSetup();
+  } catch (err) {
+    if ($('#data-status')) $('#data-status').textContent = 'Could not read file: ' + err.message;
+    notify('Could not read file: ' + err.message);
+  }
+}
 
 // Master catalog of every event type the app can record.
 //   code    short code stored with each event and used in exports
@@ -499,7 +665,7 @@ function csvFor(m) {
 }
 // PointBench player ids, where known (team id -> jersey number -> id).
 // Players not listed here are exported with an empty id.
-const PB_IDS = {"esp": {"0": "kg4ftomk", "50": "ij3up5eq", "9": "k5hxzxbs", "6": "t8ah6k7b", "31": "w44x5izp", "96": "chiozsp3", "5": "diejobxr", "13": "68bdw8sd", "11": "uu6aznqw", "25": "qgtr7hsm", "22": "dt7gpnem", "15": "zz8wh3oh"}, "fin": {"9": "cn6p7puz", "3": "jsa6okup", "32": "pda7s5gx", "8": "61egtsjr", "13": "wu4ooibz", "21": "gzc5khrh", "48": "8zadpxhq", "27": "bjnxkiob", "45": "ercg8zoe", "0": "x9uqzhnq", "10": "m34u6gz4", "1": "a7pom3ii"}};
+let PB_IDS = {"esp": {"0": "kg4ftomk", "50": "ij3up5eq", "9": "k5hxzxbs", "6": "t8ah6k7b", "31": "w44x5izp", "96": "chiozsp3", "5": "diejobxr", "13": "68bdw8sd", "11": "uu6aznqw", "25": "qgtr7hsm", "22": "dt7gpnem", "15": "zz8wh3oh"}, "fin": {"9": "cn6p7puz", "3": "jsa6okup", "32": "pda7s5gx", "8": "61egtsjr", "13": "wu4ooibz", "21": "gzc5khrh", "48": "8zadpxhq", "27": "bjnxkiob", "45": "ercg8zoe", "0": "x9uqzhnq", "10": "m34u6gz4", "1": "a7pom3ii"}};
 
 // XML export in the PointBench game-file layout.
 function xmlFor(m) {
@@ -801,7 +967,7 @@ function renderSetup() {
 function actionButtons(t, side) {
   const inactive = !match.field, goalie = t.players.find(p => p.number === match.goalies?.[t.id]);
   const codes = Object.keys(ACTIONS), spanPenalty = codes.filter(c => c !== 'G').length % 2 === 1;
-  return `<div style="${paletteStyle(t, side)}" class="team-actions ${inactive ? 'inactive' : ''}"><div class="action-grid">${Object.entries(ACTIONS).map(([code, label]) => `<button class="action ${code === 'G' ? 'goal' : code === 'PEN' ? 'penalty' + (spanPenalty ? ' span' : '') : ''}" data-do="action" data-team="${t.id}" data-action="${code}" ${inactive ? 'disabled' : ''} aria-label="${esc(t.name)} — ${label}"><strong>${code === 'G' ? 'Goal' : code === 'PEN' ? 'Penalty' : code}</strong><small>${code === 'G' ? 'Scorer, then assist' : code === 'PEN' ? 'Foul · card' : label}</small></button>`).join('')}</div><button class="change-goalie" data-do="change-goalie" data-team="${t.id}" aria-label="Change the goalie · ${esc(t.name)}"><span>Change the goalie</span><small>${goalie ? `#${esc(goalie.number)} · ${esc(goalie.name)}` : 'Select goalkeeper'}</small></button></div>`;
+  return `<div style="${paletteStyle(t, side)}" class="team-actions ${inactive ? 'inactive' : ''}"><div class="action-grid">${Object.entries(ACTIONS).map(([code, label]) => `<button class="action ${code === 'G' ? 'goal' : code === 'PEN' ? 'penalty' + (spanPenalty ? ' span' : '') : ''}" data-do="action" data-team="${t.id}" data-action="${code}" ${inactive ? 'disabled' : ''} aria-label="${esc(t.name)} — ${label}"><strong>${code === 'G' ? 'Goal' : code === 'PEN' ? 'Penalty' : code}</strong><small>${code === 'G' ? 'Scorer, then assist' : code === 'PEN' ? 'Foul · card' : label}</small></button>`).join('')}</div><button class="change-goalie" data-do="change-goalie" data-team="${t.id}" aria-label="Goalie · ${esc(t.name)}"><span>Goalie</span><small>${goalie ? `#${esc(goalie.number)} · ${esc(goalie.name)}` : 'Select goalkeeper'}</small></button></div>`;
 }
 function numberSide(t, side) {
   if (t.id !== draft.teamId) return `<div class="waiting"><span>· · ·</span>${esc(t.name)}</div>`;
@@ -833,8 +999,9 @@ function renderMatch() {
   const clockHtml = `<section class="clock-panel" id="clock-panel">${clockPanel()}</section>`;
   let hint = !match.field ? 'Choose Field 1 or Field 2 before recording actions' : 'Select an action';
   if (draft) hint = draft.stage === 'game-time' ? 'Type the game clock, e.g. 0734 = 07:34, then save' : draft.stage === 'assist-choice' ? 'Confirm the assist' : draft.stage === 'assist-player' ? 'Select the assisting player' : draft.stage === 'penalty' ? 'Card, offense and time' : draft.action === 'SS' ? 'Select the shooter' : 'Select the player';
-  const lastFor = t => { const e = [...match.events].reverse().find(e => e.teamId === t.id); return e ? `Last · ${e.player != null ? '#' + esc(e.player) + ' ' : ''}${esc(ACTIONS[e.action] || catalogByCode(e.action)?.label || e.action)} · ${periodLabel(e.period, '—')}` : 'No actions yet'; };
-  const half = (t, side) => { const c = teamPalette(t, side); return `<section class="half side-${side}" style="${paletteStyle(t, side)}" aria-label="${esc(t.name)}"><header class="half-head"><div class="half-team"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div><div class="half-score" aria-label="${esc(t.name)} score ${score(t.id)}">${score(t.id)}</div></header><div class="half-body">${draft ? numberSide(t, side) : actionButtons(t, side)}</div><footer class="half-last">${lastFor(t)}</footer></section>`; };
+  // Each half lists that team's own actions, most recent first; tapping one opens the editor.
+  const listFor = t => { const rows = match.events.map((e, i) => ({ e, i })).filter(x => x.e.teamId === t.id).reverse(); if (!rows.length) return '<p class="half-log-empty">No actions yet</p>'; return rows.map(({ e, i }) => { const p = team(e.teamId)?.players.find(p => p.number === e.player); const detail = e.action === 'G' ? (e.assist !== null ? `Assist #${e.assist}` : 'No assist') : e.action === 'PEN' ? penaltyText(e.penalty) : p?.name ?? ''; return `<button class="half-log-row" data-do="edit" data-id="${esc(e.id)}" aria-label="Edit action ${i + 1}, ${esc(ACTIONS[e.action] || e.action)}"><span class="hl-period">${periodLabel(e.period, '—')}</span><span class="hl-action">${esc(ACTIONS[e.action] || catalogByCode(e.action)?.label || e.action)}${CARDS[e.penalty?.card] ? `<i class="card-chip" style="background:${CARDS[e.penalty.card].hex}"></i>` : ''}${detail ? `<small>${esc(detail)}</small>` : ''}</span><span class="hl-num">${e.player == null ? '' : '#' + esc(e.player)}</span></button>`; }).join(''); };
+  const half = (t, side) => { const c = teamPalette(t, side); return `<section class="half side-${side}" style="${paletteStyle(t, side)}" aria-label="${esc(t.name)}"><header class="half-head"><div class="half-team"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div><div class="half-score" aria-label="${esc(t.name)} score ${score(t.id)}">${score(t.id)}</div></header><div class="half-body">${draft ? numberSide(t, side) : actionButtons(t, side)}</div><footer class="half-log" aria-label="${esc(t.name)} actions">${listFor(t)}</footer></section>`; };
   const spine = `<aside class="spine" aria-label="Clock, period and tools"><button class="brand" data-do="home" aria-label="PointBench">${$('.topbar .brand-logo')?.outerHTML ?? ''}</button>${clockHtml}${periodButtons()}<div class="stage-label"><p>${draft ? `<b>${draft.action === 'G' ? 'Goal' : draft.action === 'PEN' ? 'Penalty' : draft.action}</b> · ` : ''}${hint}</p>${draft ? '<button class="cancel" data-do="cancel">Cancel</button>' : ''}</div><div class="spine-tools"><button class="tool undo" data-do="undo" ${!draft && !match.undo?.length ? 'disabled' : ''}>${undoIcon}Undo</button><button class="tool" data-do="history">Log (${n})</button><button class="tool" data-do="summary">Summary</button><div class="tool-row"><button class="tool" data-do="export" aria-label="Export PDF">PDF</button><button class="tool" data-do="export-csv" aria-label="Export CSV">CSV</button><button class="tool" data-do="export-xml" aria-label="Export XML">XML</button></div><button class="tool" data-do="rosters">Roster</button><button class="tool" data-do="settings">Settings</button><button class="tool full" data-do="new">New match</button></div><span class="local-status save-status">${statusHtml}</span></aside>`;
   document.body.classList.add('in-match');
   main.innerHTML = `<div class="split">${half(a, 0)}${spine}${half(b, 1)}</div>`;
@@ -923,8 +1090,16 @@ function showSettings() {
   const toggle = (id, label, on, offLabel, onLabel) => `<div class="set-toggle"><span>${label}</span><div class="seg2" role="group" aria-label="${esc(label)}"><button data-do="set-flag" data-flag="${id}" data-val="0" class="${on ? '' : 'on'}" aria-pressed="${!on}">${esc(offLabel)}</button><button data-do="set-flag" data-flag="${id}" data-val="1" class="${on ? 'on' : ''}" aria-pressed="${on}">${esc(onLabel)}</button></div></div>`;
   const discOptions = Object.entries(DISCIPLINES).map(([id, v]) => `<option value="${id}" ${d.discipline === id ? 'selected' : ''}>${esc(v.name)}</option>`).join('');
   const events = ACTION_CATALOG.map(a => `<label class="set-check"><input type="checkbox" data-do="set-event" data-code="${a.code}" ${d.enabled.includes(a.code) ? 'checked' : ''}><span>${esc(a.label)}</span><small>${a.code}</small></label>`).join('');
+  const sourceOptions = PB_SOURCES.map(s => `<option value="${s.id}" ${activeSourceId === s.id ? 'selected' : ''}>${esc(s.label)}</option>`).join('');
   showModal(`${head('Settings')}
     <p class="dialog-note">These apply to the next match you start. A match already in progress keeps the settings it began with.</p>
+    <div class="set-group"><h3>Tournament data (Pointbench)</h3>
+      <label class="set-num" style="grid-column:1/-1">Competition<select id="set-source">${sourceOptions}</select><small>Rosters and player numbers from stats.pointbench.com.</small></label>
+      <p class="dialog-note" id="data-status" style="margin:2px 0 10px">${esc(data.competition)} · ${data.teams.length} teams · loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}</p>
+      <div class="dialog-actions" style="margin-top:0"><button class="secondary" data-do="download-data">Download rosters</button><button class="secondary" data-do="pick-data-file">Load from file…</button></div>
+      <input id="data-file-input" type="file" accept=".zip,.xml" multiple hidden>
+      <p class="dialog-note" style="margin-top:8px">Download fetches directly from Pointbench — this needs the site to allow it, which it may not when the app is installed or hosted elsewhere. If the download is blocked, use <b>Load from file</b> with the ZIP (or the roster XML files) saved by your Pointbench downloader.</p>
+    </div>
     <div class="set-group"><h3>Discipline</h3>
       <label class="set-num" style="grid-column:1/-1">Lacrosse discipline<select id="set-discipline" data-do="set-discipline">${discOptions}</select><small>Picking one fills the defaults below; you can still change any value.</small></label>
     </div>
@@ -1013,6 +1188,23 @@ document.addEventListener('click', e => {
     case 'archives': showArchives(); break;
     case 'settings': settingsDraft = { ...settings, enabled: [...settings.enabled] }; showSettings(); break;
     case 'set-flag': { readSettingNumbers(); settingsDraft[b.dataset.flag] = b.dataset.val === '1'; showSettings(); break; }
+    case 'download-data': {
+      const sel = $('#set-source'), src = PB_SOURCES.find(s => s.id === sel?.value) || PB_SOURCES[0];
+      activeSourceId = src.id;
+      const status = $('#data-status'); if (status) status.textContent = `Downloading ${src.label}…`;
+      b.disabled = true;
+      loadPointbenchData(src).then(fresh => {
+        notify(`Loaded ${fresh.teams.length} teams from Pointbench`);
+        if (modal.open && $('#data-status')) showSettings(); // refresh the dropdown + summary
+        if (!match) renderSetup();
+      }).catch(err => {
+        b.disabled = false;
+        if ($('#data-status')) $('#data-status').textContent = 'Download failed: ' + err.message + ' · try “Load from file”.';
+        notify('Could not load Pointbench data: ' + err.message);
+      });
+      break;
+    }
+    case 'pick-data-file': $('#data-file-input')?.click(); break;
     case 'save-settings': {
       readSettingNumbers();
       if (!settingsDraft.enabled.length) { notify('Keep at least one event type.'); return; }
@@ -1102,6 +1294,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id
 document.addEventListener('input', e => { if (TIME_FIELDS.includes(e.target.id)) e.target.value = timeMask(e.target.value); if (e.target.id === 'game-no') setupGameNo = e.target.value; if (e.target.id === 'draft-gametime' && draft) draft.timeText = e.target.value; if (e.target.id === 'draft-pentime' && draft) draft.penTime = e.target.value; });
 document.addEventListener('change', e => {
   const id = e.target.id;
+  if (id === 'set-source') { activeSourceId = e.target.value; return; }
+  if (id === 'data-file-input') { loadDataFromFiles([...e.target.files]); e.target.value = ''; return; }
   if (id === 'set-discipline') {
     readSettingNumbers();
     const preset = DISCIPLINES[e.target.value];
@@ -1149,6 +1343,12 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 wide.addEventListener('change', () => { if (match && !modal.open) renderMatch(); });
 
 /* ---------- Boot ---------- */
+// Restore the most recently downloaded Pointbench rosters, if any.
+let activeSourceId = PB_SOURCES[0].id;
+try {
+  const saved = JSON.parse(localStorage.getItem(DATA_KEY));
+  if (saved?.data?.teams?.length) { applyRosterData(saved.data); if (saved.sourceId) activeSourceId = saved.sourceId; }
+} catch {}
 match = db.matches.find(m => m.id === db.activeId) || null;
 if (match) { loadClock(); renderMatch(); setStatus('<i></i> Saved on this device'); notify('Match restored'); }
 else renderSetup();
