@@ -102,6 +102,22 @@ dialog .swatches{max-width:none;gap:8px}dialog .swatch{height:52px}dialog .swatc
 .start span{color:var(--green);font-size:20px}
 .setup-note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:20px}
 .setup-note a{text-underline-offset:3px}
+/* New-match data panel (styled after the Pointbench "Get data files" form) */
+.datafield{margin-top:18px}
+.datafield>label{display:block;font-size:12px;color:#5a6066;font-weight:600;margin-bottom:7px}
+.datafield .row{display:flex;gap:10px;align-items:stretch}
+.datafield select,.datafield input[type=text]{flex:1;min-width:0;min-height:46px;border:1px solid #cfd3d6;border-radius:9px;background:#fff;padding:10px 12px;color:var(--ink);font-size:15px;font-weight:600}
+.datafield select:focus,.datafield input:focus{outline:2px solid var(--blue);outline-offset:-1px;border-color:var(--blue)}
+.datafield .hint{font-size:11px;color:var(--muted);margin:7px 0 0;line-height:1.4}
+.datapanel .btn-ghost{min-height:46px;padding:0 16px;border:1px solid #cfd3d6;border-radius:9px;background:#fff;color:var(--ink);font-size:14px;font-weight:700;white-space:nowrap}
+.datapanel .btn-ghost:disabled{opacity:.45}
+.start-big{width:100%;margin-top:22px;min-height:54px;display:flex;justify-content:center;align-items:center;gap:10px;font-size:17px;font-weight:800}
+.data-statusbar{margin-top:18px;border-radius:10px;padding:13px 15px;font-size:13px;line-height:1.45;border:1px solid var(--line);background:#eef0f1;color:#4a5056}
+.data-statusbar.ok{background:#e4f1e8;border-color:#bcdcc6;color:#1d5c37}
+.data-statusbar.err{background:#f6e7e5;border-color:#e3c3bd;color:#8a3022}
+.data-statusbar.busy{background:#eef2f6;border-color:#cdd7e0;color:#3a4654}
+.game-meta{font-size:12px;color:#5a6066;margin:9px 0 0;line-height:1.5}
+.game-meta b{color:var(--ink)}
 .field-select{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 0}
 .field-select>span{font-size:11px;color:#656b71;font-weight:700}
 .field-buttons{display:flex;gap:7px}
@@ -578,6 +594,8 @@ async function loadDataFromFiles(fileList) {
     if (!match) renderSetup();
   } catch (err) {
     if ($('#data-status')) $('#data-status').textContent = 'Could not read file: ' + err.message;
+    setupStatus = `err:Could not read file: ${esc(err.message)}`;
+    if (!match && !modal.open) renderSetup();
     notify('Could not read file: ' + err.message);
   }
 }
@@ -773,8 +791,28 @@ function importOneGame(files, rules, meta) {
   if (!text) throw Error(`No game file for game ${meta.id}.`);
   const m = parseGameXml(text, rules, meta);
   const existing = db.matches.findIndex(x => x.imported && String(x.gameNo) === String(m.gameNo) && x.teams.map(t => t.id).sort().join() === m.teams.map(t => t.id).sort().join());
-  if (existing >= 0) db.matches[existing] = { ...m, id: db.matches[existing].id };
+  if (existing >= 0) { m.id = db.matches[existing].id; db.matches[existing] = m; }
   else db.matches.push(m);
+  return m;
+}
+
+// Build a fresh, empty live match from a schedule row (teams from the loaded
+// rosters, home = blue / visiting = red, field + game number from the schedule).
+function freshMatchFromSchedule(g) {
+  const pick = id => {
+    const t = (data.teams || []).find(x => x.id === id);
+    if (!t) throw Error(`Team ${String(id).toUpperCase()} isn't in the loaded rosters.`);
+    return structuredClone(t);
+  };
+  const home = { ...pick(g.home), color: 'blue' }, vis = { ...pick(g.visiting), color: 'red' };
+  const goalies = { [home.id]: home.goalie?.number || null, [vis.id]: vis.goalie?.number || null };
+  const date = g.year ? new Date(g.year, (g.month || 1) - 1, g.day || 1, g.hour || 0, g.min || 0) : new Date();
+  const m = {
+    id: crypto.randomUUID(), date: date.toISOString(), field: g.field || null,
+    teams: [home, vis], goalies, currentPeriod: 1, events: [], undo: [],
+    gameNo: /^\d+$/.test(String(g.id)) ? String(Number(g.id)) : null,
+  };
+  m.goalieLog = m.teams.filter(t => goalies[t.id]).map(t => ({ teamId: t.id, player: goalies[t.id], period: 1, clock: null, at: m.date }));
   return m;
 }
 
@@ -1062,6 +1100,7 @@ let statusHtml = '<i></i> Ready';
 const setStatus = h => { statusHtml = h; document.querySelectorAll('.save-status').forEach(el => { el.innerHTML = h; }); };
 let db = { matches: [], activeId: null }, match = null, draft = null;
 let setupPicks = ['', ''], setupColors = ['blue', 'red'], setupGoalies = ['', ''], setupField = null, setupGameNo = '';
+let setupGameId = '', setupStatus = '';
 let clock = { game: 0, shot: 0, running: false, at: 0 }, toastTimer, storageOkay = true, downloads = null;
 
 try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved && Array.isArray(saved.matches)) db = saved; } catch { storageOkay = false; }
@@ -1169,13 +1208,44 @@ const periodButtons = () => {
 };
 
 /* ---------- Setup screen ---------- */
+// Status bar classes/text under the data panel, mirroring the Pointbench form.
+function setupStatusBar() {
+  const m = setupStatus.match(/^(ok|err|busy):(.*)$/s);
+  const cls = m ? m[1] : '';
+  const txt = m ? m[2] : (pbFiles ? `${Object.keys(pbFiles).length} files loaded for ${esc(data.competition)}.` : `No tournament loaded yet. Download or load one to list its games.`);
+  return `<div class="data-statusbar ${cls}">${txt}</div>`;
+}
 function renderSetup() {
   draft = null; document.body.classList.remove('in-match');
-  const ready = setupPicks[0] && setupPicks[1] && setupPicks[0] !== setupPicks[1] && setupField;
-  main.innerHTML = `<section class="setup"><p class="eyebrow">Watch. Call. Review.</p><h1>Every play.<br>Just a few taps.</h1><p class="intro">Choose the teams and field. The first goalkeeper listed by Pointbench is selected automatically; select the shooter after Shot Saved; the opposing goalkeeper receives the save. Change the active goalkeeper in Roster.</p><div class="competition"><span class="pill">SIXES</span><span>${esc(data.competition)}</span></div><div class="team-selectors">${[0, 1].map(i => {
-    const t = data.teams.find(t => t.id === setupPicks[i]);
-    return `<div class="team-pick" style="${paletteStyle({ color: setupColors[i] }, i)}"><label for="pick-${i}">Team ${i + 1}</label><select id="pick-${i}">${teamOptions(setupPicks[i], setupPicks[1 - i])}</select>${t?.goalie ? `<p class="goalie-default">Starting goalkeeper · #${esc(t.goalie.number)} · ${esc(t.goalie.name)}</p>` : ''}<p class="color-label">Jersey colour</p>${swatches(setupColors[i], i)}<p class="roster-summary">${t ? `${t.players.length} jersey numbers available` : 'Select a team to load its roster'}</p></div>`;
-  }).join('')}</div>${fieldPicker('setup', setupField)}<label class="game-no"><span>Game number <small>(optional, used in the XML export)</small></span><input id="game-no" inputmode="numeric" maxlength="4" placeholder="e.g. 59" value="${esc(setupGameNo)}"></label><button class="primary start" data-do="start" ${ready ? '' : 'disabled'}>Start match <span>↗</span></button>${db.matches.length ? `<button class="secondary" style="width:100%;margin-top:12px" data-do="archives">Match archive (${db.matches.length})</button>` : ''}<p class="setup-note">Rosters from <a href="${esc(data.source)}" target="_blank" rel="noopener">World Lacrosse / Pointbench ↗</a>.<br>Data imported ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}. Jersey numbers can be edited during the match.</p></section>`;
+  const sourceOpts = PB_SOURCES.map(s => `<option value="${s.id}" ${activeSourceId === s.id ? 'selected' : ''}>${esc(s.label)}</option>`).join('');
+  // Schedule for the game picker — only available after a download/load this session.
+  gameListCache = pbFiles ? parseGameList(pbFiles) : [];
+  const importedNos = new Set(db.matches.filter(x => x.imported).map(x => String(x.gameNo)));
+  const gameOpts = gameListCache.length
+    ? '<option value="">Choose a game…</option>' + gameListCache.map(g => {
+        const has = !!gameFileFor(pbFiles, g.id), done = importedNos.has(String(Number(g.id)));
+        const label = `${String(g.id).padStart(2, ' ')}.  ${teamNameFor(g.home)} — ${teamNameFor(g.visiting)}`;
+        const tail = done ? ' ✓' : has ? '' : ' (no data yet)';
+        return `<option value="${esc(g.id)}" ${String(setupGameId) === String(g.id) ? 'selected' : ''}>${esc(label + tail)}</option>`;
+      }).join('')
+    : '<option value="">— load a tournament first —</option>';
+  const g = gameListCache.find(x => String(x.id) === String(setupGameId));
+  const hasData = g && !!gameFileFor(pbFiles, g.id);
+  const done = g && importedNos.has(String(Number(g.id)));
+  const when = g && g.day ? `${String(g.day).padStart(2,'0')}/${String(g.month).padStart(2,'0')}/${g.year}` : '';
+  const gameMeta = g ? `<p class="game-meta"><b>${esc(teamNameFor(g.home))}</b> vs <b>${esc(teamNameFor(g.visiting))}</b>${[g.pool, g.field ? 'Field ' + g.field : '', when].filter(Boolean).length ? ' · ' + [g.pool, g.field ? 'Field ' + g.field : '', when].filter(Boolean).map(esc).join(' · ') : ''}${done ? ' · already imported — Start opens it to continue' : hasData ? ' · game data available' : ' · not played yet — Start begins a fresh match'}</p>` : '';
+  const ready = !!g;
+  main.innerHTML = `<section class="setup"><p class="eyebrow">Watch. Call. Review.</p><h1>New match.</h1><p class="intro">Pick the tournament and the game. If the game has already been played, Start opens it so you can review or keep scoring; otherwise it begins a fresh match with the right teams. Change the active goalkeeper in Roster.</p>
+    <div class="datapanel">
+      <div class="datafield"><label for="setup-source">Tournament</label><div class="row"><select id="setup-source">${sourceOpts}</select><button class="btn-ghost" data-do="setup-download">Download</button><button class="btn-ghost" data-do="setup-loadfile">Load file…</button></div><p class="hint">Fetches the rosters and games from stats.pointbench.com. If the download is blocked, use <b>Load file</b> with the ZIP (or XML files) from your Pointbench downloader.</p></div>
+      <input id="setup-file-input" type="file" accept=".zip,.xml" multiple hidden>
+      <div class="datafield"><label for="setup-game">Game</label><div class="row"><select id="setup-game" ${gameListCache.length ? '' : 'disabled'}>${gameOpts}</select></div>${gameMeta}</div>
+      <button class="primary start-big" data-do="start" ${ready ? '' : 'disabled'}>${done ? 'Open match' : 'Start match'} <span style="color:var(--green);font-size:20px">↗</span></button>
+      ${setupStatusBar()}
+    </div>
+    ${db.matches.length ? `<button class="secondary" style="width:100%;margin-top:16px" data-do="archives">Match archive (${db.matches.length})</button>` : ''}
+    <p class="setup-note">${esc(data.competition)} · rosters from <a href="${esc(data.source)}" target="_blank" rel="noopener">World Lacrosse / Pointbench ↗</a>, loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}. Jersey numbers can be edited during the match.</p>
+  </section>`;
 }
 
 /* ---------- Match screen ---------- */
@@ -1415,11 +1485,38 @@ document.addEventListener('click', e => {
     case 'period': if (!draft) { match.currentPeriod = Number(b.dataset.period); if (!clock.running && clockEnded()) { clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); } persist(); renderMatch(); } break;
     case 'add-ot': if (!draft) { match.currentPeriod = Math.min(maxPeriod(), periodsInPlay() + 1); clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); clock.running = false; persist(); renderMatch(); } break;
     case 'start': {
-      const [a, c] = setupPicks; if (!a || !c || a === c || !setupField) return;
-      match = { id: crypto.randomUUID(), date: new Date().toISOString(), field: setupField, teams: [a, c].map((id, i) => ({ ...structuredClone(data.teams.find(t => t.id === id)), color: setupColors[i] })), goalies: { [a]: setupGoalies[0] || null, [c]: setupGoalies[1] || null }, currentPeriod: 1, events: [], undo: [], gameNo: /^\d+$/.test(setupGameNo.trim()) ? String(Number(setupGameNo.trim())) : null };
-      match.goalieLog = match.teams.filter(t => match.goalies[t.id]).map(t => ({ teamId: t.id, player: match.goalies[t.id], period: 1, clock: null, at: match.date }));
-      loadClock(); persist(); renderMatch(); break;
+      const g = gameListCache.find(x => String(x.id) === String(setupGameId));
+      if (!g) { notify('Pick a game first.'); return; }
+      try {
+        // If this game is already in the archive, resume that copy (keeps any
+        // live edits) rather than re-parsing over it.
+        const sameIds = m => m.teams.map(t => t.id).sort().join();
+        const already = db.matches.find(m => m.imported && String(m.gameNo) === String(Number(g.id)) && sameIds(m) === [g.home, g.visiting].sort().join());
+        if (already) {
+          match = already; db.activeId = match.id;
+        } else if (gameFileFor(pbFiles, g.id)) {
+          // Game has data — import it and open to review/continue.
+          match = importOneGame(pbFiles, pbRules, g);
+          db.activeId = match.id;
+        } else {
+          // Not played yet — start a fresh live match with the scheduled teams.
+          match = freshMatchFromSchedule(g);
+          db.matches.push(match); db.activeId = match.id;
+        }
+        setupGameId = ''; draft = null; loadClock(); persist(); renderMatch();
+      } catch (err) { notify('Could not start: ' + err.message); }
+      break;
     }
+    case 'setup-download': {
+      const sel = $('#setup-source'), src = PB_SOURCES.find(s => s.id === sel?.value) || PB_SOURCES[0];
+      activeSourceId = src.id; setupStatus = `busy:Downloading ${esc(src.label)}…`; renderSetup();
+      loadPointbenchData(src).then(fresh => {
+        setupStatus = `ok:Loaded ${fresh.teams.length} teams and ${Object.keys(pbFiles).length} files for ${esc(fresh.competition)}. Pick a game to start.`;
+        renderSetup();
+      }).catch(err => { setupStatus = `err:Download failed: ${esc(err.message)} · try “Load file” with the ZIP from your Pointbench downloader.`; renderSetup(); });
+      break;
+    }
+    case 'setup-loadfile': $('#setup-file-input')?.click(); break;
     case 'archives': showArchives(); break;
     case 'settings': settingsDraft = { ...settings, enabled: [...settings.enabled] }; showSettings(); break;
     case 'set-flag': { readSettingNumbers(); settingsDraft[b.dataset.flag] = b.dataset.val === '1'; showSettings(); break; }
@@ -1544,7 +1641,7 @@ document.addEventListener('click', e => {
     case 'new': showModal(`${head('Start a new match?')}<p class="dialog-note">This match stays saved in the Match archive. You can resume it and export it later.</p><div class="dialog-actions"><button class="primary" data-do="confirm-new">Set up another match</button><button class="secondary" data-do="close">Back</button></div>`); break;
     case 'confirm-new':
       clock.running = false; persist(); db.activeId = null; match = null; draft = null; persist(); closeModal();
-      setupPicks = ['', '']; setupColors = ['blue', 'red']; setupGoalies = ['', '']; setupField = null; setupGameNo = '';
+      setupGameId = ''; setupStatus = '';
       setStatus('<i></i> Ready'); renderSetup(); break;
   }
 });
@@ -1556,6 +1653,17 @@ document.addEventListener('change', e => {
   const id = e.target.id;
   if (id === 'set-source') { activeSourceId = e.target.value; return; }
   if (id === 'data-file-input') { loadDataFromFiles([...e.target.files]); e.target.value = ''; return; }
+  if (id === 'setup-source') { activeSourceId = e.target.value; setupGameId = ''; renderSetup(); return; }
+  if (id === 'setup-game') { setupGameId = e.target.value; renderSetup(); return; }
+  if (id === 'setup-file-input') {
+    const files = [...e.target.files]; e.target.value = '';
+    setupStatus = 'busy:Reading file…'; renderSetup();
+    loadDataFromFiles(files).then(() => {
+      setupStatus = pbFiles ? `ok:Loaded ${data.teams.length} teams and ${Object.keys(pbFiles).length} files for ${esc(data.competition)}. Pick a game to start.` : setupStatus;
+      renderSetup();
+    });
+    return;
+  }
   if (id === 'set-discipline') {
     readSettingNumbers();
     const preset = DISCIPLINES[e.target.value];
