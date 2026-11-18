@@ -298,8 +298,8 @@ body.in-match #main{height:100%}
 .bar-clock .clock-values{grid-template-columns:auto auto;justify-content:center;align-items:start;gap:40px;margin-top:4px}
 .bar-clock .clock-values>div{justify-items:center;text-align:center}
 .bar-clock .clock-values span{font-size:11px;letter-spacing:.3px}
-.bar-clock #game-clock{font-size:clamp(84px,15vw,150px);line-height:.9;letter-spacing:-2px;font-weight:900}
-.bar-clock #shot-clock{font-size:clamp(30px,5vw,48px);line-height:1}
+.bar-clock #game-clock{font-size:clamp(72px,15vmin,160px);line-height:.9;letter-spacing:-2px;font-weight:900}
+.bar-clock #shot-clock{font-size:clamp(28px,5.5vmin,54px);line-height:1}
 .bar-clock .clock-links{justify-content:center}
 .bar-clock .pen-strip{justify-content:center;margin-top:12px}
 @media(max-width:760px){.matchbar{grid-template-columns:1fr;justify-items:center;row-gap:10px}.matchbar .bar-brand,.bar-period{justify-self:center}}
@@ -333,7 +333,7 @@ body.in-match #main{height:100%}
 .half-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex-shrink:0}
 .side-1 .half-head{flex-direction:row-reverse}.side-1 .half-team{text-align:right}
 .half-team{min-width:0}
-.half-score{font-size:64px;font-weight:900;line-height:.9;letter-spacing:-3px;font-variant-numeric:tabular-nums}
+.half-score{font-size:clamp(56px,16vmin,168px);font-weight:900;line-height:.9;letter-spacing:-3px;font-variant-numeric:tabular-nums}
 .half .country-code{color:inherit;font-size:13px;font-weight:800;letter-spacing:3px}
 .half .country-name{font-size:18px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
 .half .kit-picker{color:inherit;min-height:44px;font-size:12px;font-weight:600;padding:4px 0;margin-top:0}
@@ -402,9 +402,8 @@ body.in-match #main{height:100%}
 .spine .local-status{color:#5d666d;text-align:center;font-size:11px;white-space:normal}
 .spine .local-status i{background:#668a4c}
 @media(min-width:700px){
-.split{grid-template-columns:minmax(0,2fr) minmax(150px,1fr) minmax(0,2fr);grid-template-areas:"bar bar bar" "a spine b"}
 .half{padding:18px}
-.half-score{font-size:120px;letter-spacing:-5px}
+.half-score{letter-spacing:-4px}
 .half .country-name{font-size:26px}
 .half .team-actions .action{padding:14px 16px}
 .half .action strong{font-size:34px}
@@ -413,10 +412,15 @@ body.in-match #main{height:100%}
 .half .action.penalty strong{font-size:19px}
 .action-grid{grid-auto-rows:116px}
 }
+/* Layout follows orientation, so rotating the tablet recalibrates on its own:
+   landscape = team | events | team (40/20/40); portrait = bar, events, then both teams side by side. */
+@media(min-width:700px) and (orientation:landscape){
+.split{grid-template-columns:minmax(0,2fr) minmax(160px,1fr) minmax(0,2fr);grid-template-areas:"bar bar bar" "a spine b"}
+}
 /* The whole match scrolls as one; the top bar stays pinned (position:sticky),
    so the two team columns and the centre feed all scroll together. */
 @media(min-width:1000px){.half .team-actions .action.goal{flex-direction:row;align-items:center}.half .action.penalty strong{font-size:22px}}
-@media(min-width:1100px){.half-score{font-size:150px}.half .country-name{font-size:32px}}
+@media(min-width:1100px){.half .country-name{font-size:32px}}
 </style>
 </head>
 <body>
