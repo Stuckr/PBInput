@@ -290,7 +290,7 @@ body.in-match #main{height:100%}
 .matchbar .bar-brand .brand-logo{height:26px;width:auto}
 .bar-clock{justify-self:center;min-width:0}
 .bar-clock .clock-panel{margin:0;padding:0;border:0;background:transparent}
-.bar-period{justify-self:end;display:flex;align-items:center}
+.bar-period{justify-self:end;align-self:end;display:flex;align-items:flex-end;padding-bottom:2px}
 .bar-period .period-picker{margin:0;padding:0}
 .bar-period .period-picker>span{display:none}
 /* Big, centred game + shot clock */
@@ -394,14 +394,15 @@ body.in-match #main{height:100%}
 .spine .stage-label b{color:var(--ink)}
 .spine .cancel{display:block;width:100%;min-height:44px;margin-top:8px;padding:0;border:1px solid #c2c8cd;border-radius:10px;color:#4a5056;font-size:14px;font-weight:800;text-align:center;text-decoration:none;background:#fff}
 .spine-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
-.spine .tool{min-height:44px;padding:6px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:13px;font-weight:700;text-align:center}
+.spine{min-width:0}
+.spine .tool{min-height:44px;height:auto;padding:7px 5px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:13px;font-weight:700;text-align:center;line-height:1.15;white-space:normal;overflow-wrap:break-word;min-width:0}
 .spine .tool.undo{grid-column:1/-1;min-height:52px;background:var(--ink);color:#fff;border-color:var(--ink);font-size:16px;font-weight:900}
 .spine .tool.full{grid-column:1/-1}
 .spine .tool-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .spine .local-status{color:#5d666d;text-align:center;font-size:11px;white-space:normal}
 .spine .local-status i{background:#668a4c}
 @media(min-width:700px){
-.split{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,2fr);grid-template-areas:"bar bar bar" "a spine b"}
+.split{grid-template-columns:minmax(0,2fr) minmax(150px,1fr) minmax(0,2fr);grid-template-areas:"bar bar bar" "a spine b"}
 .half{padding:18px}
 .half-score{font-size:120px;letter-spacing:-5px}
 .half .country-name{font-size:26px}
@@ -1551,7 +1552,7 @@ function renderSetup() {
 function actionButtons(t, side) {
   const inactive = !match.field, goalie = t.players.find(p => p.number === match.goalies?.[t.id]);
   // The Penalty tile is a normal action tile, the same size as SS/GB — not full-width.
-  return `<div style="${paletteStyle(t, side)}" class="team-actions ${inactive ? 'inactive' : ''}"><div class="action-grid">${Object.entries(ACTIONS).map(([code, label]) => `<button class="action ${code === 'G' ? 'goal' : ''}" data-do="action" data-team="${t.id}" data-action="${code}" ${inactive ? 'disabled' : ''} aria-label="${esc(t.name)} — ${label}"><strong>${code === 'G' ? 'Goal' : code === 'PEN' ? 'Penalty' : code}</strong><small>${code === 'G' ? 'Scorer, then assist' : code === 'PEN' ? 'Foul · card' : label}</small></button>`).join('')}</div><button class="change-goalie" data-do="change-goalie" data-team="${t.id}" aria-label="Goalie · ${esc(t.name)}"><span>Goalie</span><small>${goalie ? `#${esc(goalie.number)} · ${esc(goalie.name)}` : 'Select goalkeeper'}</small></button></div>`;
+  return `<div style="${paletteStyle(t, side)}" class="team-actions ${inactive ? 'inactive' : ''}"><div class="action-grid">${Object.entries(ACTIONS).map(([code, label]) => `<button class="action ${code === 'G' ? 'goal' : ''}" data-do="action" data-team="${t.id}" data-action="${code}" ${inactive ? 'disabled' : ''} aria-label="${esc(t.name)} — ${label}"><strong>${code === 'G' ? 'Goal' : code === 'PEN' ? 'PEN' : code}</strong><small>${code === 'G' ? 'Scorer, then assist' : code === 'PEN' ? 'Foul · card' : label}</small></button>`).join('')}</div><button class="change-goalie" data-do="change-goalie" data-team="${t.id}" aria-label="Goalie · ${esc(t.name)}"><span>Goalie</span><small>${goalie ? `#${esc(goalie.number)} · ${esc(goalie.name)}` : 'Select goalkeeper'}</small></button></div>`;
 }
 function numberSide(t, side) {
   if (t.id !== draft.teamId) return `<div class="waiting"><span>· · ·</span>${esc(t.name)}</div>`;
