@@ -255,6 +255,22 @@ dialog::backdrop{background:#212325aa;backdrop-filter:blur(3px)}
 .toolbar{padding-top:14px}.scoreboard{padding-top:10px;padding-bottom:14px}
 .board{min-height:0}
 }
+/* Manual team picker (restored) */
+.manual-setup{margin-top:26px}
+.manual-divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin:0 0 16px}
+.manual-divider::before,.manual-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+/* Playit live clock panel */
+.playit-panel{margin-top:13px;padding-top:12px;border-top:1px dashed var(--line)}
+.playit-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.playit-head .eyebrow{font-size:8px;margin:0;letter-spacing:1px}
+.playit-values{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.playit-values>div{display:grid;gap:2px;justify-items:start}
+.playit-values span{font-size:9px;color:#686f76}
+.playit-values strong{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.playit-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+.playit-foot #pl-note{font-size:10px;color:#686f76;line-height:1.3}
+.spine .playit-values strong{font-size:18px}
+.clock-values small.clock-sub{display:block;font-size:9px;color:#5a6066;margin-top:4px;font-weight:600;letter-spacing:.2px}
 /* ===== Split colours layout and theme ===== */
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 7px #15181b}
 .setup h1{font-weight:900}.primary,.secondary{border-radius:10px}.primary{font-weight:800}
@@ -267,7 +283,51 @@ html:has(body.in-match){background:#e6e9eb}
 body.in-match .app{max-width:none;background:#f5f6f6;box-shadow:none}
 body.in-match .topbar{display:none}
 body.in-match #main{height:100%}
-.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"spine spine" "a b";min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"bar bar" "spine spine" "a b";min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+/* ===== Full-width game top bar ===== */
+.matchbar{grid-area:bar;position:sticky;top:0;z-index:6;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px 14px;padding:8px 16px;background:#e9ebec;border-bottom:1px solid var(--line);box-shadow:0 2px 10px #23262814}
+.matchbar .bar-brand{justify-self:start;flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;min-height:44px;padding:6px 12px;display:flex;align-items:center}
+.matchbar .bar-brand .brand-logo{height:26px;width:auto}
+.bar-clock{justify-self:center;min-width:0}
+.bar-clock .clock-panel{margin:0;padding:0;border:0;background:transparent}
+.bar-period{justify-self:end;display:flex;align-items:center}
+.bar-period .period-picker{margin:0;padding:0}
+.bar-period .period-picker>span{display:none}
+/* Big, centred game + shot clock */
+.bar-clock .clock-panel-head{justify-content:center;text-align:center;gap:8px 14px;row-gap:4px}
+.bar-clock .clock-values{grid-template-columns:auto auto;justify-content:center;align-items:start;gap:40px;margin-top:4px}
+.bar-clock .clock-values>div{justify-items:center;text-align:center}
+.bar-clock .clock-values span{font-size:11px;letter-spacing:.3px}
+.bar-clock #game-clock{font-size:clamp(84px,15vw,150px);line-height:.9;letter-spacing:-2px;font-weight:900}
+.bar-clock #shot-clock{font-size:clamp(30px,5vw,48px);line-height:1}
+.bar-clock .clock-links{justify-content:center}
+.bar-clock .pen-strip{justify-content:center;margin-top:12px}
+@media(max-width:760px){.matchbar{grid-template-columns:1fr;justify-items:center;row-gap:10px}.matchbar .bar-brand,.bar-period{justify-self:center}}
+/* Penalty time remaining, shown under the game clock */
+.pen-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.pen-strip:empty{display:none}
+.pen-chip{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:7px 15px;border-radius:10px;background:var(--pc);color:var(--pk);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 0 1px #23262833;letter-spacing:.3px}
+.pen-chip .pen-card{width:13px;height:17px;border-radius:2px;box-shadow:inset 0 0 0 1px #ffffff66;flex-shrink:0}
+.pen-chip .pen-num{font-size:15px;font-weight:800;opacity:.92}
+.pen-chip .pen-time{font-weight:900;font-size:23px}
+.pen-chip:active{transform:scale(.96)}
+/* ===== Middle column: last-15 events feed ===== */
+.spine .spine-feed{display:flex;flex-direction:column;min-height:0;flex:1 1 auto;overflow:visible;margin-top:2px}
+.spine-feed .feed-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.spine-feed .feed-title h2{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin:0;font-weight:700}
+.spine-feed .feed-title button{font-size:11px;color:#565c61;min-height:30px;background:transparent;text-decoration:underline}
+.spine-feed-list{overflow:visible;min-height:0}
+.feed-row{display:grid;grid-template-columns:30px 32px 1fr auto;align-items:center;gap:8px;width:100%;min-height:42px;padding:6px 2px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;cursor:pointer}
+.feed-row:last-child{border-bottom:0}
+.fr-ix{font-size:10px;color:#838a91;font-variant-numeric:tabular-nums;line-height:1.2;align-self:start;padding-top:2px}
+.fr-ix small{display:block;font-size:8px;color:#5f666c;margin-top:2px}
+.fr-code{font-size:9px;font-weight:800;letter-spacing:.5px;align-self:start;padding-top:3px;padding-bottom:2px;width:fit-content}
+.fr-act{font-size:13px;font-weight:700;min-width:0}
+.fr-act small{display:block;font-size:10px;font-weight:400;color:#6d747a;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr-act .card-chip{display:inline-block;width:9px;height:12px;border-radius:2px;margin-left:5px;vertical-align:-1px}
+.fr-num{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.spine-feed-empty{font-size:12px;color:#7b838a;padding:14px 4px}
+.spine .spine-tools{margin-top:10px}
 .half{--half-ink:#15181b;background:var(--team-wash);color:var(--half-ink);display:flex;flex-direction:column;gap:12px;padding:14px 12px;min-width:0}
 .half.side-0{grid-area:a}.half.side-1{grid-area:b}
 .half-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex-shrink:0}
@@ -278,7 +338,7 @@ body.in-match #main{height:100%}
 .half .country-name{font-size:18px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
 .half .kit-picker{color:inherit;min-height:44px;font-size:12px;font-weight:600;padding:4px 0;margin-top:0}
 .half .kit-picker i{border-color:currentColor}
-.half-body{flex:0 0 auto;min-height:0;display:flex;flex-direction:column}
+.half-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
 .half-body>*{flex:0 0 auto}
 .half .team-actions{display:flex;flex-direction:column;gap:10px}
 .action-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:92px;gap:10px}
@@ -341,7 +401,7 @@ body.in-match #main{height:100%}
 .spine .local-status{color:#5d666d;text-align:center;font-size:11px;white-space:normal}
 .spine .local-status i{background:#668a4c}
 @media(min-width:700px){
-.split{grid-template-columns:minmax(0,1fr) 204px minmax(0,1fr);grid-template-areas:"a spine b"}
+.split{grid-template-columns:minmax(0,1fr) 320px minmax(0,1fr);grid-template-areas:"bar bar bar" "a spine b"}
 .half{padding:18px}
 .half-score{font-size:120px;letter-spacing:-5px}
 .half .country-name{font-size:26px}
@@ -352,13 +412,8 @@ body.in-match #main{height:100%}
 .half .action.penalty strong{font-size:19px}
 .action-grid{grid-auto-rows:116px}
 }
-@media(min-width:700px) and (min-height:600px){
-body.in-match .app{height:100dvh;overflow:hidden}
-.split{height:100%;min-height:0;grid-template-rows:minmax(0,1fr)}
-.spine{overflow-y:auto}
-.half{overflow:hidden}
-.half-body{overflow-y:auto}
-}
+/* The whole match scrolls as one; the top bar stays pinned (position:sticky),
+   so the two team columns and the centre feed all scroll together. */
 @media(min-width:1000px){.half .team-actions .action.goal{flex-direction:row;align-items:center}.half .action.penalty strong{font-size:22px}}
 @media(min-width:1100px){.half-score{font-size:150px}.half .country-name{font-size:32px}}
 </style>
@@ -366,7 +421,7 @@ body.in-match .app{height:100dvh;overflow:hidden}
 <body>
 <div class="app">
   <header class="topbar">
-    <button class="brand" data-do="home" aria-label="PointBench home"><img class="brand-logo" src="data:image/png;base64,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" alt="PointBench" width="100" height="34"></button>
+    <button class="brand" data-do="home" aria-label="PointBench home"><img class="brand-logo" src="data:image/png;base64,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" alt="PointBench" width="100" height="34"></button>
     <div class="topbar-right">
       <span class="local-status save-status" id="save-status"><i></i> Ready</span>
       <button class="settings-btn" data-do="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v2.2M12 19.3v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.5 19.5 6.1 17.9M17.9 6.1 19.5 4.5"/></svg><span>Settings</span></button>
@@ -760,8 +815,9 @@ function parseGameXml(text, rules, meta = {}) {
       const color = { G: 'green', Y: 'yellow', R: 'red' }[el.querySelector(':scope > color')?.textContent?.trim()] || null;
       const pt = el.querySelector(':scope > penalty-time')?.textContent?.trim() || null;
       events.push(mk('PEN', { penalty: { offense, card: color, time: pt } }));
+    } else if (tag === 'timeout') { events.push(mk('TMO', { player: null }));
     }
-    // <timeout> and anything else: skipped (no app equivalent).
+    // anything else: skipped (no app equivalent).
   }
   // Drop any saved-shot whose save references a player, keeping shooter-less ones only if they have a save player.
   const cleaned = events.filter(e => e.player != null || (e.action === 'SS' && e.save?.player != null));
@@ -837,6 +893,7 @@ const ACTION_CATALOG = [
   { code: 'FP',  label: 'Free Position',    button: 'FP', note: 'Free pos.', kind: 'plain' },
   { code: 'FO',  label: 'Faceoff Won',      button: 'FO', note: 'Faceoff', kind: 'plain' },
   { code: 'PEN', label: 'Penalty', button: 'Penalty', note: 'Foul · card', kind: 'card', look: 'penalty' },
+  { code: 'TMO', label: 'Timeout', button: 'Timeout', note: 'Team timeout', kind: 'timeout' },
 ];
 const catalogByCode = c => ACTION_CATALOG.find(a => a.code === c);
 // Actions currently switched on, in catalog order. ACTIONS is {code: label}.
@@ -866,10 +923,10 @@ const COLORS = [
 // Rules presets for each discipline. Picking a discipline fills these,
 // then the user can still override any single value.
 const DISCIPLINES = {
-  sixes:  { name: 'Sixes',        quarters: 4, quarterMinutes: 8,  otMinutes: 4, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'PEN'] },
-  field:  { name: 'Field',        quarters: 4, quarterMinutes: 15, otMinutes: 4, shotClockSeconds: 80, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FO', 'PEN'] },
-  box:    { name: 'Box',          quarters: 3, quarterMinutes: 20, otMinutes: 5, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'PEN'] },
-  women:  { name: "Women's Field", quarters: 2, quarterMinutes: 25, otMinutes: 3, shotClockSeconds: 90, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FP', 'PEN'] },
+  sixes:  { name: 'Sixes',        quarters: 4, quarterMinutes: 8,  otMinutes: 4, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'PEN', 'TMO'] },
+  field:  { name: 'Field',        quarters: 4, quarterMinutes: 15, otMinutes: 4, shotClockSeconds: 80, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FO', 'PEN', 'TMO'] },
+  box:    { name: 'Box',          quarters: 3, quarterMinutes: 20, otMinutes: 5, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'PEN', 'TMO'] },
+  women:  { name: "Women's Field", quarters: 2, quarterMinutes: 25, otMinutes: 3, shotClockSeconds: 90, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FP', 'PEN', 'TMO'] },
 };
 const MAX_OT = 4;        // how many OT periods the picker can add
 const SHOT_MS = () => settings.shotClockSeconds * 1000;
@@ -890,6 +947,8 @@ function validateEvent(ev, teams) {
   const t = teams.find(t => t.id === ev.teamId);
   if (ev.period != null && (!Number.isInteger(ev.period) || ev.period < 1 || ev.period > QUARTERS() + MAX_OT)) throw Error('Choose a valid period.');
   if (!t || !ACTIONS[ev.action]) throw Error('Invalid team or action.');
+  // A timeout is a team action with no player, assist, save or card.
+  if (ev.action === 'TMO') return { ...ev, player: null, assist: null, save: null, penalty: null };
   if (!t.players.some(p => p.number === ev.player)) throw Error('Choose a player from the team.');
   if (ev.action !== 'G' && ev.assist !== null) throw Error('An assist can only be recorded for a goal.');
   if (ev.assist !== null && (!t.players.some(p => p.number === ev.assist) || ev.assist === ev.player)) throw Error('Choose a different player for the assist.');
@@ -978,6 +1037,7 @@ function xmlFor(m) {
     if (e.action === 'SS' && e.save?.player != null) out.push(`    <save team-id="${x(e.save.teamId)}">`, time, who('p', e.save.teamId, e.save.player), '    </save>');
     if (e.action === 'G') { out.push(open('goal'), time, who('s', e.teamId, e.player)); if (e.assist != null) out.push(who('a', e.teamId, e.assist)); out.push('    </goal>'); }
     if (e.action === 'PEN') out.push(open('card'), time, who('p', e.teamId, e.player), `      <description>${x(e.penalty?.offense ?? '')}</description>`, `      <color>${{ green: 'G', yellow: 'Y', red: 'R' }[e.penalty?.card] ?? ''}</color>`, ...(e.penalty?.time ? [`      <penalty-time>${x(e.penalty.time)}</penalty-time>`] : []), '    </card>');
+    if (e.action === 'TMO') out.push(open('timeout'), time, '    </timeout>');
   }
   out.push('  </events>');
 
@@ -1108,12 +1168,20 @@ try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved && Array.is
 // ---------- Settings (persist on this device) ----------
 const defaultSettings = () => {
   const d = DISCIPLINES.sixes;
-  return { discipline: 'sixes', quarters: d.quarters, quarterMinutes: d.quarterMinutes, otMinutes: d.otMinutes, shotClockSeconds: d.shotClockSeconds, countUp: false, autoClock: true, enabled: [...d.enabled] };
+  return { discipline: 'sixes', quarters: d.quarters, quarterMinutes: d.quarterMinutes, otMinutes: d.otMinutes, shotClockSeconds: d.shotClockSeconds, countUp: false, autoClock: true, playit: 'off', enabled: [...d.enabled] };
 };
 let settings = defaultSettings();
 try {
   const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
   if (saved && typeof saved === 'object') settings = { ...settings, ...saved, enabled: Array.isArray(saved.enabled) && saved.enabled.length ? saved.enabled.filter(c => catalogByCode(c)) : settings.enabled };
+} catch {}
+// One-time migration: make the new Timeout button appear for existing users,
+// while still letting them switch it off afterwards.
+try {
+  if (!localStorage.getItem('lax-observer-tmo-added')) {
+    if (!settings.enabled.includes('TMO')) { settings.enabled = [...settings.enabled, 'TMO']; saveSettings?.(); }
+    localStorage.setItem('lax-observer-tmo-added', '1');
+  }
 } catch {}
 refreshActions();
 function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch {} refreshActions(); }
@@ -1170,6 +1238,14 @@ function tick() {
   const len = periodMs(currentPeriod());
   clock.game = settings.countUp ? Math.min(len, clock.game + d) : Math.max(0, clock.game - d);
   clock.shot = Math.max(0, clock.shot - d);
+  // Count active penalties down alongside the game clock.
+  if (match?.penalties?.length) {
+    let changed = false;
+    for (const pen of match.penalties) { const was = pen.remainingMs; pen.remainingMs = Math.max(0, pen.remainingMs - d); if (pen.remainingMs !== was) changed = true; }
+    const before = match.penalties.length;
+    match.penalties = match.penalties.filter(pen => pen.remainingMs > 0);
+    if (changed || match.penalties.length !== before) paintPenalties();
+  }
   if (clockEnded()) { clock.running = false; persist(); if (match && !draft) renderMatch(); notify(`End of ${periodLabel(currentPeriod())}`); return; }
   paintClock();
 }
@@ -1178,12 +1254,224 @@ setInterval(tick, 200);
 function loadClock() { clock = { game: match?.clock?.game ?? startGame(currentPeriod()), shot: match?.clock?.shot ?? SHOT_MS(), running: false, at: 0 }; }
 function captureClock() { return { field: match?.field ?? null, gameTime: fmtGame(clock.game), shotTime: fmtShot(clock.shot), status: clock.running ? 'running' : 'stopped', capturedAt: new Date().toISOString() }; }
 function clockPanel() {
+  if (settings.playit && settings.playit !== 'off') return playitClockPanel();
   const resetLabel = settings.countUp ? '0:00' : fmtGame(periodMs(currentPeriod()));
   const status = clock.running ? 'Running' : clockEnded() ? 'Period over' : 'Stopped';
   const toggle = settings.autoClock
     ? `<button class="clock-read" data-do="clock-toggle" ${clockEnded() && !clock.running ? 'disabled' : ''}>${clock.running ? 'Stop' : 'Start'}</button>`
     : '<span class="clock-manual">Manual</span>';
-  return `<div class="clock-panel-head"><div><span class="eyebrow">Clock · Field ${match.field ?? '—'} · ${settings.countUp ? 'count up' : 'count down'}</span><strong class="clock-connection ${clock.running ? 'live' : 'stale'}">${status}</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}${toggle}</div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><div class="clock-links"><button data-do="clock-set-game">Set time</button><button data-do="clock-reset-game">Reset to ${resetLabel}</button></div></div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><div class="clock-links"><button data-do="clock-set-shot">Set</button><button data-do="clock-reset-shot">Reset to ${settings.shotClockSeconds}</button></div></div></div>`;
+  return `<div class="clock-panel-head"><div><span class="eyebrow">Clock · Field ${match.field ?? '—'} · ${settings.countUp ? 'count up' : 'count down'}</span><strong class="clock-connection ${clock.running ? 'live' : 'stale'}">${status}</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}${toggle}</div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><div class="clock-links"><button data-do="clock-set-game">Set time</button><button data-do="clock-reset-game">Reset to ${resetLabel}</button></div>${penStrip()}</div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><div class="clock-links"><button data-do="clock-set-shot">Set</button><button data-do="clock-reset-shot">Reset to ${settings.shotClockSeconds}</button></div></div></div>`;
+}
+
+/* ---------- Playit live clock (optional, receive-only) ---------- */
+// Adapted from the vendor receiver v1.1. Opens one WebSocket to the Playit live
+// scoreboard + shot-clock socket, decodes the frames and exposes a confirmed /
+// last-known state. Receive only: no login, headers, HTTP bootstrap or outgoing
+// messages. wss works from an installed/file:// app (no CORS on the handshake),
+// so this connects where the Pointbench ZIP download cannot.
+const PLAYIT_URL = 'wss://apps.playit.pt/socket?app=world-lacrosse-2026';
+const _plInt = v => Number.isSafeInteger(v) && v >= 0 ? v : null;
+const _plStatuses = new Set(['live', 'stale', 'waiting', 'error', 'offline', 'disconnected']);
+function _plDecode(raw) {
+  try {
+    if (typeof raw !== 'string' || raw.length > 65536) return null;
+    const frame = JSON.parse(raw);
+    if (frame.type !== 'clocks:state' || frame.schema !== 'playit-clocks-live-v1') return null;
+    const bytes = Uint8Array.from(atob(frame.payload), c => c.charCodeAt(0));
+    const dataObj = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    const clocks = dataObj.clocks;
+    if (dataObj.schema !== 'playit-clocks-v2' || !Number.isFinite(dataObj.serverTime)
+        || clocks?.schema !== 'playit-clocks-v2' || typeof clocks.sessionId !== 'string'
+        || !clocks.sessionId || clocks.sessionId.length > 128 || clocks.sessionId !== frame.sessionId
+        || !Number.isSafeInteger(clocks.sequence) || clocks.sequence < 1
+        || typeof clocks.operating !== 'boolean' || !Array.isArray(clocks.devices)
+        || clocks.devices.length > 32) return null;
+    const demo = clocks.sourceId === 'demo' && clocks.demo === true;
+    if (demo ? frame.keyId !== 'demo' || frame.signature !== ''
+      : clocks.demo === true || frame.keyId === 'demo' || ![undefined, 'live'].includes(clocks.sourceId)) return null;
+    const ids = new Set();
+    for (const device of clocks.devices) {
+      const idValid = demo ? ['raspi-score-demo', 'raspi-shot-demo'].includes(device.id)
+        : /^raspi-(score|clock|shot)-[1-9][0-9]?$/.test(device.id);
+      if (!idValid || ids.has(device.id) || !_plStatuses.has(device.status)
+          || device.kind !== (device.id.startsWith('raspi-shot-') ? 'shot' : 'clock')
+          || (demo ? device.demo !== true : device.demo === true)) return null;
+      ids.add(device.id);
+    }
+    return { ...dataObj, sourceId: demo ? 'demo' : 'live', demo };
+  } catch { return null; }
+}
+function _plCreateState() {
+  const sources = new Map(), retired = new Map();
+  function accept(raw, now = performance.now(), wallNow = Date.now()) {
+    const d = _plDecode(raw);
+    if (!d) return false;
+    const transportAge = wallNow - d.serverTime;
+    if (transportAge > 3000 || transportAge < -750) return false;
+    const previous = sources.get(d.sourceId), clocks = d.clocks;
+    const oldSessions = retired.get(d.sourceId) ?? new Set();
+    if (oldSessions.has(clocks.sessionId)) return false;
+    if (previous?.data.clocks.sessionId === clocks.sessionId && clocks.sequence <= previous.data.clocks.sequence) return false;
+    if (previous && previous.data.clocks.sessionId !== clocks.sessionId) {
+      oldSessions.add(previous.data.clocks.sessionId);
+      if (oldSessions.size > 32) oldSessions.delete(oldSessions.values().next().value);
+    }
+    retired.set(d.sourceId, oldSessions);
+    sources.set(d.sourceId, { data: d, received: now, transportAge: Math.max(0, transportAge), active: true });
+    return true;
+  }
+  function disconnect() { for (const s of sources.values()) s.active = false; }
+  function snapshot(now = performance.now(), transportConnected = true) {
+    const devices = [], sourceStates = [];
+    for (const [sourceId, record] of sources) {
+      const { data, transportAge } = record, clocks = data.clocks;
+      const age = transportAge + Math.max(0, now - record.received);
+      const connected = transportConnected && record.active && age < 3000 && clocks.operating && clocks.state === 'connected';
+      sourceStates.push({ sourceId, demo: data.demo, sessionId: clocks.sessionId, sequence: clocks.sequence, serverTime: data.serverTime, connected });
+      for (const device of clocks.devices) {
+        const ageMs = Number.isFinite(device.ageMs) && device.ageMs >= 0 ? device.ageMs + age : null;
+        const confirmed = connected && device.status === 'live' && ageMs !== null && ageMs <= 1500;
+        devices.push({ id: device.id, sourceId, demo: data.demo, kind: device.kind, confirmed,
+          status: !connected ? 'disconnected' : device.status === 'live' && !confirmed ? 'stale' : device.status,
+          ageMs, clock: typeof device.clock === 'string' && /^[0-9:.]{1,12}$/.test(device.clock) ? device.clock : null,
+          home: _plInt(device.home), guest: _plInt(device.guest), period: _plInt(device.period),
+          motion: ['running', 'stopped', 'reset', 'unknown'].includes(device.motion) ? device.motion : 'unknown' });
+      }
+    }
+    return { connected: sourceStates.some(s => s.connected),
+      sources: sourceStates.sort((a, b) => a.sourceId.localeCompare(b.sourceId)),
+      devices: devices.sort((a, b) => a.id.localeCompare(b.id)) };
+  }
+  return { accept, snapshot, disconnect };
+}
+function _plStart({ onState = () => {}, onConnection = () => {} } = {}) {
+  const state = _plCreateState();
+  let socket, retry, stopped = false, lastAccepted = 0, waitingSince = 0, connection, renderKey = '';
+  const setConn = v => { if (connection !== v) { connection = v; onConnection(v); } };
+  function render() {
+    const value = state.snapshot(performance.now(), !stopped && socket?.readyState === 1);
+    if (!value.sources.length) return;
+    setConn(value.connected ? 'connected' : 'disconnected');
+    const key = JSON.stringify([value.sources, value.devices.map(d => [d.id, d.status, d.confirmed])]);
+    if (key === renderKey) return;
+    renderKey = key; onState(value);
+  }
+  function reconnect() { if (!stopped && !retry) retry = setTimeout(() => { retry = null; connect(); }, 3000); }
+  function connect() {
+    if (stopped) return;
+    setConn('connecting'); waitingSince = performance.now(); state.disconnect();
+    try { socket = new WebSocket(PLAYIT_URL); }
+    catch { setConn('disconnected'); reconnect(); return; }
+    const current = socket;
+    current.onmessage = e => { if (stopped || current !== socket || !state.accept(e.data)) return; lastAccepted = performance.now(); render(); };
+    current.onerror = () => current.close();
+    current.onclose = () => { if (current !== socket) return; state.disconnect(); setConn('disconnected'); render(); reconnect(); };
+  }
+  const timer = setInterval(() => { if (stopped) return; render(); if (socket && socket.readyState < 2 && performance.now() - Math.max(lastAccepted, waitingSince) >= 3000) socket.close(); }, 250);
+  connect();
+  return function stop() { if (stopped) return; stopped = true; clearInterval(timer); clearTimeout(retry); state.disconnect(); socket?.close(); setConn('disconnected'); render(); };
+}
+// App-side controller: one receiver, reflected into the match clock panel.
+let playit = { mode: 'off', status: 'disconnected', state: null, stop: null };
+// Field → reader map, read from the Playit broadcast endpoint. Reader numbers do
+// NOT identify fields (per the integration guide), so the scoreboard/shot reader
+// ids for each field must be fetched from the server and may change per event.
+//   playitMap = { '1': { scoreId, shotId, swap }, '2': {...} }, keyed by field.
+let playitMap = null, playitMapAt = 0;
+const PLAYIT_MAP_URL = 'https://apps.playit.pt/Sixes-Championships-2026/api/broadcast';
+// "Read" from the server: fetch the current field assignment for both streams.
+async function fetchPlayitMap() {
+  const map = {};
+  for (const s of [1, 2]) {
+    try {
+      const res = await fetch(`${PLAYIT_MAP_URL}?stream=${s}`, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const j = await res.json();
+      // Accept {streams:{"1":{…}}}, {stream:{…}} or a bare stream object.
+      const o = (j && j.streams && (j.streams[String(s)] || j.streams[s])) || (j && j.stream) || j;
+      if (!o) continue;
+      const fieldId = o.fieldId ?? o.field ?? s;
+      const scoreId = o.panelId ?? o.scoreId ?? o.scoreboard ?? o.clockId;
+      const shotId = o.shotId ?? o.shot;
+      const swap = !!(o.swapPanel ?? o.swap);
+      if (scoreId && shotId && fieldId != null) map[String(fieldId)] = { scoreId, shotId, swap };
+    } catch {}
+  }
+  if (Object.keys(map).length) { playitMap = map; playitMapAt = Date.now(); }
+  return playitMap;
+}
+// The two readers for the current context: the demo pair, or — in live mode —
+// the scoreboard/shot readers the server assigned to the match's field.
+function playitReaders() {
+  const s = playit.state;
+  if (settings.playit === 'demo') {
+    if (!s) return { score: null, shot: null, connected: false, suffix: 'demo', mapped: true };
+    return { score: s.devices.find(d => d.id === 'raspi-score-demo'), shot: s.devices.find(d => d.id === 'raspi-shot-demo'), connected: s.connected, suffix: 'demo', mapped: true };
+  }
+  const field = match && match.field != null ? String(match.field) : null;
+  if (!s || field == null) return { score: null, shot: null, connected: s ? s.connected : false, suffix: field, mapped: !!(playitMap && field && playitMap[field]) };
+  const m = playitMap && playitMap[field];
+  let score, shot;
+  if (m) { score = s.devices.find(d => d.id === m.scoreId); shot = s.devices.find(d => d.id === m.shotId); }
+  else { // no server map yet — best-effort fallback by field number
+    score = s.devices.find(d => d.kind === 'clock' && d.id.endsWith('-' + field));
+    shot = s.devices.find(d => d.kind === 'shot' && d.id.endsWith('-' + field));
+  }
+  return { score, shot, connected: s.connected, suffix: field, mapped: !!m };
+}
+// Start/stop the receiver so it matches the chosen mode while a match is open.
+function syncPlayit() {
+  const want = (match && settings.playit && settings.playit !== 'off') ? settings.playit : 'off';
+  if (want === playit.mode) return;
+  if (playit.stop) { try { playit.stop(); } catch {} playit.stop = null; }
+  playit.mode = want; playit.state = null; playit.status = 'disconnected';
+  if (want !== 'off') {
+    playit.status = 'connecting';
+    playit.stop = _plStart({
+      onConnection(status) { playit.status = status; paintPlayit(); },
+      onState(value) { playit.state = value; paintPlayit(); },
+    });
+    if (want === 'live') fetchPlayitMap().then(() => paintPlayit());
+  }
+  paintPlayit();
+}
+// The clock panel while a Playit mode is active: the Game/Shot clock are driven
+// by the live readers (same #game-clock / #shot-clock the rest of the app reads),
+// with a Read button to reconnect, mirroring the hosted Lax Observer build.
+function playitClockPanel() {
+  const live = settings.playit === 'live';
+  const label = live ? `Playit · Field ${match.field ?? '—'}` : 'Playit · Demo feed';
+  return `<div class="clock-panel-head"><div><span class="eyebrow">${label}</span><strong data-clock="connection" class="clock-connection stale" id="pl-status">Connecting…</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}<button class="clock-read" data-do="read-clock" aria-label="Reconnect to Playit clocks">Read</button></div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><small class="clock-sub" id="pl-gamestatus">—</small><div class="clock-links"><button data-do="clock-set-game">Set manually</button></div>${penStrip()}</div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><small class="clock-sub" id="pl-shotstatus"></small></div></div>`;
+}
+// Called on every accepted frame. When a reader is confirmed it LINKS the live
+// reading into the app clock (clock.game / clock.shot), so the Game clock on
+// screen and every event timestamp follow Playit. The manual ticker is parked
+// (clock.running = false) so the two never fight.
+function paintPlayit() {
+  if (!(settings.playit && settings.playit !== 'off') || !match) return;
+  const statusEl = $('#pl-status'); if (!statusEl) return; // live panel not mounted
+  const live = settings.playit === 'live';
+  const { score, shot, suffix, mapped } = playitReaders();
+  const confirmed = !!(score && score.confirmed);
+  if (confirmed) {
+    const ms = parseGame(String(score.clock).replace(/\..*$/, ''));
+    if (ms != null) clock.game = ms;
+    if (shot && shot.clock) { const n = Number(String(shot.clock).replace(/[^0-9].*$/, '')); if (Number.isFinite(n)) clock.shot = Math.max(0, Math.round(n)) * 1000; }
+    clock.running = false; // Playit is the time source now
+  }
+  let label, cls;
+  if (live && suffix == null) { label = 'Pick a field'; cls = 'stale'; }
+  else if (!playit.state || playit.status === 'connecting') { label = 'Connecting…'; cls = 'stale'; }
+  else if (!playit.state.connected) { label = 'Offline'; cls = 'stale'; }
+  else if (confirmed) { label = 'Connected'; cls = 'live'; }
+  else { label = 'Last known'; cls = 'stale'; }
+  statusEl.textContent = label; statusEl.className = 'clock-connection ' + cls;
+  const g = $('#game-clock'), s = $('#shot-clock'), gs = $('#pl-gamestatus'), ss = $('#pl-shotstatus');
+  if (g && score && score.clock) g.textContent = score.clock;
+  if (s && shot && shot.clock) s.textContent = shot.clock;
+  if (gs) gs.textContent = !score ? (suffix == null ? 'Pick a field' : live && !mapped ? 'Field map not loaded — tap Read' : 'Waiting for a reading')
+    : `${score.period != null ? 'Q' + score.period + ' · ' : ''}${confirmed ? (score.motion === 'stopped' ? 'Live · stopped' : 'Live') : 'Last known'}${score.home != null ? ` · ${score.home}–${score.guest}` : ''}`;
+  if (ss) ss.textContent = shot ? (confirmed ? 'Live' : 'Last known') : '';
 }
 
 /* ---------- Shared fragments ---------- */
@@ -1216,7 +1504,7 @@ function setupStatusBar() {
   return `<div class="data-statusbar ${cls}">${txt}</div>`;
 }
 function renderSetup() {
-  draft = null; document.body.classList.remove('in-match');
+  draft = null; document.body.classList.remove('in-match'); syncPlayit();
   const sourceOpts = PB_SOURCES.map(s => `<option value="${s.id}" ${activeSourceId === s.id ? 'selected' : ''}>${esc(s.label)}</option>`).join('');
   // Schedule for the game picker — only available after a download/load this session.
   gameListCache = pbFiles ? parseGameList(pbFiles) : [];
@@ -1235,6 +1523,7 @@ function renderSetup() {
   const when = g && g.day ? `${String(g.day).padStart(2,'0')}/${String(g.month).padStart(2,'0')}/${g.year}` : '';
   const gameMeta = g ? `<p class="game-meta"><b>${esc(teamNameFor(g.home))}</b> vs <b>${esc(teamNameFor(g.visiting))}</b>${[g.pool, g.field ? 'Field ' + g.field : '', when].filter(Boolean).length ? ' · ' + [g.pool, g.field ? 'Field ' + g.field : '', when].filter(Boolean).map(esc).join(' · ') : ''}${done ? ' · already imported — Start opens it to continue' : hasData ? ' · game data available' : ' · not played yet — Start begins a fresh match'}</p>` : '';
   const ready = !!g;
+  const manualReady = setupPicks[0] && setupPicks[1] && setupPicks[0] !== setupPicks[1] && setupField;
   main.innerHTML = `<section class="setup"><p class="eyebrow">Watch. Call. Review.</p><h1>New match.</h1><p class="intro">Pick the tournament and the game. If the game has already been played, Start opens it so you can review or keep scoring; otherwise it begins a fresh match with the right teams. Change the active goalkeeper in Roster.</p>
     <div class="datapanel">
       <div class="datafield"><label for="setup-source">Tournament</label><div class="row"><select id="setup-source">${sourceOpts}</select><button class="btn-ghost" data-do="setup-download">Download</button><button class="btn-ghost" data-do="setup-loadfile">Load file…</button></div><p class="hint">Fetches the rosters and games from stats.pointbench.com. If the download is blocked, use <b>Load file</b> with the ZIP (or XML files) from your Pointbench downloader.</p></div>
@@ -1242,6 +1531,16 @@ function renderSetup() {
       <div class="datafield"><label for="setup-game">Game</label><div class="row"><select id="setup-game" ${gameListCache.length ? '' : 'disabled'}>${gameOpts}</select></div>${gameMeta}</div>
       <button class="primary start-big" data-do="start" ${ready ? '' : 'disabled'}>${done ? 'Open match' : 'Start match'} <span style="color:var(--green);font-size:20px">↗</span></button>
       ${setupStatusBar()}
+    </div>
+    <div class="manual-setup">
+      <p class="manual-divider">or choose teams manually</p>
+      <div class="team-selectors">${[0, 1].map(i => {
+        const t = data.teams.find(t => t.id === setupPicks[i]);
+        return `<div class="team-pick" style="${paletteStyle({ color: setupColors[i] }, i)}"><label for="pick-${i}">Team ${i + 1}</label><select id="pick-${i}">${teamOptions(setupPicks[i], setupPicks[1 - i])}</select>${t?.goalie ? `<p class="goalie-default">Starting goalkeeper · #${esc(t.goalie.number)} · ${esc(t.goalie.name)}</p>` : ''}<p class="color-label">Jersey colour</p>${swatches(setupColors[i], i)}<p class="roster-summary">${t ? `${t.players.length} jersey numbers available` : 'Select a team to load its roster'}</p></div>`;
+      }).join('')}</div>
+      ${fieldPicker('setup', setupField)}
+      <label class="game-no"><span>Game number <small>(optional, used in the XML export)</small></span><input id="game-no" inputmode="numeric" maxlength="4" placeholder="e.g. 59" value="${esc(setupGameNo)}"></label>
+      <button class="primary start" data-do="start-manual" ${manualReady ? '' : 'disabled'}>Start manual match <span>↗</span></button>
     </div>
     ${db.matches.length ? `<button class="secondary" style="width:100%;margin-top:16px" data-do="archives">Match archive (${db.matches.length})</button>` : ''}
     <p class="setup-note">${esc(data.competition)} · rosters from <a href="${esc(data.source)}" target="_blank" rel="noopener">World Lacrosse / Pointbench ↗</a>, loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}. Jersey numbers can be edited during the match.</p>
@@ -1257,7 +1556,7 @@ function actionButtons(t, side) {
 function numberSide(t, side) {
   if (t.id !== draft.teamId) return `<div class="waiting"><span>· · ·</span>${esc(t.name)}</div>`;
   if (draft.stage === 'assist-choice') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">Goal: <b>#${esc(draft.player)}</b><br>Assist?</div><div class="assist-options"><button data-do="assist-yes">Assist</button><button class="no" data-do="assist-no">No</button></div></div>`;
-  if (draft.stage === 'game-time') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">${esc(ACTIONS[draft.action] || draft.action)}: <b>#${esc(draft.player)}</b><br>Game clock when it happened</div><input id="draft-gametime" class="time-input" inputmode="numeric" placeholder="MM:SS" autocomplete="off" value="${esc(draft.timeText ?? '')}" aria-label="Game clock time, type four digits, minutes then seconds"><button class="primary confirm-time" data-do="time-confirm">Save to events log</button></div>`;
+  if (draft.stage === 'game-time') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">${esc(ACTIONS[draft.action] || draft.action)}${draft.player != null ? `: <b>#${esc(draft.player)}</b>` : ''}<br>Game clock when it happened</div><input id="draft-gametime" class="time-input" inputmode="numeric" placeholder="MM:SS" autocomplete="off" value="${esc(draft.timeText ?? '')}" aria-label="Game clock time, type four digits, minutes then seconds"><button class="primary confirm-time" data-do="time-confirm">Save to events log</button></div>`;
   if (draft.stage === 'penalty') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">Penalty: <b>#${esc(draft.player)}</b><br>Card given?</div>${cardButtons(draft.card)}<label class="offense-label" for="draft-offense">Offense</label><select id="draft-offense" class="offense-select">${offenseOptions(draft.offense)}</select><label class="offense-label" for="draft-pentime">Penalty time <small>(MM:SS, optional)</small></label><input id="draft-pentime" class="time-input" inputmode="numeric" placeholder="e.g. 1:00" value="${esc(draft.penTime ?? '')}"><button class="primary confirm-penalty" data-do="penalty-confirm" ${draft.offense ? '' : 'disabled'}>Save penalty</button></div>`;
   const assist = draft.stage === 'assist-player';
   return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="number-head"><span>${assist ? 'ASSIST' : 'NUMBER'}</span><span>${assist ? 'A' : draft.action}</span></div><div class="jerseys">${t.players.map(p => `<button class="jersey" data-do="number" data-number="${esc(p.number)}" ${assist && p.number === draft.player ? 'disabled' : ''} title="${esc(p.name)}" aria-label="Jersey number ${esc(p.number)}, ${esc(p.name)}">${esc(p.number)}</button>`).join('')}</div></div>`;
@@ -1279,17 +1578,58 @@ function teamHeading(t, side) {
   const c = teamPalette(t, side);
   return `<div class="score-team" style="${paletteStyle(t, side)}"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div>`;
 }
+/* ---------- Active penalties (live countdown under the game clock) ---------- */
+// Each entry: { id (source event id), teamId, player, card, remainingMs }.
+// Added when a penalty with a time is recorded; counted down with the game clock.
+function reconcilePenalties() {
+  if (!match) return;
+  match.penalties = (match.penalties || []).filter(p => match.events.some(e => e.id === p.id && e.action === 'PEN'));
+}
+function penChips() {
+  const list = (match?.penalties || []).filter(p => p.remainingMs > 0);
+  if (!list.length) return '';
+  return list.map(p => {
+    const t = team(p.teamId), pal = teamPalette(t, match.teams.indexOf(t));
+    const s = Math.ceil(p.remainingMs / 1000), mm = Math.floor(s / 60), ss = s % 60;
+    return `<button class="pen-chip" data-do="clear-pen" data-id="${esc(p.id)}" style="--pc:${pal.hex};--pk:${pal.ink}" title="Tap to clear (e.g. penalty served or goal scored)" aria-label="Penalty ${esc(t?.id?.toUpperCase() ?? '')} number ${esc(p.player ?? '')}, ${mm}:${String(ss).padStart(2, '0')} remaining. Tap to clear."><i class="pen-card" style="background:${p.card ? CARDS[p.card].hex : 'transparent'}"></i><span class="pen-num">${esc(t?.id?.toUpperCase() ?? '')}${p.player != null ? ' #' + esc(p.player) : ''}</span><span class="pen-time">${mm}:${String(ss).padStart(2, '0')}</span></button>`;
+  }).join('');
+}
+const penStrip = () => `<div class="pen-strip" id="pen-strip">${penChips()}</div>`;
+function paintPenalties() { const el = $('#pen-strip'); if (el) el.innerHTML = penChips(); }
+
+/* ---------- Combined feed: the last 15 events of the whole game ---------- */
+function spineFeed() {
+  const rows = match.events.map((e, i) => ({ e, i })).slice(-15).reverse();
+  const header = `<div class="feed-title"><h2>Last 15 events</h2><button data-do="history">All ${match.events.length}</button></div>`;
+  if (!rows.length) return `<div class="spine-feed">${header}<p class="spine-feed-empty">No actions yet</p></div>`;
+  const body = rows.map(({ e, i }) => {
+    const t = team(e.teamId), pal = teamPalette(t, match.teams.indexOf(t));
+    const p = t?.players.find(p => p.number === e.player);
+    const detail = e.action === 'G' ? (e.assist !== null ? `Assist #${e.assist}` : 'No assist')
+      : e.action === 'PEN' ? penaltyText(e.penalty)
+      : e.action === 'TMO' ? 'Team timeout'
+      : (p?.name ?? '');
+    const label = ACTIONS[e.action] || catalogByCode(e.action)?.label || e.action;
+    return `<button class="feed-row" data-do="edit" data-id="${esc(e.id)}" aria-label="Edit action ${i + 1}, ${esc(label)}"><span class="fr-ix">${String(i + 1).padStart(2, '0')}<small>${periodLabel(e.period, '—')}</small></span><span class="fr-code" style="color:${pal.accent};border-bottom:2px solid ${pal.hex}">${esc(t?.id?.toUpperCase() ?? '—')}</span><span class="fr-act">${esc(label)}${CARDS[e.penalty?.card] ? `<i class="card-chip" style="background:${CARDS[e.penalty.card].hex}"></i>` : ''}${detail ? `<small>${esc(detail)}</small>` : ''}</span><span class="fr-num">${e.player == null ? '' : '#' + esc(e.player)}</span></button>`;
+  }).join('');
+  return `<div class="spine-feed">${header}<div class="spine-feed-list">${body}</div></div>`;
+}
+
 function renderMatch() {
+  reconcilePenalties();
   const [a, b] = match.teams, n = match.events.length;
   const clockHtml = `<section class="clock-panel" id="clock-panel">${clockPanel()}</section>`;
   let hint = !match.field ? 'Choose Field 1 or Field 2 before recording actions' : 'Select an action';
   if (draft) hint = draft.stage === 'game-time' ? 'Type the game clock, e.g. 0734 = 07:34, then save' : draft.stage === 'assist-choice' ? 'Confirm the assist' : draft.stage === 'assist-player' ? 'Select the assisting player' : draft.stage === 'penalty' ? 'Card, offense and time' : draft.action === 'SS' ? 'Select the shooter' : 'Select the player';
-  // Each half lists that team's own actions, most recent first; tapping one opens the editor.
-  const listFor = t => { const rows = match.events.map((e, i) => ({ e, i })).filter(x => x.e.teamId === t.id).reverse(); if (!rows.length) return '<p class="half-log-empty">No actions yet</p>'; return rows.map(({ e, i }) => { const p = team(e.teamId)?.players.find(p => p.number === e.player); const detail = e.action === 'G' ? (e.assist !== null ? `Assist #${e.assist}` : 'No assist') : e.action === 'PEN' ? penaltyText(e.penalty) : p?.name ?? ''; return `<button class="half-log-row" data-do="edit" data-id="${esc(e.id)}" aria-label="Edit action ${i + 1}, ${esc(ACTIONS[e.action] || e.action)}"><span class="hl-period">${periodLabel(e.period, '—')}</span><span class="hl-action">${esc(ACTIONS[e.action] || catalogByCode(e.action)?.label || e.action)}${CARDS[e.penalty?.card] ? `<i class="card-chip" style="background:${CARDS[e.penalty.card].hex}"></i>` : ''}${detail ? `<small>${esc(detail)}</small>` : ''}</span><span class="hl-num">${e.player == null ? '' : '#' + esc(e.player)}</span></button>`; }).join(''); };
-  const half = (t, side) => { const c = teamPalette(t, side); return `<section class="half side-${side}" style="${paletteStyle(t, side)}" aria-label="${esc(t.name)}"><header class="half-head"><div class="half-team"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div><div class="half-score" aria-label="${esc(t.name)} score ${score(t.id)}">${score(t.id)}</div></header><div class="half-body">${draft ? numberSide(t, side) : actionButtons(t, side)}</div><footer class="half-log" aria-label="${esc(t.name)} actions">${listFor(t)}</footer></section>`; };
-  const spine = `<aside class="spine" aria-label="Clock, period and tools"><button class="brand" data-do="home" aria-label="PointBench">${$('.topbar .brand-logo')?.outerHTML ?? ''}</button>${clockHtml}${periodButtons()}<div class="stage-label"><p>${draft ? `<b>${draft.action === 'G' ? 'Goal' : draft.action === 'PEN' ? 'Penalty' : draft.action}</b> · ` : ''}${hint}</p>${draft ? '<button class="cancel" data-do="cancel">Cancel</button>' : ''}</div><div class="spine-tools"><button class="tool undo" data-do="undo" ${!draft && !match.undo?.length ? 'disabled' : ''}>${undoIcon}Undo</button><button class="tool" data-do="history">Log (${n})</button><button class="tool" data-do="summary">Summary</button><div class="tool-row"><button class="tool" data-do="export" aria-label="Export PDF">PDF</button><button class="tool" data-do="export-csv" aria-label="Export CSV">CSV</button><button class="tool" data-do="export-xml" aria-label="Export XML">XML</button></div><button class="tool" data-do="rosters">Roster</button><button class="tool" data-do="settings">Settings</button><button class="tool full" data-do="new">New match</button></div><span class="local-status save-status">${statusHtml}</span></aside>`;
+  // Each half is just its score and action buttons now; the running event log lives in the centre column.
+  const half = (t, side) => { const c = teamPalette(t, side); return `<section class="half side-${side}" style="${paletteStyle(t, side)}" aria-label="${esc(t.name)}"><header class="half-head"><div class="half-team"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div><div class="half-score" aria-label="${esc(t.name)} score ${score(t.id)}">${score(t.id)}</div></header><div class="half-body">${draft ? numberSide(t, side) : actionButtons(t, side)}</div></section>`; };
+  // Full-width top bar: logo, game/shot clock (with any penalty times under the game clock), and the period picker.
+  const bar = `<header class="matchbar" aria-label="Game clock, period and penalties"><button class="brand bar-brand" data-do="home" aria-label="PointBench">${$('.topbar .brand-logo')?.outerHTML ?? ''}</button><div class="bar-clock">${clockHtml}</div><div class="bar-period">${periodButtons()}</div></header>`;
+  // Centre column: the stage hint, the whole-game event feed (last 15), then the tools.
+  const spine = `<aside class="spine" aria-label="Events and tools"><div class="stage-label"><p>${draft ? `<b>${esc(ACTIONS[draft.action] || catalogByCode(draft.action)?.label || draft.action)}</b> · ` : ''}${hint}</p>${draft ? '<button class="cancel" data-do="cancel">Cancel</button>' : ''}</div>${spineFeed()}<div class="spine-tools"><button class="tool" data-do="summary">Summary</button><div class="tool-row"><button class="tool" data-do="export" aria-label="Export PDF">PDF</button><button class="tool" data-do="export-csv" aria-label="Export CSV">CSV</button><button class="tool" data-do="export-xml" aria-label="Export XML">XML</button></div><button class="tool" data-do="rosters">Roster</button><button class="tool" data-do="settings">Settings</button><button class="tool full" data-do="new">New match</button></div><span class="local-status save-status">${statusHtml}</span></aside>`;
   document.body.classList.add('in-match');
-  main.innerHTML = `<div class="split">${half(a, 0)}${spine}${half(b, 1)}</div>`;
+  main.innerHTML = `<div class="split">${bar}${half(a, 0)}${spine}${half(b, 1)}</div>`;
+  syncPlayit(); paintPlayit(); paintPenalties();
 }
 // After the player (and, in manual mode, the game time) are set, go to the
 // action-specific sub-step or commit.
@@ -1311,7 +1651,10 @@ function commitDraft() {
   try {
     if (!match.field) throw Error('Choose Field 1 or Field 2 before recording an action.');
     const ev = validateEvent({ id: crypto.randomUUID(), teamId: draft.teamId, action: draft.action, player: draft.player, period: draft.period, assist: draft.assist ?? null, save: draft.action === 'SS' ? draft.save : null, penalty: draft.action === 'PEN' ? { offense: draft.offense, card: draft.card ?? null, time: draft.penTime || null } : null, clock: draft.clock }, match.teams);
-    match = applyChange(match, [...match.events, ev]); draft = null; persist(); renderMatch();
+    match = applyChange(match, [...match.events, ev]);
+    // Start a live countdown for a timed penalty.
+    if (ev.action === 'PEN' && ev.penalty?.time) { const ms = parseGame(ev.penalty.time); if (ms) (match.penalties ||= []).push({ id: ev.id, teamId: ev.teamId, player: ev.player, card: ev.penalty.card ?? null, remainingMs: ms }); }
+    draft = null; persist(); renderMatch();
   } catch (err) { notify(err.message); }
 }
 function undo() {
@@ -1402,6 +1745,8 @@ function showSettings() {
       ${toggle('countUp', 'Time direction', d.countUp, 'Count down', 'Count up')}
       ${toggle('autoClock', 'Timing', d.autoClock, 'Manual', 'Automatic')}
       <p class="dialog-note" style="margin-top:4px">Manual timing hides Start/Stop; you set the clock yourself with “Set time”. The game clock is asked only for goals, penalties and goalie changes: type 0734 for 07:34.</p>
+      <div class="set-toggle" style="margin-top:12px"><span>Live clock (Playit)</span><div class="seg2" role="group" aria-label="Playit live clock">${[['off', 'Off'], ['demo', 'Demo'], ['live', 'Live']].map(([v, l]) => `<button type="button" data-do="set-playit" data-val="${v}" class="${(d.playit || 'off') === v ? 'on' : ''}" aria-pressed="${(d.playit || 'off') === v}">${l}</button>`).join('')}</div></div>
+      <p class="dialog-note" style="margin-top:4px">Drives the Game and Shot clock from the Playit scoreboard socket during a match. <b>Live</b> uses the reader the Playit server assigns to the match’s field (the field→reader map is read from the broadcast endpoint — tap <b>Read</b> on the clock to reconnect and refresh it); <b>Demo</b> uses Playit’s hosted test feed. Switch to <b>Off</b> for the manual clock with Start/Stop.</p>
     </div>
     <div class="set-group"><h3>Events to collect</h3>
       <div class="set-events">${events}</div>
@@ -1475,6 +1820,16 @@ document.addEventListener('click', e => {
     case 'clock-set-game': { const v = prompt('Game clock remaining (m:ss or seconds):', fmtGame(clock.game)); if (v != null) { const ms = parseGame(v); if (ms == null) notify('Enter a time like 6:30 or 390.'); else { clock.game = ms; clock.running = false; persist(); $('#clock-panel').innerHTML = clockPanel(); } } break; }
     case 'clock-set-shot': { const v = prompt('Shot clock remaining (seconds):', fmtShot(clock.shot)); if (v != null) { const n = Number(v); if (!Number.isFinite(n) || n < 0) notify('Enter a number of seconds.'); else { clock.shot = Math.round(n) * 1000; clock.at = Date.now(); persist(); $('#clock-panel').innerHTML = clockPanel(); } } break; }
     case 'clock-reset-shot': clock.shot = SHOT_MS(); clock.at = Date.now(); persist(); paintClock(); break;
+    case 'read-clock': {
+      if (settings.playit && settings.playit !== 'off') {
+        if (playit.stop) { try { playit.stop(); } catch {} playit.stop = null; }
+        playit.mode = 'off'; // force syncPlayit to open a fresh connection
+        syncPlayit();
+        if (settings.playit === 'live') fetchPlayitMap().then(() => paintPlayit());
+        notify('Reconnecting to Playit…');
+      }
+      break;
+    }
     case 'color': {
       const i = Number(b.dataset.side), color = b.dataset.color;
       if (b.dataset.scope === 'setup') { setupColors[i] = color; renderSetup(); }
@@ -1507,6 +1862,23 @@ document.addEventListener('click', e => {
       } catch (err) { notify('Could not start: ' + err.message); }
       break;
     }
+    case 'start-manual': {
+      const [a, c] = setupPicks;
+      if (!a || !c || a === c || !setupField) { notify('Pick two different teams and a field.'); return; }
+      try {
+        match = {
+          id: crypto.randomUUID(), date: new Date().toISOString(), field: setupField,
+          teams: [a, c].map((id, i) => ({ ...structuredClone(data.teams.find(t => t.id === id)), color: setupColors[i] })),
+          goalies: { [a]: setupGoalies[0] || null, [c]: setupGoalies[1] || null },
+          currentPeriod: 1, events: [], undo: [],
+          gameNo: /^\d+$/.test(setupGameNo.trim()) ? String(Number(setupGameNo.trim())) : null,
+        };
+        match.goalieLog = match.teams.filter(t => match.goalies[t.id]).map(t => ({ teamId: t.id, player: match.goalies[t.id], period: 1, clock: null, at: match.date }));
+        db.matches.push(match); db.activeId = match.id;
+        setupGameId = ''; draft = null; loadClock(); persist(); renderMatch();
+      } catch (err) { notify('Could not start: ' + err.message); }
+      break;
+    }
     case 'setup-download': {
       const sel = $('#setup-source'), src = PB_SOURCES.find(s => s.id === sel?.value) || PB_SOURCES[0];
       activeSourceId = src.id; setupStatus = `busy:Downloading ${esc(src.label)}…`; renderSetup();
@@ -1520,6 +1892,7 @@ document.addEventListener('click', e => {
     case 'archives': showArchives(); break;
     case 'settings': settingsDraft = { ...settings, enabled: [...settings.enabled] }; showSettings(); break;
     case 'set-flag': { readSettingNumbers(); settingsDraft[b.dataset.flag] = b.dataset.val === '1'; showSettings(); break; }
+    case 'set-playit': { readSettingNumbers(); settingsDraft.playit = b.dataset.val; showSettings(); break; }
     case 'download-data': {
       const sel = $('#set-source'), src = PB_SOURCES.find(s => s.id === sel?.value) || PB_SOURCES[0];
       activeSourceId = src.id;
@@ -1569,6 +1942,7 @@ document.addEventListener('click', e => {
       settings = settingsDraft; settingsDraft = null; saveSettings();
       closeModal();
       if (!match) renderSetup(); else renderMatch();
+      syncPlayit();
       notify('Settings saved');
       break;
     }
@@ -1576,6 +1950,12 @@ document.addEventListener('click', e => {
     case 'action': {
       if (!match.field) { notify('Choose Field 1 or Field 2 first.'); return; }
       const teamId = b.dataset.team, code = b.dataset.action;
+      // A timeout has no player: record it straight away (auto timing) or ask only for the game clock (manual).
+      if (code === 'TMO') {
+        if (settings.autoClock) { draft = { teamId, action: 'TMO', player: null, period: currentPeriod(), clock: captureClock(), assist: null, save: null }; commitDraft(); notify(`${team(teamId)?.name ?? ''} · Timeout`); }
+        else { draft = { teamId, action: 'TMO', stage: 'game-time', player: null, period: currentPeriod(), clock: captureClock(), assist: null, save: null, timeText: match.lastTime?.text ?? '' }; renderMatch(); setTimeout(() => { const i = $('#draft-gametime'); i?.focus(); i?.select(); }, 30); }
+        return;
+      }
       draft = { teamId, action: code, stage: 'player', player: null, period: currentPeriod(), clock: captureClock(), save: code === 'SS' ? saveForShot(match, teamId) : null };
       renderMatch(); break;
     }
@@ -1604,6 +1984,7 @@ document.addEventListener('click', e => {
       break;
     }
     case 'cancel': draft = null; renderMatch(); break;
+    case 'clear-pen': { match.penalties = (match.penalties || []).filter(p => p.id !== b.dataset.id); persist(); paintPenalties(); break; }
     case 'undo': undo(); break;
     case 'history': showHistory(); break;
     case 'summary': showModal(`${head('Summary by period')}${summaryHtml()}<div class="dialog-actions"><button class="secondary" data-do="close">Back to match</button></div>`); break;
