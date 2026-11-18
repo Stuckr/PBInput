@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sixes Spotter">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAB+0lEQVR42u3bwQ2CQBBA0cXQAS145szBxNpNLMNibGAhiJoMM+93APMyKqzDNC9N6nVxCwSH4BAcgkNwCA7BITgEh+CQ4BAcgkNwCA7BITgEh+AQHBIcgkNwCA7BITgEh+AQHIJDgkNwCA7BITgEh+AQHIJDcAgOCQ7BoR805riM5+N69ku43V82h1Z9RyMOhxUIBx9wCA7LAw7BoZjLAw7BITgEh+AQHIJDcKg5z9EchmhpTpPYHGTAQQYcZMBBBhxkwEEGHGTAQQYcKigDDjLgCCAj4L8d4SADDjLgIAMOMuAgAw4y4CAjlQw4yICDDDjIgIMMOMiAgww4yICDDDjISC+jIg4y4CADDjLgIAMOMuAgAw4y4CADDjLgIIOMzDjIgIMMOMiAgww4yICDDDjIgIMMOMhQDhxkwEEGHGTAQQYcZMBBBhxklG2Y5oUMnXJzkAEHGXCQAQcZcJABBxlwkKG4OMiA449zJSPzx8o30yUj/xfSYzMmo8pP2U8nTUath2D7501Gxcfne6ZORt0Xb9uzJ6P6K/s1AWTA0XdABhx9DWTA0fdBRnOGVDaH4BAcgkNwCA63QHAIDsEhOASH4BAcgkNwCA4JDsEhOASH4BAcgkNwCA7BIcEhOASH4BAcgkNwCA7BITgkOASH4BAcgkNwCA7BoSy9ATpQ3N+n9lheAAAAAElFTkSuQmCC">
+<meta name="theme-color" content="#15181b">
+<title>Sixes Spotter</title>
+<style>
+:root{font-family:Archivo,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#15181b;background:#e6e9eb;font-synthesis:none;--ink:#15181b;--muted:#5d666d;--line:#d9dee2;--green:#ffffff;--blue:#176189;--red:#af4d37}
+*{box-sizing:border-box}body{margin:0}
+button,input,select,textarea{font:inherit}
+button,a,input,select{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;touch-action:manipulation;border:0}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #7b838a;outline-offset:3px}
+button:disabled{opacity:.35;cursor:default}
+a{color:inherit}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+body{overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+select,input,textarea{font-size:16px!important}
+.app{max-width:760px;min-height:100dvh;margin:auto;background:#f5f6f6;box-shadow:0 0 50px #23262808;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.match-grid{display:flex;flex-direction:column}.match-main,.match-side{display:contents}
+.toolbar{order:1}.scoreboard{order:2}.clock-panel{order:3}.period-picker{order:4}.stage-label{order:5}.board{order:6}.summary{order:7}.feed{order:8}.match-footer{order:9;padding-top:6px}
+.summary{padding:14px 20px 16px;border-top:1px solid var(--line);background:#f5f6f6}
+.summary-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.summary-title h2{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin:0;font-weight:700}
+.summary-title span{font-size:10px;letter-spacing:.5px;color:var(--muted)}
+.summary-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.summary table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:max-content}
+.summary th,.summary td{padding:6px 2px;text-align:center;border-top:1px solid var(--line)}
+.summary thead th{border-top:0;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;line-height:1.2;vertical-align:bottom}
+.summary tbody th{text-align:left;font-size:11px;color:#5f666c;position:sticky;left:0;background:#f5f6f6;padding-right:8px;z-index:1}
+.summary td{white-space:nowrap}
+.summary td b,.summary-title .key{display:inline-block;min-width:30px;padding:4px 6px;margin:0 2px;border-radius:6px;font-size:17px;font-weight:800;line-height:1.15;background:var(--c);color:var(--k);box-shadow:inset 0 0 0 1px #23262833}
+.summary td b.zero{background:transparent;color:#8b9299;font-weight:600;box-shadow:inset 0 0 0 1px var(--line)}
+.summary-title .key{font-size:10px;letter-spacing:.5px;min-width:0;padding:3px 7px}
+.summary tbody th{font-size:13px!important;font-weight:800;color:var(--ink)!important}
+.summary thead th{font-size:10px!important;color:#555b60!important}
+.summary td.now,.summary thead th.now{background:#e1e3e5}
+.summary td.total,.summary thead th.total{border-left:2px solid #a2a8ad}
+.summary thead th.total,.summary thead th.now{color:var(--ink)!important;font-weight:800}
+
+.game-no{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:11px;color:#656b71;font-weight:700}.game-no small{font-weight:400}.game-no input{width:120px;min-height:42px;border:1px solid #d6d8da;border-radius:7px;background:white;padding:8px 10px;color:var(--ink);text-align:center;font-weight:700}
+.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--line);gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;padding:4px;background:none;border:0;background:none;color:var(--ink);padding:0;text-align:left}
+.brand b{font-weight:800}
+.brand-logo{display:block;height:30px;width:auto}
+.brand small{display:block;font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:5px;font-weight:700}
+.brand-mark{width:32px;height:36px;border:2px solid var(--ink);border-radius:8px 2px;display:grid;place-items:center;font-size:24px;font-weight:900;position:relative}
+.brand-mark span{position:absolute;top:-9px;right:-6px;background:#f5f6f6;line-height:18px}
+.local-status{font-size:10px;color:#595f65;white-space:nowrap}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.settings-btn{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 14px;border-radius:8px;background:var(--ink);color:#fff;font-size:12px;font-weight:700;letter-spacing:.3px;flex-shrink:0;box-shadow:0 1px 3px #23262833}
+.settings-btn svg{width:18px;height:18px;color:var(--green)}
+.settings-btn:active{transform:scale(.97)}
+.clock-manual{font-size:11px;font-weight:700;color:#7a5a16;background:#fff6dd;border:1px solid #e7d79a;border-radius:6px;padding:7px 11px}
+/* Settings dialog */
+.set-group{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}
+.set-group:first-of-type{border-top:0;margin-top:10px}
+.set-group h3{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.set-num{display:grid;gap:6px;font-size:12px;color:#585e64;font-weight:600}
+.set-num input,.set-num select{min-height:46px;border:1px solid #d6d8da;border-radius:7px;background:white;padding:9px 11px;color:var(--ink);font-size:16px;font-weight:600}
+.set-num small{font-weight:400;color:var(--muted);font-size:10.5px}
+.set-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.set-toggle>span{font-size:13px;font-weight:600}
+.seg2{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#edeeef}
+.seg2 button{min-height:40px;padding:8px 14px;font-size:12px;font-weight:700;color:#5f666c;background:transparent;border:0}
+.seg2 button.on{background:var(--ink);color:white}
+.set-events{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.set-check{display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid var(--line);border-radius:7px;background:#fafbfb;font-size:13px;font-weight:600;cursor:pointer}
+.set-check input{width:19px;height:19px;flex-shrink:0;accent-color:var(--ink)}
+.set-check small{margin-left:auto;font-size:10px;font-weight:700;color:#9ba1a7;letter-spacing:.5px}
+.local-status i{display:inline-block;width:6px;height:6px;background:#668a4c;border-radius:50%;margin-right:4px}
+.setup{padding:34px 24px}
+.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:10px;color:var(--muted);font-weight:700;margin:0 0 12px}
+.setup h1{font-size:36px;line-height:1.06;letter-spacing:-1.5px;margin:0 0 12px;font-weight:800}
+.intro{font-size:14px;color:#666d73;line-height:1.5;max-width:380px}
+.competition{display:flex;align-items:center;gap:10px;font-size:11px;padding:16px 0 22px;margin-top:16px;border-top:1px solid var(--line)}
+.pill{background:var(--ink);color:white;border-radius:4px;padding:5px 6px;font-weight:700;font-size:10px}
+.team-selectors{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.team-pick{border:1px solid var(--line);border-top:3px solid var(--team-color,var(--blue));border-radius:9px;background:white;padding:16px 12px;min-width:0}
+.team-pick label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.team-pick select{font-size:15px;font-weight:700;width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:0 0 10px;background:white;color:var(--ink);min-height:40px}
+.goalie-default{font-size:11px;color:#666d73;margin:14px 0 0;line-height:1.4}
+.color-label{font-size:10px;color:var(--muted);margin:16px 0 6px}
+.roster-summary{font-size:11px;color:var(--muted);margin:14px 0 0;min-height:14px}
+.swatches{display:grid;grid-template-columns:repeat(4,minmax(28px,1fr));gap:3px;max-width:300px}
+.swatch{min-width:28px;height:38px;padding:4px;border-radius:6px;border:2px solid transparent;background:transparent}
+.swatch span{display:grid;place-items:center;width:100%;height:100%;min-height:26px;max-width:42px;margin:auto;background:var(--swatch);color:var(--swatch-ink);box-shadow:inset 0 0 0 1px #23262833;border-radius:50%;font-size:16px;font-weight:800}
+.swatch.chosen{border-color:var(--ink)}
+dialog .swatches{max-width:none;gap:8px}dialog .swatch{height:52px}dialog .swatch span{max-width:40px}
+.primary{background:var(--ink);color:white;border-radius:7px;min-height:54px;padding:14px 20px;font-weight:700}
+.start{width:100%;margin-top:20px;display:flex;justify-content:space-between;align-items:center}
+.start span{color:var(--green);font-size:20px}
+.setup-note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:20px}
+.setup-note a{text-underline-offset:3px}
+/* New-match data panel (styled after the Pointbench "Get data files" form) */
+.datafield{margin-top:18px}
+.datafield>label{display:block;font-size:12px;color:#5a6066;font-weight:600;margin-bottom:7px}
+.datafield .row{display:flex;gap:10px;align-items:stretch}
+.datafield select,.datafield input[type=text]{flex:1;min-width:0;min-height:46px;border:1px solid #cfd3d6;border-radius:9px;background:#fff;padding:10px 12px;color:var(--ink);font-size:15px;font-weight:600}
+.datafield select:focus,.datafield input:focus{outline:2px solid var(--blue);outline-offset:-1px;border-color:var(--blue)}
+.datafield .hint{font-size:11px;color:var(--muted);margin:7px 0 0;line-height:1.4}
+.datapanel .btn-ghost{min-height:46px;padding:0 16px;border:1px solid #cfd3d6;border-radius:9px;background:#fff;color:var(--ink);font-size:14px;font-weight:700;white-space:nowrap}
+.datapanel .btn-ghost:disabled{opacity:.45}
+.start-big{width:100%;margin-top:22px;min-height:54px;display:flex;justify-content:center;align-items:center;gap:10px;font-size:17px;font-weight:800}
+.data-statusbar{margin-top:18px;border-radius:10px;padding:13px 15px;font-size:13px;line-height:1.45;border:1px solid var(--line);background:#eef0f1;color:#4a5056}
+.data-statusbar.ok{background:#e4f1e8;border-color:#bcdcc6;color:#1d5c37}
+.data-statusbar.err{background:#f6e7e5;border-color:#e3c3bd;color:#8a3022}
+.data-statusbar.busy{background:#eef2f6;border-color:#cdd7e0;color:#3a4654}
+.game-meta{font-size:12px;color:#5a6066;margin:9px 0 0;line-height:1.5}
+.game-meta b{color:var(--ink)}
+.field-select{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 0}
+.field-select>span{font-size:11px;color:#656b71;font-weight:700}
+.field-buttons{display:flex;gap:7px}
+.field-buttons button{min-height:42px;min-width:104px;padding:8px 14px;border:1px solid #d6d8da;border-radius:7px;background:#e6e8e9;color:#575d63;font-size:12px;font-weight:800}
+.field-buttons button.selected{background:var(--ink);border-color:var(--ink);color:white}
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:17px 20px 12px;gap:6px}
+.toolbar-label{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.tools{display:flex;gap:5px}
+.tool{background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 11px;min-height:40px;font-size:12px;font-weight:700;color:var(--ink)}
+.tool svg{width:14px;height:14px;vertical-align:-2px;margin-right:4px}
+.scoreboard{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;margin:5px 20px 0;padding:18px 10px 20px;border-bottom:1px solid var(--line)}
+.score-team{text-align:center;min-width:0}
+.country-code{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--team-accent,var(--blue))}
+.country-name{font-size:13px;margin-top:5px}
+.kit-picker{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:32px;background:transparent;color:#676e74;font-size:10px;padding:4px;margin-top:5px}
+.kit-picker i{height:12px;width:12px;border:1px solid #23262840;border-radius:50%}
+.kit-picker span{font-size:13px}
+.score{display:flex;justify-content:center;gap:8px;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.score span{color:#bbbfc3;font-weight:400}
+.clock-panel{margin:13px 20px 0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#edeeef}
+.clock-panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.clock-panel-head>div:first-child{display:grid;gap:4px}
+.clock-panel-head .eyebrow{font-size:8px;margin:0;letter-spacing:1px}
+.clock-panel-head .field-select{margin:0}
+.clock-panel-head .field-select>span{display:none}
+.clock-panel-head .field-buttons button{min-width:76px;min-height:34px;padding:6px 9px;font-size:10px}
+.clock-connection{font-size:10px}.clock-connection.live{color:#17683c}.clock-connection.stale{color:#87621a}
+.clock-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.clock-read{min-height:38px;min-width:64px;padding:7px 12px;border-radius:6px;background:var(--ink);color:white;font-size:12px;font-weight:700}
+.clock-values{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.clock-values>div{display:grid;gap:3px;justify-items:start}
+.clock-values span{font-size:9px;color:#686f76}
+.clock-values strong{font-size:27px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.clock-links{display:flex;gap:12px}
+.clock-values button{background:none;padding:6px 0;font-size:10px;color:#5a6066;text-decoration:underline;min-height:28px}
+.period-picker{margin:0 20px;padding:12px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.period-picker>span{font-size:11px;color:#656b71}
+.period-buttons{display:flex;gap:6px}
+.period-buttons button{min-width:42px;min-height:38px;background:#e6e8e9;border:1px solid #d6d8da;border-radius:6px;color:#5f666c;font-weight:700;font-size:12px}
+.period-buttons button.selected{color:var(--ink);background:var(--green);border-color:#828a91}
+.period-buttons .add-ot{color:#555b60;background:#fff;border-style:dashed;min-width:48px}
+.stage-label{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.stage-label p{font-size:12px;margin:0;color:#656c72}
+.stage-label b{color:var(--ink)}
+.cancel{background:transparent;padding:6px 0 6px 8px;min-height:32px;font-size:12px;color:#646a70;text-decoration:underline}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:17px 20px 22px;min-height:245px}
+.team-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-content:start}
+.team-actions.inactive{opacity:.3}
+.change-goalie{grid-column:1/-1;min-height:54px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px;padding:10px;border:1px solid var(--team-border);border-radius:7px;background:var(--team-soft);color:var(--team-accent);text-align:left}
+.change-goalie span{font-size:12px;font-weight:700}
+.change-goalie small{font-size:10px;line-height:1.35;overflow-wrap:anywhere}
+.action{height:92px;border-radius:8px;background:var(--team-soft,#eceeef);color:var(--team-accent,var(--blue));border:1px solid var(--team-border,#dadcde);display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:13px 12px;text-align:left}
+.action strong{font-size:27px;letter-spacing:-1px;line-height:1}
+.action small{font-size:10px;font-weight:600}
+.action.goal{background:var(--team-color,var(--blue));color:var(--team-ink,white);border-color:var(--team-border,var(--blue))}
+.action:active,.jersey:active{transform:scale(.97)}
+.action.penalty{grid-column:1/-1;height:auto;min-height:58px;flex-direction:row;align-items:center}
+.team-actions,.number-side{--tint:color-mix(in srgb,var(--team-color) 24%,#fff);--tint-line:color-mix(in srgb,var(--team-color) 40%,var(--team-border))}
+.team-actions .action:not(.goal),.team-actions .change-goalie,.number-side .jersey{background:var(--team-soft);background:var(--tint);border-color:var(--team-border);border-color:var(--tint-line)}
+.team-actions .change-goalie{background:color-mix(in srgb,var(--team-color) 12%,#fff)}
+.action.penalty strong{font-size:17px;letter-spacing:-.3px}
+.card-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.card-options button{min-height:48px;border-radius:6px;border:1px solid var(--line);background:white;color:var(--ink);font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;padding:8px 9px;text-align:left}
+.card-options button.chosen{border:2px solid var(--ink);padding:7px 8px}
+.card-options i,.card-chip{display:inline-block;width:11px;height:15px;border-radius:2px;box-shadow:inset 0 0 0 1px #23262840;flex-shrink:0}
+.card-chip{margin-left:6px;vertical-align:-2px}
+.time-input{width:100%;min-height:52px;border:1px solid #d6d8da;border-radius:8px;background:white;padding:10px 12px;color:var(--ink);font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px;text-align:center;margin-bottom:10px}
+.confirm-time,.confirm-penalty{width:100%}
+.offense-label{display:block;font-size:11px;color:#6d747a;margin:13px 0 6px}
+.offense-select{width:100%;min-height:46px;border:1px solid #d6d8da;border-radius:6px;background:white;padding:10px;color:var(--ink);font-size:13px}
+.confirm-penalty{width:100%;margin-top:10px;min-height:50px}
+.number-side{min-width:0}
+.number-head{font-size:10px;font-weight:700;color:var(--team-accent,var(--blue));letter-spacing:1px;display:flex;justify-content:space-between;margin-bottom:9px}
+.jerseys{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.jersey{height:46px;border:1px solid var(--team-border,#d7dadc);border-radius:6px;background:var(--team-soft,#eceeef);color:var(--team-accent,var(--blue));font-size:20px;font-weight:800;padding:0}
+.waiting{color:#999fa5;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:8px;min-height:200px;font-size:11px}
+.waiting span{font-size:22px}
+.assist-options{display:grid;gap:10px}
+.assist-options button{min-height:80px;border-radius:7px;font-size:23px;font-weight:800;background:var(--team-color,var(--blue));color:var(--team-ink,white);border:1px solid var(--team-border)}
+.assist-options button.no{background:white;color:var(--ink);border:1px solid var(--line)}
+.draft-details{font-size:12px;color:#646a70;padding-bottom:10px;line-height:1.5}
+.feed{border-top:1px solid var(--line);padding:0 20px 16px;touch-action:pan-y;background:#eeefef}
+.feed-handle{display:block;width:35px;height:4px;border-radius:3px;background:#c8cbce;margin:10px auto 12px}
+.feed-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;gap:10px}
+.feed-title h2{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin:0;font-weight:700}
+.feed-title button{font-size:11px;color:#565c61;min-height:32px;background:transparent}
+.event{display:grid;grid-template-columns:22px 35px 1fr 44px;align-items:center;text-align:left;gap:8px;width:100%;min-height:48px;border-top:1px solid #dcdee0;background:transparent;color:var(--ink);padding:8px 0}
+.event-index{font-size:10px;color:#838a91;font-variant-numeric:tabular-nums}
+.event-period{display:block;font-size:8px;color:#5f666c;margin-top:3px}
+.event-code{font-size:9px;font-weight:800;letter-spacing:.5px;width:fit-content;padding-bottom:3px}
+.event-action{font-size:12px;font-weight:700;min-width:0}
+.event-action small{font-size:10px;display:block;color:#6d747a;font-weight:400;margin-top:4px}
+.event-action small.event-clock{font-size:9px;color:#5a6066;line-height:1.35;overflow-wrap:anywhere}
+.event-num{text-align:right;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.event-num small{font-size:10px;font-weight:500}
+.empty-feed{font-size:12px;color:#7b838a;text-align:center;line-height:1.6;padding:15px 5px}
+.match-footer{display:flex;justify-content:space-between;font-size:10px;color:#7d848b;align-items:center;padding:0 20px 16px}
+.match-footer button{background:none;color:inherit;padding:10px 0;text-decoration:underline;min-height:40px;font-size:11px}
+dialog{color:var(--ink);background:#f5f6f6;border:0;border-radius:15px;padding:24px;width:calc(100% - 28px);max-width:650px;max-height:90dvh;box-shadow:0 20px 100px #0003}
+dialog::backdrop{background:#212325aa;backdrop-filter:blur(3px)}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.dialog-head h2{font-size:22px;letter-spacing:-.6px;margin:0}
+.close{background:#e7e9ea;color:var(--ink);width:40px;height:40px;border-radius:50%;font-size:24px;flex-shrink:0}
+.dialog-note{font-size:12px;line-height:1.6;color:#6d747b}
+.full-events{margin-top:15px;max-height:55dvh;overflow:auto}
+.dialog-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.secondary{min-height:48px;background:#e6e7e8;color:var(--ink);padding:10px 17px;border-radius:6px;font-weight:700}
+.danger{background:#f6e5df;color:#a34630}
+.fields{display:grid;gap:14px;margin-top:22px}
+.fields label{font-size:11px;color:#6d747a;display:grid;gap:7px}
+.fields select,.fields input{min-height:46px;border:1px solid #d6d8da;border-radius:6px;background:white;padding:10px;color:var(--ink);width:100%}
+.archive-item{text-align:left}
+.archive-item small{display:block;font-size:11px;font-weight:400;margin-top:5px}
+.export-text{display:block;width:100%;height:40dvh;margin-top:12px;border:1px solid #d6d8da;border-radius:6px;background:white;padding:10px;color:var(--ink);font:11px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre;resize:vertical}
+.error{font-size:12px;color:#b14e34;line-height:1.5}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:white;padding:13px 20px;border-radius:9px;font-size:12px;max-width:90vw;opacity:0;pointer-events:none;transition:.2s;z-index:10;box-shadow:0 4px 30px #0002}
+#toast.visible{opacity:1;transform:translate(-50%,0)}
+@media(min-width:600px){.summary{padding:16px 30px 18px}.setup{padding:45px}.setup h1{font-size:46px}.team-pick{padding:22px}.board{padding:22px 30px 28px;gap:38px}.action{height:110px;padding:17px}.action strong{font-size:34px}.action small{font-size:12px}.jersey{height:58px}.feed{padding:0 30px 20px}.topbar{padding:0 30px}.stage-label{padding:22px 30px 0}.toolbar{padding:20px 30px 12px}.period-picker{margin:0 30px}.period-buttons button{min-width:48px}.swatch{height:42px}.clock-panel{margin-left:30px;margin-right:30px}.field-select{margin-top:22px}.scoreboard{margin:5px 30px 0}.match-footer{padding:0 30px 16px}}
+@media(max-width:520px){.summary{padding-left:12px;padding-right:12px}.summary tbody th{width:38px}.summary td b{min-width:22px;padding:3px 3px;margin:0 1px;font-size:14px}}
+@media(max-width:480px){.set-grid,.set-events{grid-template-columns:1fr}}
+@media(max-width:420px){.field-select{gap:8px}.field-buttons{gap:5px}.field-buttons button{min-width:88px;padding:8px 9px}.clock-panel{margin-left:15px;margin-right:15px;padding:12px}.clock-panel-head .field-buttons button{min-width:60px;padding:6px}.clock-values strong{font-size:24px}.tool{padding:9px 8px}}
+@media(max-width:360px){.settings-btn span{display:none}.settings-btn{padding:9px 11px}}
+@media(max-width:350px){.topbar{padding:0 15px}.board{padding:15px;gap:14px}.toolbar{padding-left:15px;padding-right:15px}.toolbar-label{letter-spacing:0;font-size:8px}.action{padding:11px 8px}.action small{font-size:9px}.setup{padding:28px 16px}.jerseys{gap:5px}.team-pick{padding:14px 8px}.swatch{padding:3px;min-width:24px}.swatches{grid-template-columns:repeat(4,minmax(24px,1fr))}.period-picker{margin:0 15px}.period-buttons{gap:4px}.period-buttons button{min-width:37px}}
+@media(min-width:1000px) and (orientation:landscape){
+.app{max-width:1240px}
+.topbar{height:60px}
+.match-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;align-items:start}
+.match-main{display:block}
+.match-side{display:flex;flex-direction:column;border-left:1px solid var(--line);position:sticky;top:0;height:calc(100dvh - 61px - env(safe-area-inset-top) - env(safe-area-inset-bottom));background:#eeefef}
+.match-side .clock-panel{margin:16px 20px;background:#f5f6f6}
+.match-side .summary{background:transparent;padding:10px 20px 12px}.match-side .summary tbody th{background:#eeefef}.match-side .summary th,.match-side .summary td{padding:3px 3px}.match-side .summary td b{min-width:22px;padding:3px 4px;margin:0 1px;font-size:14px}
+.match-side .feed{border-top:1px solid var(--line);padding:0 20px 16px;flex:1;min-height:0;overflow:auto}
+.match-side .feed-handle{visibility:hidden;margin:4px auto}
+.match-side .match-footer{padding:6px 20px 12px}
+.toolbar{padding-top:14px}.scoreboard{padding-top:10px;padding-bottom:14px}
+.board{min-height:0}
+}
+/* Manual team picker (restored) */
+.manual-setup{margin-top:26px}
+.manual-divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin:0 0 16px}
+.manual-divider::before,.manual-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+/* Playit live clock panel */
+.playit-panel{margin-top:13px;padding-top:12px;border-top:1px dashed var(--line)}
+.playit-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.playit-head .eyebrow{font-size:8px;margin:0;letter-spacing:1px}
+.playit-values{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.playit-values>div{display:grid;gap:2px;justify-items:start}
+.playit-values span{font-size:9px;color:#686f76}
+.playit-values strong{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.playit-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+.playit-foot #pl-note{font-size:10px;color:#686f76;line-height:1.3}
+.spine .playit-values strong{font-size:18px}
+.clock-values small.clock-sub{display:block;font-size:9px;color:#5a6066;margin-top:4px;font-weight:600;letter-spacing:.2px}
+/* ===== Split colours layout and theme ===== */
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 7px #15181b}
+.setup h1{font-weight:900}.primary,.secondary{border-radius:10px}.primary{font-weight:800}
+.period-buttons button.selected{border-color:#15181b}
+dialog{background:#f4f5f6}
+dialog .summary{padding:0;border:0;background:transparent;margin-top:14px}
+dialog .summary tbody th{background:#f4f5f6}
+.summary td.now,.summary thead th.now{background:#e2e6e9}
+html:has(body.in-match){background:#e6e9eb}
+body.in-match .app{max-width:none;background:#f5f6f6;box-shadow:none}
+body.in-match .topbar{display:none}
+body.in-match #main{height:100%}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"spine spine" "a b";min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+.half{--half-ink:#15181b;background:var(--team-wash);color:var(--half-ink);display:flex;flex-direction:column;gap:12px;padding:14px 12px;min-width:0}
+.half.side-0{grid-area:a}.half.side-1{grid-area:b}
+.half-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex-shrink:0}
+.side-1 .half-head{flex-direction:row-reverse}.side-1 .half-team{text-align:right}
+.half-team{min-width:0}
+.half-score{font-size:64px;font-weight:900;line-height:.9;letter-spacing:-3px;font-variant-numeric:tabular-nums}
+.half .country-code{color:inherit;font-size:13px;font-weight:800;letter-spacing:3px}
+.half .country-name{font-size:18px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+.half .kit-picker{color:inherit;min-height:44px;font-size:12px;font-weight:600;padding:4px 0;margin-top:0}
+.half .kit-picker i{border-color:currentColor}
+.half-body{flex:0 0 auto;min-height:0;display:flex;flex-direction:column}
+.half-body>*{flex:0 0 auto}
+.half .team-actions{display:flex;flex-direction:column;gap:10px}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:92px;gap:10px}
+.half .team-actions .action{min-width:0;overflow:hidden;height:auto;min-height:64px;border-radius:14px;padding:10px 8px;background:var(--team-tile);color:var(--half-ink);border:1px solid color-mix(in srgb,var(--half-ink) 22%,transparent)}
+.half .action strong{font-size:26px;font-weight:900}
+.half .action small{font-size:12px;font-weight:600}
+.half .team-actions .action.goal{grid-column:1/-1;order:-1;background:var(--team-goal-bg);color:var(--team-goal-ink)}
+.half-score,.half .country-code,.half .action strong,.half .number-side .jersey{color:var(--team-accent)}
+.half .action.goal strong{color:inherit}
+.half .action.goal strong{font-size:34px;text-transform:uppercase}
+.half .action.penalty{grid-column:auto;flex-direction:column;align-items:flex-start}
+.half .action.penalty.span{grid-column:1/-1;flex-direction:row;align-items:center}
+.half .action.penalty strong{font-size:13px;text-transform:uppercase}
+.half .team-actions .change-goalie{flex-shrink:0;min-height:52px;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 10px;padding:8px 14px;border-radius:14px;background:transparent;border:2px solid var(--half-ink);color:var(--half-ink)}
+.half .change-goalie span{font-size:14px;font-weight:800}
+.half .change-goalie small{font-size:13px;font-weight:600}
+.half-log{flex:1 1 0;min-height:60px;overflow-y:auto;border-top:1px solid color-mix(in srgb,var(--half-ink) 35%,transparent);display:flex;flex-direction:column}.half-log-empty{padding:12px 2px;font-size:13px;font-weight:700;color:color-mix(in srgb,var(--half-ink) 70%,transparent)}.half-log-row{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;min-height:44px;padding:7px 2px;border:0;border-bottom:1px solid color-mix(in srgb,var(--half-ink) 15%,transparent);background:transparent;color:var(--half-ink);text-align:left;cursor:pointer}.half-log-row:last-child{border-bottom:0}.hl-period{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--team-accent)}.hl-action{display:flex;flex-direction:column;gap:1px;min-width:0;font-size:14px;font-weight:800;line-height:1.15}.hl-action small{font-size:11px;font-weight:600;color:color-mix(in srgb,var(--half-ink) 75%,transparent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hl-action .card-chip{display:inline-block;width:9px;height:12px;border-radius:2px;margin-left:6px;vertical-align:-1px}.hl-num{font-size:15px;font-weight:900;font-variant-numeric:tabular-nums}
+.half .number-head{color:inherit;font-size:13px}
+.half .number-side .jersey{height:auto;min-height:60px;border-radius:12px;background:var(--team-tile);color:var(--half-ink);border:1px solid color-mix(in srgb,var(--half-ink) 22%,transparent);font-size:24px;font-weight:900}
+.half .draft-details{color:inherit;font-size:15px}
+.half .offense-label{color:inherit;font-size:13px}
+.half .waiting{color:var(--half-ink);font-size:14px;font-weight:700}
+.half .assist-options button{background:var(--team-goal-bg);color:var(--team-goal-ink);border:0;border-radius:14px}
+.half .assist-options button.no{background:transparent;color:var(--half-ink);border:2px solid var(--half-ink)}
+.half .primary{background:var(--team-goal-bg);color:var(--team-goal-ink)}
+.spine{grid-area:spine;background:#edeeef;color:var(--ink);display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.spine>*{order:0;flex-shrink:0}
+.spine .brand{background:#fff;border:1px solid var(--line);border-radius:10px;min-height:44px;padding:6px 10px;justify-content:center}
+.spine .brand-logo{height:24px}
+.spine .clock-panel{margin:0;padding:10px;border:1px solid var(--line);border-radius:12px;background:#f5f6f6;color:var(--ink)}
+.spine .clock-panel-head .eyebrow{display:none}
+.spine .clock-connection{font-size:12px}
+.spine .clock-connection.live{color:#17683c}.spine .clock-connection.stale{color:#87621a}
+.spine .clock-controls{width:100%}
+.spine .clock-panel-head .field-select{flex:1}
+.spine .field-buttons{flex:1}
+.spine .clock-panel-head .field-buttons button{flex:1;min-width:0;min-height:44px;padding:6px;font-size:12px;background:#e6e8e9;border:1px solid #d6d8da;color:#575d63}
+.spine .clock-panel-head .field-buttons button.selected{background:var(--ink);border-color:var(--ink);color:#fff}
+.spine .clock-read{flex:1;min-height:44px;background:var(--ink);color:#fff;font-size:14px;font-weight:800;text-align:center;border-radius:6px}
+.spine .clock-values{gap:8px;margin-top:10px}
+.spine .clock-values span{color:#686f76;font-size:11px}
+.spine .clock-values strong{font-size:30px;font-weight:900}
+.spine .clock-links{flex-direction:column;gap:0}
+.spine .clock-values button{color:#5a6066;font-size:12px;min-height:28px;padding:4px 0;text-align:left}
+.spine .period-picker{margin:0;padding:0;display:block}
+.spine .period-picker>span{display:none}
+.spine .period-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.spine .period-buttons button{min-width:0;min-height:44px;border:1px solid #d6d8da;border-radius:10px;background:#e6e8e9;color:#5f666c;font-size:15px;font-weight:800}
+.spine .period-buttons button.selected{background:var(--green);border-color:#828a91;color:var(--ink)}
+.spine .period-buttons .add-ot{background:#fff;border:1px dashed #9aa1a7;color:#555b60}
+.spine .stage-label{padding:0;display:block;text-align:center}
+.spine .stage-label p{color:#4a5056;font-size:13px;font-weight:600;line-height:1.35}
+.spine .stage-label b{color:var(--ink)}
+.spine .cancel{display:block;width:100%;min-height:44px;margin-top:8px;padding:0;border:1px solid #c2c8cd;border-radius:10px;color:#4a5056;font-size:14px;font-weight:800;text-align:center;text-decoration:none;background:#fff}
+.spine-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
+.spine .tool{min-height:44px;padding:6px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:13px;font-weight:700;text-align:center}
+.spine .tool.undo{grid-column:1/-1;min-height:52px;background:var(--ink);color:#fff;border-color:var(--ink);font-size:16px;font-weight:900}
+.spine .tool.full{grid-column:1/-1}
+.spine .tool-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.spine .local-status{color:#5d666d;text-align:center;font-size:11px;white-space:normal}
+.spine .local-status i{background:#668a4c}
+@media(min-width:700px){
+.split{grid-template-columns:minmax(0,1fr) 204px minmax(0,1fr);grid-template-areas:"a spine b"}
+.half{padding:18px}
+.half-score{font-size:120px;letter-spacing:-5px}
+.half .country-name{font-size:26px}
+.half .team-actions .action{padding:14px 16px}
+.half .action strong{font-size:34px}
+.half .action small{font-size:14px}
+.half .action.goal strong{font-size:46px}
+.half .action.penalty strong{font-size:19px}
+.action-grid{grid-auto-rows:116px}
+}
+@media(min-width:700px) and (min-height:600px){
+body.in-match .app{height:100dvh;overflow:hidden}
+.split{height:100%;min-height:0;grid-template-rows:minmax(0,1fr)}
+.spine{overflow-y:auto}
+.half{overflow:hidden}
+.half-body{overflow-y:auto}
+}
+@media(min-width:1000px){.half .team-actions .action.goal{flex-direction:row;align-items:center}.half .action.penalty strong{font-size:22px}}
+@media(min-width:1100px){.half-score{font-size:150px}.half .country-name{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button class="brand" data-do="home" aria-label="PointBench home"><img class="brand-logo" src="data:image/png;base64,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" alt="PointBench" width="100" height="34"></button>
+    <div class="topbar-right">
+      <span class="local-status save-status" id="save-status"><i></i> Ready</span>
+      <button class="settings-btn" data-do="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v2.2M12 19.3v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.5 19.5 6.1 17.9M17.9 6.1 19.5 4.5"/></svg><span>Settings</span></button>
+    </div>
+  </header>
+  <main id="main"></main>
+</div>
+<dialog id="modal"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- Data ---------- */
+const ROSTERS = `aut|Austria|13|3:Smretschnig, Philipp;6:Garlinghouse, John;7:Garlinghouse, Hans;10:Probst, Gerhard;11:Toth, Leon;13:Kriz, Rudolf Daniel;14:Heubrandtner, Jan;16:Pucher, Daniel;20:Balasch, Adrian;22:Salzbrunn, Maximilian;27:Schusterschitz, Clemens;99:Stadlinger, Matthias
+cro|Croatia|30|3:Kukoleča, Luka;6:Korov, Luka;7:Marunić, Bartul;10:Korov, Pavo;11:Mandušić, Matej;17:Srezović Bijelić, Bruno;21:Balint, Sven;24:Duvnjak, Jakov;25:Voelker, Jack;30:Haračić, Robert;32:Gorup, Ryan;48:Ford, Jonathan
+cze|Czechia|23|1:Adamiec, Jakub;5:Kučera, Lukáš;6:Adamiec, Krystof;7:Pech, Martin;8:Kalenský, Martin;11:Formánek, Tobiáš;12:Dřízhal, Ondřej;13:Kučera, Šimon;16:Rohlík, Filip;19:Vodolán, Josef;21:Strieblik, Ondřej;23:Slavík, Josef
+fin|Finland|0|0:Uusitalo, Lauri;1:Virtanen, Juho;3:Fobare, Thomas;8:Hill, Alex;9:Behm, Hugo;10:Valanne, Alexandre;13:Karvonen, Jere;21:Kiviniemi, Alex;27:Metsälä, Ville;32:Heiskanen, Pyry;45:Rintala, Petri;48:Kuisma, Mikael
+fra|France|39|0:Rosenberg, Justin;1:Ponte, Jean-Gabriel;2:Klahr, Jules;5:Derungs, Jules;6:Arbaud, Louis;10:Dailleboust, Thomas;16:Fardin, Didier;18:Fardin, Gabriel;32:Callaway, Jamie;39:Richer, Quentin;43:Christophe, Keita;99:Sassone, Emile
+ger|Germany|13|3:Kapeller, Niels;9:Beckmann, David;13:Zinoviev, Mikhail;14:Brandenburger, Marc;16:Spiegel, Sören;17:Mulvey, Fionn;20:Sontowski, Kai;21:Boushy, Christopher;22:Volquardsen, Lasse;24:Wismer, Justin;26:Bastian, Wynton;77:Böhm, Leon
+gbr|Great Britain|2|1:Dwobeng, Henry;2:Baxter, William;3:Bickerton, Drew;4:Watson, Daniel;5:Russell, Alex;7:Hunns, Ryan;8:Collins, Timothy;9:Roper, Thomas;10:DeCaprio, Nicolas;11:Callies, Reece;12:Bracegirdle, Glen;13:Mills, Luke
+gre|Greece|47|1:Caldroney, George;3:Stephan, Sam;4:Koumentakos, Tristan;12:Paragioudakis, Manolis;15:Brooks, Christos;18:Michail, Alexander;19:Sotiropoulos, Nickolas;22:Tsakos, Antony;24:Spiropoulos, Peter;39:Ioannou, Nicholas;47:Katagas, Anthony;51:Myers, Marcus
+hun|Hungary|1|1:Nagy, Dominik;4:Tarnay, Chris;10:Gudmundsen, Peter;13:Bodó, Botond;16:Portnoy, Dylan;19:Rohonczy, George;24:Fejer, Jack;27:Ross, Oliver;77:Nyarady, Karsten;99:Cserkuti, Bence
+irl|Ireland|51|1:Clarke, Ryan;7:Clarke, Daniel;8:Jacoby, Ronan;11:Holland, Sean;14:Lynch, Kevin;18:Foley, Conor;20:Duncan, Matt;21:Staunton, John;33:Lynch, Michael;40:Brosnan, Patrick;42:Corbett, Patrick;51:Walsh, Joe
+isr|Israel|18|0:Malever, Eric;3:Schain, Robert;5:Fitzpatrick, Ryan;6:Kraft, Joseph;7:Kruter, Andrew;12:Kadish, Ian;13:Fruhling, Hayden;14:Popeck, Matthew;16:Chetner, Beau;18:Morris, Andrew;34:Utting, Douglas;48:Krevsky, Maxwell
+ita|Italy|2|1:Serloreti, Lorenzo;2:Vona, Andrew;3:De Fazio, John;4:Disque, David;5:Vardaro, Alexander;6:Piatelli, John;7:Sirbu, Tiberiu Gabriel;8:Lietti, Luca;9:Piatelli, Brian;11:D'Alto, Vince;14:Mazzuca, Philip;16:Favaro, Ryan
+lat|Latvia|16|4:Moen, James;5:Facciponti, Vincent;7:Richters, Ryan;10:Lasda, Eli;11:Rozins, Georgs;12:Tierney, Paul;14:Doktor, Andrew;16:Lucs, Daniels;35:Kikste-Zanders, Daniels;50:Lasda, Riley;55:Nye, Harrison;93:Eistrat, Pent
+ned|Netherlands|1|1:Albertsz, Urney;2:Jansen, Morris;4:van der Heyde, Alderik;5:Kokke, Oscar;10:McCormick, Charlie;11:Verschuure, Donald;12:Berger, Nico;21:Müskens, Wieland;22:van der Horst, Joost;30:van Est, Lionel;54:MacDonald, Luke;91:Wijbrandts, Brady
+nor|Norway|1|1:Jonberg, Edvard;2:Mejlænder-Larsen, Martin;3:Varpe, Joar;4:Otnes, Grunde;5:Madsen, Sebastian;7:Auestad, Einar;10:Haddad, Skander;19:Heldal, Erik;20:Svendsen, Magnus;22:Glavee-Geo, Roger;23:Blaalid, Rikard;57:Vu, Hao Nhien
+pol|Poland|33|0:Dyszkiewicz, Patrick;1:Wójcik, Maciej;11:Kligerman, Eli;15:Tymorek, Adam;17:Sloma, Steven;19:Rydzak, Jan;23:Cooley, AJ;33:Dzwilewski, Christian;34:Borko, Tyler;45:Hucal, Lucas;80:Crapanzano, Christopher;91:Dyszkiewicz, Matthew
+por|Portugal|12|2:Hawkins, Mike;4:Webster, Michael;7:Roque, Zachary;12:Calisto, Steven;15:Costa, Ricardo;17:Lopes, Rafael;23:Vasconcelos, Luis;48:Black-Araujo, Courtland;77:Pereira, Brandon;94:Alves, Tiago
+esp|Spain|15|0:Aguado-Scheyer, Andy;5:González Baños, Alejandro;6:Coderque Ferrer, Luis;9:Cantalejo Gómez, Cándido;11:López Díez, Gustavo;13:Hipwell Guerrero, Ethan;15:Walter Diaz, Paul;22:Márquez Lorente, Antonio;25:Martinez Sierra, Fernando;31:El Bargui Ramiro, Ismael;50:Campos Bell, James;96:Fernandez Contreras, Miguel
+swe|Sweden|1|1:Zeidlitz, Richard;2:Harrell, Hugo;3:McCallion, Luke;4:Backlund, Kristofer;5:Hunter, Jonas;6:Thomsson, Ludvig;9:Eklund, Mattias;18:Järbyn, Erik;23:Quigley, Jonathan;34:Rubin, Zack;91:McCallion, Nils
+sui|Switzerland|92|6:Giger, Marvin;7:Hug, Noé;8:Ernst, Roger;12:Hänni, Tim;13:Schütze, Till;16:Bachmann, Daniel;26:Lindegger, Dario;30:Biedermann, Kai;37:Classens, Christopher;66:Bamert, David;77:Friderich, Matthias;92:Bremgartner, André
+tur|Turkiye|0|0:Ünlü, Ozan;1:Ertek, Berk;3:Zeybek, Ege;6:Marusa, Taner;7:Yılmaz, Emir;10:Onur, Onur;13:Dogrul, Cem;14:Edil Jr, Barış;17:Unal, Bertan;36:Twining, Ata;42:Ceylan, Kaan;55:Can, Alperen
+ukr|Ukraine|9|0:Polishchuk, Artem;3:Povar, Illia;9:Demchenko, Denys;10:Miniailo, Dmytro;11:Lukianchuk, Yevhenii;17:Panin, Nazarii;21:Dorobiichuk, Maksym;24:Zazulevych, Heorhii;31:Zhabotynskyi, Davyd;35:Yakymchuk, Oleksii;44:Liashenko, Ostap;95:Humeniuk, Vladyslav`;
+
+let data = {
+  competition: 'ESLC 2026 · Men · Salou',
+  code: 'eslcm', // competition code used in the XML file name
+  source: 'https://worldlacrosse.sport/eslc26-men/',
+  fetchedAt: '2026-11-13T17:00:00+00:00',
+  teams: ROSTERS.split('\n').map(line => {
+    const [id, name, g, list] = line.split('|');
+    const players = list.split(';').map(p => { const i = p.indexOf(':'); return { number: p.slice(0, i), name: p.slice(i + 1) }; });
+    return { id, name, players, goalie: players.find(p => p.number === g) || null };
+  })
+};
+
+/* ---------- Pointbench data download ---------- */
+// Tournament data sources on stats.pointbench.com. Each send-data URL returns a
+// ZIP of the tournament's XML files (rosters, config, game list). These presets
+// come from the user's downloads.json.
+const PB_SOURCES = [
+  { id: 'eslcm', label: "Men's Sixes", url: 'https://stats.pointbench.com/eu/eslcm/2026/index.php?cmd=send-data' },
+  { id: 'eslcw', label: "Women's Sixes", url: 'https://stats.pointbench.com/eu/eslcw/2026/index.php?cmd=send-data' },
+];
+const DATA_KEY = 'lax-observer-rosterdata-v1';
+// The full set of files from the most recent download/load, kept in memory for
+// this session so games can be imported and the files saved to a folder.
+let pbFiles = null;
+// Period length/count for the loaded tournament, read from its config file.
+let pbRules = { periodCount: 4, periodLength: 8, otLength: 3 };
+
+// Minimal in-browser ZIP reader. Handles STORED (0) and DEFLATE (8) entries,
+// using the browser's built-in DecompressionStream for deflate. Returns a map
+// of { filename: text }. No external library needed.
+async function readZip(buf) {
+  const dv = new DataView(buf), bytes = new Uint8Array(buf), out = {};
+  // Find the End Of Central Directory record (signature 0x06054b50), scanning back.
+  let eocd = -1;
+  for (let i = bytes.length - 22; i >= 0 && i >= bytes.length - 22 - 65536; i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) throw Error('Not a valid ZIP file.');
+  const count = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true); // offset of first central-directory record
+  const dec = new TextDecoder('utf-8');
+  const inflate = async slice => {
+    if (typeof DecompressionStream !== 'function') throw Error('This browser cannot unzip the data.');
+    const ds = new DecompressionStream('deflate-raw');
+    const stream = new Blob([slice]).stream().pipeThrough(ds);
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  };
+  for (let n = 0; n < count; n++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break; // central-directory header
+    const method = dv.getUint16(p + 10, true);
+    const compSize = dv.getUint32(p + 20, true);
+    const nameLen = dv.getUint16(p + 28, true);
+    const extraLen = dv.getUint16(p + 30, true);
+    const commentLen = dv.getUint16(p + 32, true);
+    const localOff = dv.getUint32(p + 42, true);
+    const name = dec.decode(bytes.subarray(p + 46, p + 46 + nameLen));
+    // Jump to the local file header to find where the data actually starts.
+    const lNameLen = dv.getUint16(localOff + 26, true), lExtraLen = dv.getUint16(localOff + 28, true);
+    const dataStart = localOff + 30 + lNameLen + lExtraLen;
+    const comp = bytes.subarray(dataStart, dataStart + compSize);
+    let raw;
+    if (method === 0) raw = comp;
+    else if (method === 8) raw = await inflate(comp);
+    else { p += 46 + nameLen + extraLen + commentLen; continue; }
+    out[name.split('/').pop()] = dec.decode(raw);
+    p += 46 + nameLen + extraLen + commentLen;
+  }
+  return out;
+}
+
+// Build a fresh `data`-shaped object from the unzipped tournament files.
+// Reads the master league file for the competition name and team order, then
+// each per-team roster file for players (number, name, Pointbench id).
+function parsePointbenchData(files, source) {
+  const parser = new DOMParser();
+  const parseXml = text => { const d = parser.parseFromString(text, 'application/xml'); if (d.querySelector('parsererror')) throw Error('Could not read a data file.'); return d; };
+  const code = source.id;
+  // The master file is the one with <league> at its root (e.g. 2026-eslcm.xml).
+  const masterName = Object.keys(files).find(n => /<league[\s>]/.test(files[n]));
+  let leagueName = source.label, teamOrder = null;
+  if (masterName) {
+    const L = parseXml(files[masterName]);
+    leagueName = L.querySelector('league > name')?.textContent?.trim() || leagueName;
+    const refs = [...L.querySelectorAll('teams > *')].map(el =>
+      el.getAttribute('href') || el.getAttribute('id') || '');
+    teamOrder = refs.map(r => (r.match(/roster-([a-z]{2,4})\.xml/i)?.[1] || r).toLowerCase()).filter(Boolean);
+  }
+  // Collect only the dedicated per-team roster files (…-roster-xx.xml). Game and
+  // game-list files also contain <team id="…"> elements but no team <name> or
+  // per-player names, so they must not be mistaken for rosters.
+  const rosters = {};
+  for (const [name, text] of Object.entries(files)) {
+    if (!/roster-[a-z]{2,4}\.xml$/i.test(name)) continue;
+    if (!/<team[\s>]/.test(text) || /<league[\s>]/.test(text)) continue;
+    let doc; try { doc = parseXml(text); } catch { continue; }
+    const teamEl = doc.querySelector('team'); if (!teamEl) continue;
+    const id = (teamEl.getAttribute('id') || name.match(/roster-([a-z]{2,4})/i)?.[1] || '').toLowerCase();
+    if (!id) continue;
+    const teamName = teamEl.querySelector('name')?.textContent?.trim() || id.toUpperCase();
+    const players = [...teamEl.querySelectorAll('player')].map(pl => {
+      const no = pl.querySelector('no')?.textContent?.trim() ?? '';
+      const last = pl.querySelector('last-name')?.textContent?.trim() ?? '';
+      const first = pl.querySelector('first-name')?.textContent?.trim() ?? '';
+      const full = pl.querySelector('full-name')?.textContent?.trim();
+      const nm = full || [last, first].filter(Boolean).join(', ');
+      return { number: no, name: nm, pid: pl.getAttribute('id') || '' };
+    }).filter(p => p.number !== '');
+    players.sort((a, b) => Number(a.number) - Number(b.number));
+    if (players.length) rosters[id] = { id, name: teamName, players };
+  }
+  const ids = Object.keys(rosters);
+  if (!ids.length) throw Error('No team rosters found in the download.');
+  const ordered = (teamOrder && teamOrder.length ? teamOrder.filter(id => rosters[id]) : [])
+    .concat(ids.filter(id => !teamOrder || !teamOrder.includes(id)));
+  const teams = ordered.map(id => {
+    const r = rosters[id];
+    return { id, name: r.name, players: r.players.map(p => ({ number: p.number, name: p.name })), goalie: r.players[0] || null };
+  });
+  // Pointbench player ids for the XML export (team id -> jersey -> id).
+  const pbIds = {};
+  for (const id of ordered) { pbIds[id] = {}; for (const p of rosters[id].players) if (p.pid) pbIds[id][p.number] = p.pid; }
+  // Period rules from the config file, so imported games split into the right periods.
+  let rules = { periodCount: 4, periodLength: 8, otLength: 3 };
+  const cfgName = Object.keys(files).find(n => /<config[\s>]/.test(files[n]));
+  if (cfgName) { try {
+    const C = parseXml(files[cfgName]);
+    rules = {
+      periodCount: Number(C.querySelector('period-count')?.textContent) || 4,
+      periodLength: Number(C.querySelector('period-length')?.textContent) || 8,
+      otLength: Number(C.querySelector('period-ot-length')?.textContent) || 3,
+    };
+  } catch {} }
+  return {
+    competition: `${leagueName}`,
+    code,
+    source: source.url,
+    fetchedAt: new Date().toISOString(),
+    teams,
+    pbIds,
+    rules,
+  };
+}
+
+// Fetch, unzip and apply a source. Replaces the live rosters and the export id map.
+async function loadPointbenchData(source) {
+  const res = await fetch(source.url, { cache: 'no-store' });
+  if (!res.ok) throw Error(`Download failed (HTTP ${res.status}).`);
+  const buf = await res.arrayBuffer();
+  const files = await readZip(buf);
+  const fresh = parsePointbenchData(files, source);
+  pbFiles = files; pbRules = fresh.rules || pbRules;
+  applyRosterData(fresh);
+  try { localStorage.setItem(DATA_KEY, JSON.stringify({ sourceId: source.id, data: fresh })); } catch {}
+  return fresh;
+}
+
+// Swap the current rosters/competition/export-ids in and reset any setup picks
+// that no longer match a team.
+function applyRosterData(fresh) {
+  data = { competition: fresh.competition, code: fresh.code, source: fresh.source, fetchedAt: fresh.fetchedAt, teams: fresh.teams };
+  PB_IDS = fresh.pbIds || {};
+  const valid = new Set(data.teams.map(t => t.id));
+  setupPicks = setupPicks.map(id => valid.has(id) ? id : '');
+  setupGoalies = setupPicks.map((id, i) => data.teams.find(t => t.id === id)?.goalie?.number || '');
+}
+
+// Load rosters from files the user picks: a Pointbench ZIP, or one or more of
+// the unzipped XML files (rosters + optionally the master league file).
+async function loadDataFromFiles(fileList) {
+  const status = $('#data-status'); if (status) status.textContent = 'Reading file…';
+  try {
+    let files = {};
+    for (const f of fileList) {
+      if (/\.zip$/i.test(f.name)) Object.assign(files, await readZip(await f.arrayBuffer()));
+      else if (/\.xml$/i.test(f.name)) files[f.name.split(/[\\/]/).pop()] = await f.text();
+    }
+    if (!Object.keys(files).length) throw Error('Choose a .zip or .xml file.');
+    // Work out which competition this is: the chosen dropdown, else a filename code.
+    const guess = Object.keys(files).join(' ').match(/\b(eslc[mw])\b/i)?.[1]?.toLowerCase();
+    const src = PB_SOURCES.find(s => s.id === ($('#set-source')?.value || guess))
+      || (guess && { id: guess, label: guess.toUpperCase(), url: '' })
+      || PB_SOURCES.find(s => s.id === activeSourceId) || PB_SOURCES[0];
+    const fresh = parsePointbenchData(files, src);
+    pbFiles = files; pbRules = fresh.rules || pbRules;
+    activeSourceId = src.id;
+    applyRosterData(fresh);
+    try { localStorage.setItem(DATA_KEY, JSON.stringify({ sourceId: src.id, data: fresh })); } catch {}
+    notify(`Loaded ${fresh.teams.length} teams from file`);
+    if (modal.open && $('#data-status')) showSettings();
+    if (!match) renderSetup();
+  } catch (err) {
+    if ($('#data-status')) $('#data-status').textContent = 'Could not read file: ' + err.message;
+    setupStatus = `err:Could not read file: ${esc(err.message)}`;
+    if (!match && !modal.open) renderSetup();
+    notify('Could not read file: ' + err.message);
+  }
+}
+
+/* ---------- Save downloaded files to a chosen folder (desktop) ---------- */
+// The File System Access API (desktop Chrome/Edge) lets us write the unzipped
+// files into a folder the user picks, and remember that folder via IndexedDB.
+const fsSupported = () => typeof window.showDirectoryPicker === 'function';
+function idb() {
+  return new Promise((resolve, reject) => {
+    const r = indexedDB.open('lax-observer-fs', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('handles');
+    r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error);
+  });
+}
+async function idbGet(key) { try { const db = await idb(); return await new Promise((res, rej) => { const tx = db.transaction('handles', 'readonly').objectStore('handles').get(key); tx.onsuccess = () => res(tx.result); tx.onerror = () => rej(tx.error); }); } catch { return null; } }
+async function idbSet(key, val) { try { const db = await idb(); await new Promise((res, rej) => { const tx = db.transaction('handles', 'readwrite').objectStore('handles').put(val, key); tx.onsuccess = () => res(); tx.onerror = () => rej(tx.error); }); } catch {} }
+async function ensurePermission(handle) {
+  if (!handle) return false;
+  const opts = { mode: 'readwrite' };
+  if ((await handle.queryPermission?.(opts)) === 'granted') return true;
+  return (await handle.requestPermission?.(opts)) === 'granted';
+}
+// Get the remembered folder (asking permission), or pick a new one.
+async function getSaveFolder(forcePick = false) {
+  if (!fsSupported()) throw Error('Saving to a folder needs desktop Chrome or Edge.');
+  if (!forcePick) {
+    const saved = await idbGet('saveDir');
+    if (saved && await ensurePermission(saved)) return saved;
+  }
+  const dir = await window.showDirectoryPicker({ mode: 'readwrite' });
+  await idbSet('saveDir', dir);
+  return dir;
+}
+// Write every file from the last download into the chosen folder.
+async function saveFilesToFolder(forcePick = false) {
+  if (!pbFiles || !Object.keys(pbFiles).length) throw Error('Download or load a tournament first.');
+  const dir = await getSaveFolder(forcePick);
+  let n = 0;
+  for (const [name, text] of Object.entries(pbFiles)) {
+    const fh = await dir.getFileHandle(name, { create: true });
+    const w = await fh.createWritable(); await w.write(text); await w.close(); n++;
+  }
+  try { localStorage.setItem('lax-observer-savedir-name', dir.name); } catch {}
+  return { count: n, folder: dir.name };
+}
+
+/* ---------- Import games from the loaded tournament ---------- */
+// Read the schedule (game-list) into rows: id, home/visiting ids, date, field, pool.
+function parseGameList(files) {
+  const listName = Object.keys(files).find(n => /<game-list[\s>]/.test(files[n]));
+  if (!listName) return [];
+  let doc; try { doc = new DOMParser().parseFromString(files[listName], 'application/xml'); } catch { return []; }
+  return [...doc.querySelectorAll('game-list > game')].map(g => {
+    const teams = [...g.querySelectorAll('team')];
+    const home = teams.find(t => t.getAttribute('role') === 'home') || teams[0];
+    const vis = teams.find(t => t.getAttribute('role') === 'visiting') || teams[1];
+    const d = g.querySelector('date'), t = g.querySelector('time');
+    const loc = (g.querySelector('location')?.textContent || '').trim();
+    return {
+      id: g.getAttribute('id') || '',
+      home: home?.getAttribute('id') || '', visiting: vis?.getAttribute('id') || '',
+      year: Number(d?.getAttribute('year')) || null, month: Number(d?.getAttribute('month')) || null, day: Number(d?.getAttribute('day')) || null,
+      hour: Number(t?.getAttribute('hour')) || 0, min: Number(t?.getAttribute('min')) || 0,
+      field: /2/.test(loc) ? '2' : /1/.test(loc) ? '1' : null,
+      pool: (g.querySelector('description')?.textContent || '').trim(),
+    };
+  }).filter(g => g.id);
+}
+// Find the game XML file for a given game number within the loaded files.
+function gameFileFor(files, id) {
+  const n = String(id).padStart(3, '0');
+  const name = Object.keys(files).find(k => new RegExp(`game-0*${id}\\.xml$`, 'i').test(k) || k.includes(`game-${n}.xml`));
+  return name ? files[name] : null;
+}
+// Convert an absolute game time (minutes:seconds from the start of the match) to
+// the app's { period, gameTime(countdown) } using the tournament's period length.
+function splitGameTime(absSecs, rules) {
+  const regLen = rules.periodLength * 60, otLen = rules.otLength * 60;
+  let period = 1, start = 0;
+  while (true) {
+    const len = period <= rules.periodCount ? regLen : otLen;
+    if (absSecs < start + len || period >= rules.periodCount + 4) break;
+    start += len; period++;
+  }
+  const len = period <= rules.periodCount ? regLen : otLen;
+  const remaining = Math.max(0, len - (absSecs - start));
+  const mm = Math.floor(remaining / 60), ss = remaining % 60;
+  return { period, gameTime: `${mm}:${String(ss).padStart(2, '0')}` };
+}
+// Build a match object from a PointBench game XML (the inverse of xmlFor).
+function parseGameXml(text, rules, meta = {}) {
+  const doc = new DOMParser().parseFromString(text, 'application/xml');
+  if (doc.querySelector('parsererror')) throw Error('Could not read the game file.');
+  const gameEl = doc.querySelector('game'); if (!gameEl) throw Error('Not a game file.');
+  const teamEls = [...doc.querySelectorAll('game > team')];
+  if (teamEls.length < 2) throw Error('Game file has no teams.');
+  const COLOR_IDS = ['blue', 'red'];
+  const teams = teamEls.slice(0, 2).map((tEl, i) => {
+    const id = (tEl.getAttribute('id') || '').toLowerCase();
+    const known = (data.teams || []).find(t => t.id === id);
+    const players = [...tEl.querySelectorAll(':scope > player')].map(pl => {
+      const no = pl.querySelector('no')?.textContent?.trim() ?? '';
+      const full = pl.querySelector('full-name')?.textContent?.trim()
+        || [pl.querySelector('last-name')?.textContent, pl.querySelector('first-name')?.textContent].filter(Boolean).join(', ');
+      return { number: no, name: full || `#${no}` };
+    }).filter(p => p.number !== '');
+    players.sort((a, b) => Number(a.number) - Number(b.number));
+    return { id, name: known?.name || id.toUpperCase(), players, color: COLOR_IDS[i] };
+  });
+  const teamById = id => teams.find(t => t.id === id);
+  const timeOf = el => { const tt = el.querySelector(':scope > time'); const abs = (Number(tt?.getAttribute('min')) || 0) * 60 + (Number(tt?.getAttribute('sec')) || 0); const at = tt?.getAttribute('ts') || null; return { abs, at, ...splitGameTime(abs, rules) }; };
+  const clockFrom = (tm, field) => ({ field: field ?? null, gameTime: tm.gameTime, shotTime: null, status: 'imported', capturedAt: tm.at || null });
+  const field = meta.field ?? null;
+  const events = [], goalieLog = [], goalies = {};
+  const evEls = [...doc.querySelectorAll('game > events > *')];
+  for (let i = 0; i < evEls.length; i++) {
+    const el = evEls[i], tag = el.tagName.toLowerCase(), teamId = el.getAttribute('team-id');
+    const tm = timeOf(el), clock = clockFrom(tm, field);
+    const pno = el.querySelector(':scope > p')?.getAttribute('no') || null;
+    const mk = (action, extra = {}) => ({ id: crypto.randomUUID(), teamId, action, player: pno, period: tm.period, assist: null, save: null, penalty: null, clock, ...extra });
+    if (tag === 'goalie-change') {
+      const no = el.querySelector(':scope > p')?.getAttribute('no'); if (!no) continue;
+      goalies[teamId] = no; goalieLog.push({ teamId, player: no, period: tm.period, clock: { ...clock, gameTime: tm.gameTime }, at: tm.at || null });
+      continue;
+    }
+    if (tag === 'goal') {
+      const s = el.querySelector(':scope > s')?.getAttribute('no') || null;
+      const a = el.querySelector(':scope > a')?.getAttribute('no') || null;
+      if (!s) continue;
+      events.push(mk('G', { player: s, assist: a }));
+    } else if (tag === 'shot') {
+      const type = el.querySelector(':scope > type')?.textContent?.trim();
+      if (type === 'S') {
+        // A saved shot: the following <save> (same team-defending) carries the goalie.
+        const next = evEls[i + 1];
+        let save = null;
+        if (next && next.tagName.toLowerCase() === 'save') {
+          const sv = next, gkTeam = sv.getAttribute('team-id'), gk = sv.querySelector(':scope > p')?.getAttribute('no') || null;
+          save = { teamId: gkTeam, player: gk };
+          i++; // consume the save element
+        }
+        if (!pno) continue; // the app requires a shooter
+        if (!save) save = { teamId: teams.find(t => t.id !== teamId)?.id, player: null };
+        events.push(mk('SS', { save }));
+      } else { // 'W' = wide
+        if (!pno) continue;
+        events.push(mk('SW'));
+      }
+    } else if (tag === 'save') {
+      // A save not preceded by its shot (shooter unknown): record as the opponent's saved shot.
+      const shooterTeam = teams.find(t => t.id !== teamId)?.id;
+      events.push({ id: crypto.randomUUID(), teamId: shooterTeam, action: 'SS', player: null, period: tm.period, assist: null, save: { teamId, player: el.querySelector(':scope > p')?.getAttribute('no') || null }, penalty: null, clock });
+    } else if (tag === 'ground-ball') { if (pno) events.push(mk('GB'));
+    } else if (tag === 'turnover') { if (pno) events.push(mk('TO'));
+    } else if (tag === 'caused-turnover') { if (pno) events.push(mk('CT'));
+    } else if (tag === 'fo') { if (pno) events.push(mk('FO'));
+    } else if (tag === 'free-position') { if (pno) events.push(mk('FP'));
+    } else if (tag === 'card') {
+      if (!pno) continue;
+      const offense = el.querySelector(':scope > description')?.textContent?.trim() || 'Other';
+      const color = { G: 'green', Y: 'yellow', R: 'red' }[el.querySelector(':scope > color')?.textContent?.trim()] || null;
+      const pt = el.querySelector(':scope > penalty-time')?.textContent?.trim() || null;
+      events.push(mk('PEN', { penalty: { offense, card: color, time: pt } }));
+    }
+    // <timeout> and anything else: skipped (no app equivalent).
+  }
+  // Drop any saved-shot whose save references a player, keeping shooter-less ones only if they have a save player.
+  const cleaned = events.filter(e => e.player != null || (e.action === 'SS' && e.save?.player != null));
+  // Starting goalies: first goalie-change per team, else none.
+  const dEl = gameEl.querySelector(':scope > date'), hEl = gameEl.querySelector(':scope > time');
+  const date = meta.year ? new Date(meta.year, (meta.month || 1) - 1, meta.day || 1, meta.hour || 0, meta.min || 0)
+    : dEl ? new Date(Number(dEl.getAttribute('year')), (Number(dEl.getAttribute('month')) || 1) - 1, Number(dEl.getAttribute('day')) || 1, Number(hEl?.getAttribute('hour')) || 0, Number(hEl?.getAttribute('min')) || 0)
+    : new Date();
+  const lastPeriod = cleaned.reduce((m, e) => Math.max(m, e.period || 1), 1);
+  return {
+    id: crypto.randomUUID(),
+    date: date.toISOString(),
+    field,
+    teams,
+    goalies,
+    goalieLog,
+    currentPeriod: lastPeriod,
+    events: cleaned,
+    undo: [],
+    gameNo: meta.id ? String(Number(meta.id)) : (gameEl.getAttribute('id') || null),
+    imported: true,
+  };
+}
+// Import one scheduled game into the archive (db.matches); returns the match.
+function importOneGame(files, rules, meta) {
+  const text = gameFileFor(files, meta.id);
+  if (!text) throw Error(`No game file for game ${meta.id}.`);
+  const m = parseGameXml(text, rules, meta);
+  const existing = db.matches.findIndex(x => x.imported && String(x.gameNo) === String(m.gameNo) && x.teams.map(t => t.id).sort().join() === m.teams.map(t => t.id).sort().join());
+  if (existing >= 0) { m.id = db.matches[existing].id; db.matches[existing] = m; }
+  else db.matches.push(m);
+  return m;
+}
+
+// Build a fresh, empty live match from a schedule row (teams from the loaded
+// rosters, home = blue / visiting = red, field + game number from the schedule).
+function freshMatchFromSchedule(g) {
+  const pick = id => {
+    const t = (data.teams || []).find(x => x.id === id);
+    if (!t) throw Error(`Team ${String(id).toUpperCase()} isn't in the loaded rosters.`);
+    return structuredClone(t);
+  };
+  const home = { ...pick(g.home), color: 'blue' }, vis = { ...pick(g.visiting), color: 'red' };
+  const goalies = { [home.id]: home.goalie?.number || null, [vis.id]: vis.goalie?.number || null };
+  const date = g.year ? new Date(g.year, (g.month || 1) - 1, g.day || 1, g.hour || 0, g.min || 0) : new Date();
+  const m = {
+    id: crypto.randomUUID(), date: date.toISOString(), field: g.field || null,
+    teams: [home, vis], goalies, currentPeriod: 1, events: [], undo: [],
+    gameNo: /^\d+$/.test(String(g.id)) ? String(Number(g.id)) : null,
+  };
+  m.goalieLog = m.teams.filter(t => goalies[t.id]).map(t => ({ teamId: t.id, player: goalies[t.id], period: 1, clock: null, at: m.date }));
+  return m;
+}
+
+// Master catalog of every event type the app can record.
+//   code    short code stored with each event and used in exports
+//   label   full name (shown in the feed, exports, summary)
+//   button  text on the big action button (defaults to code)
+//   note    small text under the button (defaults to label)
+//   kind    'goal'   scores a point, asks for an assist
+//           'shot'   a missed shot (type W in the XML)
+//           'save'   a saved shot: asks the shooter, credits the opposing goalie (type S)
+//           'card'   a penalty: asks for card colour and offense
+//           'plain'  just a player (ground ball, turnover, …)
+//   look    'goal' or 'penalty' give the button special colours; 'wide' = full-width
+const ACTION_CATALOG = [
+  { code: 'GB',  label: 'Ground Ball',      kind: 'plain' },
+  { code: 'SW',  label: 'Shot Wide',        kind: 'shot' },
+  { code: 'SS',  label: 'Shot Saved',       kind: 'save' },
+  { code: 'G',   label: 'Goal', button: 'Goal', kind: 'goal', look: 'goal' },
+  { code: 'TO',  label: 'Turnover',         kind: 'plain' },
+  { code: 'CT',  label: 'Caused Turnover',  button: 'CT', note: 'Caused TO', kind: 'plain' },
+  { code: 'FP',  label: 'Free Position',    button: 'FP', note: 'Free pos.', kind: 'plain' },
+  { code: 'FO',  label: 'Faceoff Won',      button: 'FO', note: 'Faceoff', kind: 'plain' },
+  { code: 'PEN', label: 'Penalty', button: 'Penalty', note: 'Foul · card', kind: 'card', look: 'penalty' },
+];
+const catalogByCode = c => ACTION_CATALOG.find(a => a.code === c);
+// Actions currently switched on, in catalog order. ACTIONS is {code: label}.
+let enabledActions = () => ACTION_CATALOG.filter(a => settings.enabled.includes(a.code));
+let ACTIONS = {};
+const refreshActions = () => { ACTIONS = Object.fromEntries(enabledActions().map(a => [a.code, a.label])); };
+const OFFENSES = {
+  'Minor foul': ['Interference', 'Pushing', 'Illegal Pick', 'Holding', 'Withholding the Ball from Play', 'Illegal Actions with the Stick', 'Illegal Actions by Team Officials', 'Illegal Procedure', 'Illegal Equipment', 'Offside', 'Warding'],
+  'Major foul': ['Illegal Body-Check', 'Slashing', 'Cross-Check', 'Tripping', 'Unnecessary Roughness', 'Illegal Stick', 'Unsportsmanlike Conduct', 'Walling'],
+  'Expulsion foul': ['Fighting', 'Abusive Language or Misconduct toward Officials', 'Deliberate Check to Head or Neck, or from Behind'],
+  'Other': ['Other']
+};
+const CARDS = { green: { name: 'Green', hex: '#248444', ink: '#fff' }, yellow: { name: 'Yellow', hex: '#f4cf2e', ink: '#15181b' }, red: { name: 'Red', hex: '#c53636', ink: '#fff' } };
+const offenseClass = o => Object.keys(OFFENSES).find(k => OFFENSES[k].includes(o)) || '';
+const cardName = c => CARDS[c] ? CARDS[c].name + ' card' : 'No card';
+const penaltyText = p => p ? `${p.offense} · ${cardName(p.card)}${p.time ? ` · ${p.time}` : ''}` : 'Offense not recorded';
+const COLORS = [
+  { id: 'red', name: 'Red', hex: '#c53636', ink: '#ffffff', soft: '#f9e9e7', accent: '#9f2424', border: '#e5c3c3' },
+  { id: 'yellow', name: 'Yellow', hex: '#f4cf2e', ink: '#15181b', soft: '#fff8d9', accent: '#6f5900', border: '#e5d996' },
+  { id: 'blue', name: 'Blue', hex: '#2069b2', ink: '#ffffff', soft: '#eaf1f9', accent: '#185386', border: '#c8d9e9' },
+  { id: 'orange', name: 'Orange', hex: '#e77b24', ink: '#15181b', soft: '#fff1e5', accent: '#98460b', border: '#edc9ad' },
+  { id: 'green', name: 'Green', hex: '#248444', ink: '#ffffff', soft: '#e8f3e9', accent: '#17612f', border: '#bdd7c3' },
+  { id: 'purple', name: 'Purple', hex: '#8048a5', ink: '#ffffff', soft: '#f3eaf8', accent: '#6c368e', border: '#dac7e7' },
+  { id: 'black', name: 'Black', hex: '#1c2023', ink: '#ffffff', soft: '#e9ebed', accent: '#1c2023', border: '#c4cbd0' },
+  { id: 'white', name: 'White', hex: '#ffffff', ink: '#15181b', soft: '#ffffff', accent: '#132e38', border: '#b9c6c4' }
+];
+// Rules presets for each discipline. Picking a discipline fills these,
+// then the user can still override any single value.
+const DISCIPLINES = {
+  sixes:  { name: 'Sixes',        quarters: 4, quarterMinutes: 8,  otMinutes: 4, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'PEN'] },
+  field:  { name: 'Field',        quarters: 4, quarterMinutes: 15, otMinutes: 4, shotClockSeconds: 80, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FO', 'PEN'] },
+  box:    { name: 'Box',          quarters: 3, quarterMinutes: 20, otMinutes: 5, shotClockSeconds: 30, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'PEN'] },
+  women:  { name: "Women's Field", quarters: 2, quarterMinutes: 25, otMinutes: 3, shotClockSeconds: 90, enabled: ['GB', 'SW', 'SS', 'G', 'TO', 'CT', 'FP', 'PEN'] },
+};
+const MAX_OT = 4;        // how many OT periods the picker can add
+const SHOT_MS = () => settings.shotClockSeconds * 1000;
+const QUARTERS = () => settings.quarters;
+const isOT = p => Number.isInteger(p) && p > QUARTERS();
+const periodMs = p => (isOT(p) ? settings.otMinutes : settings.quarterMinutes) * 60 * 1000;
+
+/* ---------- Core logic ---------- */
+const teamPalette = (t, index = 0) => COLORS.find(c => c.id === t?.color) || COLORS.find(c => c.id === (index ? 'red' : 'blue'));
+const periodLabel = (p, unknown = '-') => !Number.isInteger(p) || p < 1 ? unknown : p <= QUARTERS() ? 'Q' + p : p === QUARTERS() + 1 ? 'OT' : 'OT' + (p - QUARTERS());
+function saveForShot(m, teamId) {
+  const opp = m.teams.find(t => t.id !== teamId);
+  if (!opp) throw Error('Opposing team unavailable.');
+  const number = m.goalies?.[opp.id];
+  return { teamId: opp.id, player: opp.players.some(p => p.number === number) ? number : null };
+}
+function validateEvent(ev, teams) {
+  const t = teams.find(t => t.id === ev.teamId);
+  if (ev.period != null && (!Number.isInteger(ev.period) || ev.period < 1 || ev.period > QUARTERS() + MAX_OT)) throw Error('Choose a valid period.');
+  if (!t || !ACTIONS[ev.action]) throw Error('Invalid team or action.');
+  if (!t.players.some(p => p.number === ev.player)) throw Error('Choose a player from the team.');
+  if (ev.action !== 'G' && ev.assist !== null) throw Error('An assist can only be recorded for a goal.');
+  if (ev.assist !== null && (!t.players.some(p => p.number === ev.assist) || ev.assist === ev.player)) throw Error('Choose a different player for the assist.');
+  if (ev.save != null) {
+    const d = teams.find(x => x.id === ev.save.teamId);
+    if (ev.action !== 'SS' || !d || d.id === t.id) throw Error('A save must belong to the opposing team.');
+    if (ev.save.player != null && !d.players.some(p => p.number === ev.save.player)) throw Error('Choose a goalkeeper from the opposing team.');
+  }
+  if (ev.action === 'PEN') {
+    if (!ev.penalty || !offenseClass(ev.penalty.offense)) throw Error('Choose the offense.');
+    if (ev.penalty.card != null && !CARDS[ev.penalty.card]) throw Error('Choose a valid card colour.');
+  } else if (ev.penalty != null) throw Error('A card can only be recorded for a penalty.');
+  return ev;
+}
+const applyChange = (m, events) => ({ ...m, undo: [...(m.undo || []), m.events.map(e => ({ ...e }))].slice(-50), events });
+const undoChange = m => m.undo?.length ? { ...m, events: m.undo.at(-1), undo: m.undo.slice(0, -1) } : m;
+
+function csvFor(m) {
+  const teams = m.teams, quote = v => '"' + String(v ?? '').replaceAll('"', '""') + '"';
+  const rows = [['Order', 'Quarter', 'Field', 'Game clock', 'Shot clock', 'Clock status', 'Clock captured at', 'Team', 'Action', 'Jersey number', 'Player', 'Assist number', 'Assist player', 'Save team', 'Goalkeeper number', 'Goalkeeper name', 'Offense', 'Foul class', 'Card']];
+  m.events.forEach((e, i) => {
+    const t = teams.find(t => t.id === e.teamId), c = e.clock || {}, d = e.save ? teams.find(t => t.id === e.save.teamId) : null;
+    rows.push([i + 1, periodLabel(e.period, ''), c.field ? `Field ${c.field}` : '', c.gameTime ?? '', c.shotTime ?? '', c.status ?? '', c.capturedAt ?? '', t?.name ?? e.teamId, e.action, e.player, t?.players.find(p => p.number === e.player)?.name ?? '', e.assist ?? '', t?.players.find(p => p.number === e.assist)?.name ?? '', e.save ? d?.name ?? e.save.teamId : '', e.save?.player ?? '', d?.players.find(p => p.number === e.save?.player)?.name ?? '', e.penalty?.offense ?? '', e.penalty ? offenseClass(e.penalty.offense) : '', e.penalty ? (e.penalty.card ?? 'none') : '']);
+  });
+  return '﻿' + rows.map(r => r.map(quote).join(';')).join('\r\n');
+}
+// PointBench player ids, where known (team id -> jersey number -> id).
+// Players not listed here are exported with an empty id.
+let PB_IDS = {"esp": {"0": "kg4ftomk", "50": "ij3up5eq", "9": "k5hxzxbs", "6": "t8ah6k7b", "31": "w44x5izp", "96": "chiozsp3", "5": "diejobxr", "13": "68bdw8sd", "11": "uu6aznqw", "25": "qgtr7hsm", "22": "dt7gpnem", "15": "zz8wh3oh"}, "fin": {"9": "cn6p7puz", "3": "jsa6okup", "32": "pda7s5gx", "8": "61egtsjr", "13": "wu4ooibz", "21": "gzc5khrh", "48": "8zadpxhq", "27": "bjnxkiob", "45": "ercg8zoe", "0": "x9uqzhnq", "10": "m34u6gz4", "1": "a7pom3ii"}};
+
+// XML export in the PointBench game-file layout.
+function xmlFor(m) {
+  const x = v => String(v ?? '').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const pad = (n, w = 2) => String(n).padStart(w, '0');
+  const pid = (teamId, no) => PB_IDS[teamId]?.[no] ?? '';
+  const who = (tag, teamId, no) => `      <${tag} id="${x(pid(teamId, no))}" no="${x(no)}"/>`;
+  // Local time with its UTC offset, e.g. 2026-11-15T15:32:29.846+01:00
+  const stamp = iso => {
+    const d = iso ? new Date(iso) : new Date(), off = -d.getTimezoneOffset(), a = Math.abs(off);
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(), 3)}${off < 0 ? '-' : '+'}${pad(Math.floor(a / 60))}:${pad(a % 60)}`;
+  };
+  // Game time counted up from the start of the match (Q2 at 6:30 left = 9:30).
+  const timeTag = (period, clock, at) => {
+    let secs = 0;
+    const parts = /^(\d+):(\d\d)$/.exec(clock?.gameTime ?? clock?.orderTime ?? '');
+    if (parts && Number.isInteger(period)) {
+      let before = 0; for (let q = 1; q < period; q++) before += periodMs(q) / 1000;
+      secs = before + Math.max(0, periodMs(period) / 1000 - (Number(parts[1]) * 60 + Number(parts[2])));
+    }
+    return `      <time min="${Math.floor(secs / 60)}" sec="${secs % 60}" ts="${stamp(at ?? clock?.capturedAt)}"/>`;
+  };
+  const start = new Date(m.date), no = m.gameNo ?? '';
+  const out = [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    `<game id="${x(no)}" ids="${no ? 'M' + x(no) : ''}">`,
+    `  <!-- Last change: ${new Date().toUTCString()} -->`,
+    `  <timestamp>${Math.floor(Date.now() / 1000)}</timestamp>`,
+    `  <date year="${start.getFullYear()}" day="${start.getDate()}" month="${start.getMonth() + 1}"/>`,
+    `  <time hour="${start.getHours()}" min="${start.getMinutes()}"/>`,
+    '  <status>finished</status>',
+  ];
+
+  m.teams.forEach((t, i) => {
+    out.push(`  <team role="${i ? 'visiting' : 'home'}" id="${x(t.id)}">`);
+    for (const p of t.players) out.push(`    <player id="${x(pid(t.id, p.number))}">`, `      <no>${x(p.number)}</no>`, `      <full-name>${x(p.name)}</full-name>`, '    </player>');
+    out.push('  </team>');
+  });
+
+  // Goalkeeper changes are slotted in before the first action recorded after them.
+  const changes = (m.goalieLog?.length ? m.goalieLog : m.teams.filter(t => m.goalies?.[t.id]).map(t => ({ teamId: t.id, player: m.goalies[t.id], period: 1, clock: null, at: m.date }))).filter(g => g.player);
+  const timeline = m.events.map(e => ({ e }));
+  for (const g of changes) {
+    const k = timeline.findIndex(item => item.e && (item.e.clock?.capturedAt ?? '') > g.at);
+    timeline.splice(k < 0 ? timeline.length : k, 0, { g });
+  }
+  out.push('  <events>');
+  for (const { e, g } of timeline) {
+    if (g) { out.push(`    <goalie-change team-id="${x(g.teamId)}">`, timeTag(g.period, g.clock, g.at), who('p', g.teamId, g.player), '    </goalie-change>'); continue; }
+    const time = timeTag(e.period, e.clock), open = tag => `    <${tag} team-id="${x(e.teamId)}">`;
+    if (e.action === 'GB') out.push(open('ground-ball'), time, who('p', e.teamId, e.player), '    </ground-ball>');
+    if (e.action === 'TO') out.push(open('turnover'), time, who('p', e.teamId, e.player), '    </turnover>');
+    if (e.action === 'CT') out.push(open('caused-turnover'), time, who('p', e.teamId, e.player), '    </caused-turnover>');
+    if (e.action === 'FO') out.push(open('fo'), time, who('p', e.teamId, e.player), '    </fo>');
+    if (e.action === 'FP') out.push(open('free-position'), time, who('p', e.teamId, e.player), '    </free-position>');
+    if (e.action === 'SW' || e.action === 'SS') out.push(open('shot'), time, who('p', e.teamId, e.player), `      <type>${e.action === 'SS' ? 'S' : 'W'}</type>`, '    </shot>');
+    if (e.action === 'SS' && e.save?.player != null) out.push(`    <save team-id="${x(e.save.teamId)}">`, time, who('p', e.save.teamId, e.save.player), '    </save>');
+    if (e.action === 'G') { out.push(open('goal'), time, who('s', e.teamId, e.player)); if (e.assist != null) out.push(who('a', e.teamId, e.assist)); out.push('    </goal>'); }
+    if (e.action === 'PEN') out.push(open('card'), time, who('p', e.teamId, e.player), `      <description>${x(e.penalty?.offense ?? '')}</description>`, `      <color>${{ green: 'G', yellow: 'Y', red: 'R' }[e.penalty?.card] ?? ''}</color>`, ...(e.penalty?.time ? [`      <penalty-time>${x(e.penalty.time)}</penalty-time>`] : []), '    </card>');
+  }
+  out.push('  </events>');
+
+  // Summary: one <cnt> per quarter, then overtime (always 0 here).
+  const counts = (attrs, values) => out.push(`    <${attrs}>`, ...values.map(v => `      <cnt>${v}</cnt>`), `    </${attrs.split(' ')[0]}>`);
+  // Q1..Q4 in their own slots; every OT period is summed into the 5th (OT) slot.
+  const perQuarter = test => [1, 2, 3, 4].map(q => m.events.filter(e => e.period === q && test(e)).length)
+    .concat(m.events.filter(e => isOT(e.period) && test(e)).length);
+  const zeros = n => Array(n).fill(0);
+  const eachTeam = fn => m.teams.forEach(t => fn(t));
+  out.push('  <summary>');
+  eachTeam(t => counts(`goal team-id="${x(t.id)}"`, zeros(8)));
+  eachTeam(t => counts(`fo team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'FO')));
+  for (const tag of ['draw-ctrl', 'shot']) eachTeam(t => counts(`${tag} team-id="${x(t.id)}"`, zeros(5)));
+  eachTeam(t => counts(`shot-wide team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'SW')));
+  eachTeam(t => counts(`ground-ball team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'GB')));
+  eachTeam(t => counts(`turnover team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'TO')));
+  eachTeam(t => counts(`caused-turnover team-id="${x(t.id)}"`, perQuarter(e => e.teamId === t.id && e.action === 'CT')));
+  eachTeam(t => counts(`unforced-error team-id="${x(t.id)}"`, zeros(5)));
+  for (const g of [1, 0]) eachTeam(t => counts(`pp team-id="${x(t.id)}" g="${g}"`, zeros(5)));
+  eachTeam(t => {
+    const keepers = [...new Set(m.events.filter(e => e.action === 'SS' && e.save?.teamId === t.id && e.save.player != null).map(e => e.save.player))];
+    for (const k of keepers) counts(`save team-id="${x(t.id)}" no="${x(k)}" id="${x(pid(t.id, k))}"`, perQuarter(e => e.action === 'SS' && e.save?.teamId === t.id && e.save.player === k));
+  });
+  out.push('  </summary>');
+
+  eachTeam(t => {
+    out.push(`  <player-stats team-id="${x(t.id)}">`);
+    for (const p of t.players) {
+      out.push(`    <player id="${x(pid(t.id, p.number))}" no="${x(p.number)}">`);
+      for (const tag of ['ground-ball', 'turnover', 'caused-turnover']) out.push(`      <${tag}>`, '        <cnt>0</cnt>', `      </${tag}>`);
+      out.push('    </player>');
+    }
+    out.push('  </player-stats>');
+  });
+  out.push('</game>', '');
+  return out.join('\n');
+}
+
+/* ---------- Minimal PDF writer (A4, Helvetica) ---------- */
+function pdfText(s) {
+  const map = { 'ł': 'l', 'Ł': 'L', 'ı': 'i', 'đ': 'd', 'Đ': 'D', '—': '-', '–': '-', '’': "'", '…': '...', '↳': '>' };
+  let out = '';
+  for (const ch of String(s ?? '')) {
+    let c = map[ch] ?? ch;
+    if (c.charCodeAt(0) > 255 || (c.charCodeAt(0) > 126 && c.charCodeAt(0) < 160)) c = c.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    for (const k of c) out += k.charCodeAt(0) <= 255 ? k : '?';
+  }
+  return out.replace(/[\\()]/g, '\\$&');
+}
+function createMatchPdf(m) {
+  const W = 595, H = 842, L = 40, pages = []; let ops, y;
+  const newPage = () => { ops = []; pages.push(ops); y = H - 48; };
+  const text = (x, s, size = 9, bold = false, grey = 0) => ops.push(`BT /${bold ? 'F2' : 'F1'} ${size} Tf ${grey} g ${x} ${y} Td (${pdfText(s)}) Tj ET`);
+  const rule = () => ops.push(`0.8 G 0.5 w ${L} ${y + 10} m ${W - L} ${y + 10} l S`);
+  const need = h => { if (y - h < 45) newPage(); };
+  const cut = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+  const [a, b] = m.teams, sc = id => m.events.filter(e => e.teamId === id && e.action === 'G').length;
+  newPage();
+  text(L, data.competition.toUpperCase(), 9, true, 0.45); y -= 26;
+  text(L, `${a.name}  ${sc(a.id)} : ${sc(b.id)}  ${b.name}`, 20, true); y -= 18;
+  text(L, `Field ${m.field ?? '-'} · ${new Date(m.date).toLocaleString('en-GB')} · ${m.events.length} actions`, 9, false, 0.4); y -= 30;
+
+  for (const t of m.teams) {
+    const opp = m.teams.find(x => x.id !== t.id), cols = [L, L + 34, L + 230, L + 266, L + 302, L + 338, L + 374, L + 410, L + 456];
+    need(60); text(L, `${t.name} (${t.id.toUpperCase()})`, 12, true); y -= 18;
+    ['#', 'Player', 'G', 'A', 'SW', 'SS', 'GB', 'Saves', 'Penalties'].forEach((h, i) => text(cols[i], h, 8, true, 0.4)); y -= 14;
+    let any = false;
+    for (const p of t.players) {
+      const mine = m.events.filter(e => e.teamId === t.id && e.player === p.number), n = c => mine.filter(e => e.action === c).length;
+      const row = [n('G'), m.events.filter(e => e.teamId === t.id && e.assist === p.number).length, n('SW'), n('SS'), n('GB'), m.events.filter(e => e.teamId === opp.id && e.save?.player === p.number).length, n('PEN')];
+      if (!row.some(Boolean)) continue;
+      any = true; need(14); rule();
+      [p.number, cut(p.name, 36), ...row.map(v => v || '-')].forEach((v, i) => text(cols[i], v, 9)); y -= 14;
+    }
+    if (!any) { text(L, 'No actions recorded.', 9, false, 0.4); y -= 14; }
+    y -= 16;
+  }
+
+  const ec = [L, L + 28, L + 54, L + 100, L + 134, L + 206, L + 234, L + 352];
+  const header = () => { ['No', 'Q', 'Clock', 'Team', 'Action', '#', 'Player', 'Detail'].forEach((h, i) => text(ec[i], h, 8, true, 0.4)); y -= 14; };
+  need(70); text(L, 'All actions', 12, true); y -= 18; header();
+  m.events.forEach((e, i) => {
+    if (y - 14 < 45) { newPage(); header(); }
+    const t = m.teams.find(t => t.id === e.teamId), p = t?.players.find(p => p.number === e.player);
+    let detail = '';
+    if (e.action === 'G') detail = e.assist != null ? `Assist #${e.assist}` : 'No assist';
+    if (e.action === 'SS') { const d = m.teams.find(t => t.id === e.save?.teamId), g = d?.players.find(p => p.number === e.save?.player); detail = g ? `Save ${d.id.toUpperCase()} #${g.number} ${g.name}` : 'Save not assigned'; }
+    if (e.action === 'PEN') detail = penaltyText(e.penalty);
+    rule();
+    [i + 1, periodLabel(e.period, '-'), e.clock?.gameTime ?? '', t?.id.toUpperCase() ?? '', ACTIONS[e.action], e.player, cut(p?.name ?? '', 22), cut(detail, 40)].forEach((v, k) => text(ec[k], v, 9, k === 4 && e.action === 'G'));
+    y -= 14;
+  });
+  if (!m.events.length) text(L, 'No actions recorded.', 9, false, 0.4);
+
+  const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+  const kids = [];
+  pages.forEach((p, i) => {
+    const stream = p.join('\n') + `\nBT /F1 8 Tf 0.5 g ${L} 26 Td (Page ${i + 1} of ${pages.length}) Tj ET`;
+    objs.push(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
+    objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${objs.length} 0 R >>`);
+    kids.push(`${objs.length} 0 R`);
+  });
+  objs[1] = `<< /Type /Pages /Kids [${kids.join(' ')}] /Count ${kids.length} >>`;
+  let out = '%PDF-1.4\n'; const offs = [];
+  objs.forEach((o, i) => { offs.push(out.length); out += `${i + 1} 0 obj\n${o}\nendobj\n`; });
+  const xref = out.length;
+  out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return Uint8Array.from(out, c => c.charCodeAt(0) & 255);
+}
+
+/* ---------- App state ---------- */
+const $ = s => document.querySelector(s), main = $('#main'), modal = $('#modal'), KEY = 'lax-observer-ui-v1', SETTINGS_KEY = 'lax-observer-settings-v1';
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const undoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 10l6 6M3 10h11a7 7 0 0 1 0 14" transform="translate(0 -2)"/></svg>';
+const exportIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>';
+const wide = window.matchMedia('(min-width:1000px) and (orientation:landscape)');
+// The save status is shown in the top bar and, during a match, in the centre strip.
+let statusHtml = '<i></i> Ready';
+const setStatus = h => { statusHtml = h; document.querySelectorAll('.save-status').forEach(el => { el.innerHTML = h; }); };
+let db = { matches: [], activeId: null }, match = null, draft = null;
+let setupPicks = ['', ''], setupColors = ['blue', 'red'], setupGoalies = ['', ''], setupField = null, setupGameNo = '';
+let setupGameId = '', setupStatus = '';
+let clock = { game: 0, shot: 0, running: false, at: 0 }, toastTimer, storageOkay = true, downloads = null;
+
+try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved && Array.isArray(saved.matches)) db = saved; } catch { storageOkay = false; }
+
+// ---------- Settings (persist on this device) ----------
+const defaultSettings = () => {
+  const d = DISCIPLINES.sixes;
+  return { discipline: 'sixes', quarters: d.quarters, quarterMinutes: d.quarterMinutes, otMinutes: d.otMinutes, shotClockSeconds: d.shotClockSeconds, countUp: false, autoClock: true, playit: 'off', enabled: [...d.enabled] };
+};
+let settings = defaultSettings();
+try {
+  const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+  if (saved && typeof saved === 'object') settings = { ...settings, ...saved, enabled: Array.isArray(saved.enabled) && saved.enabled.length ? saved.enabled.filter(c => catalogByCode(c)) : settings.enabled };
+} catch {}
+refreshActions();
+function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch {} refreshActions(); }
+
+function notify(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('visible'), 2800); }
+function persist() {
+  if (match) {
+    match.clock = { game: clock.game, shot: clock.shot };
+    const i = db.matches.findIndex(m => m.id === match.id);
+    if (i < 0) db.matches.push(match); else db.matches[i] = match;
+    db.activeId = match.id;
+  }
+  try { localStorage.setItem(KEY, JSON.stringify(db)); storageOkay = true; setStatus('<i></i> Saved on this device'); }
+  catch { storageOkay = false; setStatus('Saving unavailable'); notify('Unable to save in this browser. Export your match to keep a copy.'); }
+}
+const team = id => match?.teams.find(t => t.id === id) || data.teams.find(t => t.id === id);
+const maxPeriod = () => QUARTERS() + MAX_OT;
+const periodsInPlay = () => Math.max(QUARTERS(), match.currentPeriod || 1, ...match.events.map(e => e.period || 0));
+const currentPeriod = () => Number.isInteger(match.currentPeriod) && match.currentPeriod >= 1 && match.currentPeriod <= maxPeriod() ? match.currentPeriod : 1;
+const score = id => match.events.filter(e => e.teamId === id && e.action === 'G').length;
+function closeModal() { if (modal.open) modal.close(); modal.innerHTML = ''; }
+function showModal(html) { modal.innerHTML = html; if (!modal.open) modal.showModal(); }
+const head = title => `<div class="dialog-head"><h2>${title}</h2><button class="close" data-do="close" aria-label="Close">×</button></div>`;
+
+/* ---------- Clock (manual: 8:00 quarters, 30 s shot clock) ---------- */
+const fmtGame = ms => { const s = Math.ceil(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+// Parse a m:ss or seconds string to milliseconds, or null if invalid.
+const parseGame = txt => { const m = /^\s*(\d{1,3})(?::([0-5]?\d))?\s*$/.exec(txt || ''); return m ? (m[2] == null ? Number(m[1]) : Number(m[1]) * 60 + Number(m[2])) * 1000 : null; };
+const fmtShot = ms => String(Math.ceil(ms / 1000));
+// Manual time entry: type digits only, the last two are seconds (0734 -> 07:34).
+const TIMED_ACTIONS = ['G', 'PEN'];
+const timeDigits = txt => String(txt ?? '').replace(/\D/g, '').slice(-4);
+const timeMask = txt => { const d = timeDigits(txt); return d.length > 2 ? `${d.slice(0, -2)}:${d.slice(-2)}` : d; };
+const parseClockEntry = txt => {
+  const d = timeDigits(txt); if (!d) return null;
+  const secs = Number(d.slice(-2)); if (d.length > 2 && secs > 59) return null;
+  const total = Number(d.slice(0, -2) || 0) * 60 + secs, two = n => String(n).padStart(2, '0');
+  return `${two(Math.floor(total / 60))}:${two(total % 60)}`;
+};
+// The last time typed in is kept with the match and offered again next time.
+const rememberTime = (text, period) => { match.lastTime = { text, period }; };
+// Untimed actions keep their place in exports: the last typed time of the
+// same period, or the start of the period when nothing was typed yet.
+const orderTime = period => match.lastTime?.period === period ? match.lastTime.text : fmtGame(periodMs(period));
+const TIME_HELP = 'Type the time as digits, e.g. 0734 for 07:34.';
+// Game time at the start of the current period: full length when counting
+// down, 0 when counting up.
+const startGame = period => settings.countUp ? 0 : periodMs(period);
+// The period is over when the clock reaches the end in either direction.
+const clockEnded = () => settings.countUp ? clock.game >= periodMs(currentPeriod()) : clock.game <= 0;
+function tick() {
+  if (!clock.running) return;
+  const now = Date.now(), d = now - clock.at; clock.at = now;
+  const len = periodMs(currentPeriod());
+  clock.game = settings.countUp ? Math.min(len, clock.game + d) : Math.max(0, clock.game - d);
+  clock.shot = Math.max(0, clock.shot - d);
+  if (clockEnded()) { clock.running = false; persist(); if (match && !draft) renderMatch(); notify(`End of ${periodLabel(currentPeriod())}`); return; }
+  paintClock();
+}
+function paintClock() { const g = $('#game-clock'), s = $('#shot-clock'); if (g) g.textContent = fmtGame(clock.game); if (s) s.textContent = fmtShot(clock.shot); }
+setInterval(tick, 200);
+function loadClock() { clock = { game: match?.clock?.game ?? startGame(currentPeriod()), shot: match?.clock?.shot ?? SHOT_MS(), running: false, at: 0 }; }
+function captureClock() { return { field: match?.field ?? null, gameTime: fmtGame(clock.game), shotTime: fmtShot(clock.shot), status: clock.running ? 'running' : 'stopped', capturedAt: new Date().toISOString() }; }
+function clockPanel() {
+  if (settings.playit && settings.playit !== 'off') return playitClockPanel();
+  const resetLabel = settings.countUp ? '0:00' : fmtGame(periodMs(currentPeriod()));
+  const status = clock.running ? 'Running' : clockEnded() ? 'Period over' : 'Stopped';
+  const toggle = settings.autoClock
+    ? `<button class="clock-read" data-do="clock-toggle" ${clockEnded() && !clock.running ? 'disabled' : ''}>${clock.running ? 'Stop' : 'Start'}</button>`
+    : '<span class="clock-manual">Manual</span>';
+  return `<div class="clock-panel-head"><div><span class="eyebrow">Clock · Field ${match.field ?? '—'} · ${settings.countUp ? 'count up' : 'count down'}</span><strong class="clock-connection ${clock.running ? 'live' : 'stale'}">${status}</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}${toggle}</div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><div class="clock-links"><button data-do="clock-set-game">Set time</button><button data-do="clock-reset-game">Reset to ${resetLabel}</button></div></div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><div class="clock-links"><button data-do="clock-set-shot">Set</button><button data-do="clock-reset-shot">Reset to ${settings.shotClockSeconds}</button></div></div></div>`;
+}
+
+/* ---------- Playit live clock (optional, receive-only) ---------- */
+// Adapted from the vendor receiver v1.1. Opens one WebSocket to the Playit live
+// scoreboard + shot-clock socket, decodes the frames and exposes a confirmed /
+// last-known state. Receive only: no login, headers, HTTP bootstrap or outgoing
+// messages. wss works from an installed/file:// app (no CORS on the handshake),
+// so this connects where the Pointbench ZIP download cannot.
+const PLAYIT_URL = 'wss://apps.playit.pt/socket?app=world-lacrosse-2026';
+const _plInt = v => Number.isSafeInteger(v) && v >= 0 ? v : null;
+const _plStatuses = new Set(['live', 'stale', 'waiting', 'error', 'offline', 'disconnected']);
+function _plDecode(raw) {
+  try {
+    if (typeof raw !== 'string' || raw.length > 65536) return null;
+    const frame = JSON.parse(raw);
+    if (frame.type !== 'clocks:state' || frame.schema !== 'playit-clocks-live-v1') return null;
+    const bytes = Uint8Array.from(atob(frame.payload), c => c.charCodeAt(0));
+    const dataObj = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    const clocks = dataObj.clocks;
+    if (dataObj.schema !== 'playit-clocks-v2' || !Number.isFinite(dataObj.serverTime)
+        || clocks?.schema !== 'playit-clocks-v2' || typeof clocks.sessionId !== 'string'
+        || !clocks.sessionId || clocks.sessionId.length > 128 || clocks.sessionId !== frame.sessionId
+        || !Number.isSafeInteger(clocks.sequence) || clocks.sequence < 1
+        || typeof clocks.operating !== 'boolean' || !Array.isArray(clocks.devices)
+        || clocks.devices.length > 32) return null;
+    const demo = clocks.sourceId === 'demo' && clocks.demo === true;
+    if (demo ? frame.keyId !== 'demo' || frame.signature !== ''
+      : clocks.demo === true || frame.keyId === 'demo' || ![undefined, 'live'].includes(clocks.sourceId)) return null;
+    const ids = new Set();
+    for (const device of clocks.devices) {
+      const idValid = demo ? ['raspi-score-demo', 'raspi-shot-demo'].includes(device.id)
+        : /^raspi-(score|clock|shot)-[1-9][0-9]?$/.test(device.id);
+      if (!idValid || ids.has(device.id) || !_plStatuses.has(device.status)
+          || device.kind !== (device.id.startsWith('raspi-shot-') ? 'shot' : 'clock')
+          || (demo ? device.demo !== true : device.demo === true)) return null;
+      ids.add(device.id);
+    }
+    return { ...dataObj, sourceId: demo ? 'demo' : 'live', demo };
+  } catch { return null; }
+}
+function _plCreateState() {
+  const sources = new Map(), retired = new Map();
+  function accept(raw, now = performance.now(), wallNow = Date.now()) {
+    const d = _plDecode(raw);
+    if (!d) return false;
+    const transportAge = wallNow - d.serverTime;
+    if (transportAge > 3000 || transportAge < -750) return false;
+    const previous = sources.get(d.sourceId), clocks = d.clocks;
+    const oldSessions = retired.get(d.sourceId) ?? new Set();
+    if (oldSessions.has(clocks.sessionId)) return false;
+    if (previous?.data.clocks.sessionId === clocks.sessionId && clocks.sequence <= previous.data.clocks.sequence) return false;
+    if (previous && previous.data.clocks.sessionId !== clocks.sessionId) {
+      oldSessions.add(previous.data.clocks.sessionId);
+      if (oldSessions.size > 32) oldSessions.delete(oldSessions.values().next().value);
+    }
+    retired.set(d.sourceId, oldSessions);
+    sources.set(d.sourceId, { data: d, received: now, transportAge: Math.max(0, transportAge), active: true });
+    return true;
+  }
+  function disconnect() { for (const s of sources.values()) s.active = false; }
+  function snapshot(now = performance.now(), transportConnected = true) {
+    const devices = [], sourceStates = [];
+    for (const [sourceId, record] of sources) {
+      const { data, transportAge } = record, clocks = data.clocks;
+      const age = transportAge + Math.max(0, now - record.received);
+      const connected = transportConnected && record.active && age < 3000 && clocks.operating && clocks.state === 'connected';
+      sourceStates.push({ sourceId, demo: data.demo, sessionId: clocks.sessionId, sequence: clocks.sequence, serverTime: data.serverTime, connected });
+      for (const device of clocks.devices) {
+        const ageMs = Number.isFinite(device.ageMs) && device.ageMs >= 0 ? device.ageMs + age : null;
+        const confirmed = connected && device.status === 'live' && ageMs !== null && ageMs <= 1500;
+        devices.push({ id: device.id, sourceId, demo: data.demo, kind: device.kind, confirmed,
+          status: !connected ? 'disconnected' : device.status === 'live' && !confirmed ? 'stale' : device.status,
+          ageMs, clock: typeof device.clock === 'string' && /^[0-9:.]{1,12}$/.test(device.clock) ? device.clock : null,
+          home: _plInt(device.home), guest: _plInt(device.guest), period: _plInt(device.period),
+          motion: ['running', 'stopped', 'reset', 'unknown'].includes(device.motion) ? device.motion : 'unknown' });
+      }
+    }
+    return { connected: sourceStates.some(s => s.connected),
+      sources: sourceStates.sort((a, b) => a.sourceId.localeCompare(b.sourceId)),
+      devices: devices.sort((a, b) => a.id.localeCompare(b.id)) };
+  }
+  return { accept, snapshot, disconnect };
+}
+function _plStart({ onState = () => {}, onConnection = () => {} } = {}) {
+  const state = _plCreateState();
+  let socket, retry, stopped = false, lastAccepted = 0, waitingSince = 0, connection, renderKey = '';
+  const setConn = v => { if (connection !== v) { connection = v; onConnection(v); } };
+  function render() {
+    const value = state.snapshot(performance.now(), !stopped && socket?.readyState === 1);
+    if (!value.sources.length) return;
+    setConn(value.connected ? 'connected' : 'disconnected');
+    const key = JSON.stringify([value.sources, value.devices.map(d => [d.id, d.status, d.confirmed])]);
+    if (key === renderKey) return;
+    renderKey = key; onState(value);
+  }
+  function reconnect() { if (!stopped && !retry) retry = setTimeout(() => { retry = null; connect(); }, 3000); }
+  function connect() {
+    if (stopped) return;
+    setConn('connecting'); waitingSince = performance.now(); state.disconnect();
+    try { socket = new WebSocket(PLAYIT_URL); }
+    catch { setConn('disconnected'); reconnect(); return; }
+    const current = socket;
+    current.onmessage = e => { if (stopped || current !== socket || !state.accept(e.data)) return; lastAccepted = performance.now(); render(); };
+    current.onerror = () => current.close();
+    current.onclose = () => { if (current !== socket) return; state.disconnect(); setConn('disconnected'); render(); reconnect(); };
+  }
+  const timer = setInterval(() => { if (stopped) return; render(); if (socket && socket.readyState < 2 && performance.now() - Math.max(lastAccepted, waitingSince) >= 3000) socket.close(); }, 250);
+  connect();
+  return function stop() { if (stopped) return; stopped = true; clearInterval(timer); clearTimeout(retry); state.disconnect(); socket?.close(); setConn('disconnected'); render(); };
+}
+// App-side controller: one receiver, reflected into the match clock panel.
+let playit = { mode: 'off', status: 'disconnected', state: null, stop: null };
+// Field → reader map, read from the Playit broadcast endpoint. Reader numbers do
+// NOT identify fields (per the integration guide), so the scoreboard/shot reader
+// ids for each field must be fetched from the server and may change per event.
+//   playitMap = { '1': { scoreId, shotId, swap }, '2': {...} }, keyed by field.
+let playitMap = null, playitMapAt = 0;
+const PLAYIT_MAP_URL = 'https://apps.playit.pt/Sixes-Championships-2026/api/broadcast';
+// "Read" from the server: fetch the current field assignment for both streams.
+async function fetchPlayitMap() {
+  const map = {};
+  for (const s of [1, 2]) {
+    try {
+      const res = await fetch(`${PLAYIT_MAP_URL}?stream=${s}`, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const j = await res.json();
+      // Accept {streams:{"1":{…}}}, {stream:{…}} or a bare stream object.
+      const o = (j && j.streams && (j.streams[String(s)] || j.streams[s])) || (j && j.stream) || j;
+      if (!o) continue;
+      const fieldId = o.fieldId ?? o.field ?? s;
+      const scoreId = o.panelId ?? o.scoreId ?? o.scoreboard ?? o.clockId;
+      const shotId = o.shotId ?? o.shot;
+      const swap = !!(o.swapPanel ?? o.swap);
+      if (scoreId && shotId && fieldId != null) map[String(fieldId)] = { scoreId, shotId, swap };
+    } catch {}
+  }
+  if (Object.keys(map).length) { playitMap = map; playitMapAt = Date.now(); }
+  return playitMap;
+}
+// The two readers for the current context: the demo pair, or — in live mode —
+// the scoreboard/shot readers the server assigned to the match's field.
+function playitReaders() {
+  const s = playit.state;
+  if (settings.playit === 'demo') {
+    if (!s) return { score: null, shot: null, connected: false, suffix: 'demo', mapped: true };
+    return { score: s.devices.find(d => d.id === 'raspi-score-demo'), shot: s.devices.find(d => d.id === 'raspi-shot-demo'), connected: s.connected, suffix: 'demo', mapped: true };
+  }
+  const field = match && match.field != null ? String(match.field) : null;
+  if (!s || field == null) return { score: null, shot: null, connected: s ? s.connected : false, suffix: field, mapped: !!(playitMap && field && playitMap[field]) };
+  const m = playitMap && playitMap[field];
+  let score, shot;
+  if (m) { score = s.devices.find(d => d.id === m.scoreId); shot = s.devices.find(d => d.id === m.shotId); }
+  else { // no server map yet — best-effort fallback by field number
+    score = s.devices.find(d => d.kind === 'clock' && d.id.endsWith('-' + field));
+    shot = s.devices.find(d => d.kind === 'shot' && d.id.endsWith('-' + field));
+  }
+  return { score, shot, connected: s.connected, suffix: field, mapped: !!m };
+}
+// Start/stop the receiver so it matches the chosen mode while a match is open.
+function syncPlayit() {
+  const want = (match && settings.playit && settings.playit !== 'off') ? settings.playit : 'off';
+  if (want === playit.mode) return;
+  if (playit.stop) { try { playit.stop(); } catch {} playit.stop = null; }
+  playit.mode = want; playit.state = null; playit.status = 'disconnected';
+  if (want !== 'off') {
+    playit.status = 'connecting';
+    playit.stop = _plStart({
+      onConnection(status) { playit.status = status; paintPlayit(); },
+      onState(value) { playit.state = value; paintPlayit(); },
+    });
+    if (want === 'live') fetchPlayitMap().then(() => paintPlayit());
+  }
+  paintPlayit();
+}
+// The clock panel while a Playit mode is active: the Game/Shot clock are driven
+// by the live readers (same #game-clock / #shot-clock the rest of the app reads),
+// with a Read button to reconnect, mirroring the hosted Lax Observer build.
+function playitClockPanel() {
+  const live = settings.playit === 'live';
+  const label = live ? `Playit · Field ${match.field ?? '—'}` : 'Playit · Demo feed';
+  return `<div class="clock-panel-head"><div><span class="eyebrow">${label}</span><strong data-clock="connection" class="clock-connection stale" id="pl-status">Connecting…</strong></div><div class="clock-controls">${fieldPicker('match', match.field)}<button class="clock-read" data-do="read-clock" aria-label="Reconnect to Playit clocks">Read</button></div></div><div class="clock-values"><div><span>Game clock</span><strong id="game-clock">${fmtGame(clock.game)}</strong><small class="clock-sub" id="pl-gamestatus">—</small><div class="clock-links"><button data-do="clock-set-game">Set manually</button></div></div><div><span>Shot clock</span><strong id="shot-clock">${fmtShot(clock.shot)}</strong><small class="clock-sub" id="pl-shotstatus"></small></div></div>`;
+}
+// Called on every accepted frame. When a reader is confirmed it LINKS the live
+// reading into the app clock (clock.game / clock.shot), so the Game clock on
+// screen and every event timestamp follow Playit. The manual ticker is parked
+// (clock.running = false) so the two never fight.
+function paintPlayit() {
+  if (!(settings.playit && settings.playit !== 'off') || !match) return;
+  const statusEl = $('#pl-status'); if (!statusEl) return; // live panel not mounted
+  const live = settings.playit === 'live';
+  const { score, shot, suffix, mapped } = playitReaders();
+  const confirmed = !!(score && score.confirmed);
+  if (confirmed) {
+    const ms = parseGame(String(score.clock).replace(/\..*$/, ''));
+    if (ms != null) clock.game = ms;
+    if (shot && shot.clock) { const n = Number(String(shot.clock).replace(/[^0-9].*$/, '')); if (Number.isFinite(n)) clock.shot = Math.max(0, Math.round(n)) * 1000; }
+    clock.running = false; // Playit is the time source now
+  }
+  let label, cls;
+  if (live && suffix == null) { label = 'Pick a field'; cls = 'stale'; }
+  else if (!playit.state || playit.status === 'connecting') { label = 'Connecting…'; cls = 'stale'; }
+  else if (!playit.state.connected) { label = 'Offline'; cls = 'stale'; }
+  else if (confirmed) { label = 'Connected'; cls = 'live'; }
+  else { label = 'Last known'; cls = 'stale'; }
+  statusEl.textContent = label; statusEl.className = 'clock-connection ' + cls;
+  const g = $('#game-clock'), s = $('#shot-clock'), gs = $('#pl-gamestatus'), ss = $('#pl-shotstatus');
+  if (g && score && score.clock) g.textContent = score.clock;
+  if (s && shot && shot.clock) s.textContent = shot.clock;
+  if (gs) gs.textContent = !score ? (suffix == null ? 'Pick a field' : live && !mapped ? 'Field map not loaded — tap Read' : 'Waiting for a reading')
+    : `${score.period != null ? 'Q' + score.period + ' · ' : ''}${confirmed ? (score.motion === 'stopped' ? 'Live · stopped' : 'Live') : 'Last known'}${score.home != null ? ` · ${score.home}–${score.guest}` : ''}`;
+  if (ss) ss.textContent = shot ? (confirmed ? 'Live' : 'Last known') : '';
+}
+
+/* ---------- Shared fragments ---------- */
+const hexMix = (a, b, w) => '#' + [1, 3, 5].map(i => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - w) + parseInt(b.slice(i, i + 2), 16) * w).toString(16).padStart(2, '0')).join('');
+// Each half is a light tint of the jersey colour: plain buttons are a paler tint, Goal is the full colour.
+const tileOf = c => c.id === 'white' ? '#ffffff' : hexMix(c.hex, '#ffffff', .88);
+const washOf = c => c.id === 'white' ? '#e9ecee' : hexMix(c.hex, '#ffffff', .68);
+const paletteStyle = (t, i = 0) => { const c = teamPalette(t, i); return `--team-color:${c.hex};--team-ink:${c.ink};--team-soft:${c.soft};--team-accent:${c.accent};--team-border:${c.border};--team-wash:${washOf(c)};--team-tile:${tileOf(c)};--team-goal-bg:${c.hex};--team-goal-ink:${c.ink};`; };
+const teamOptions = (sel = '', exclude = '') => '<option value="">Choose…</option>' + data.teams.map(t => `<option value="${t.id}" ${t.id === sel ? 'selected' : ''} ${t.id === exclude ? 'disabled' : ''}>${esc(t.name)}</option>`).join('');
+const goalieOptions = (t, sel = '') => `<option value="">No active goalkeeper</option>${(t?.players || []).map(p => `<option value="${esc(p.number)}" ${String(p.number) === String(sel) ? 'selected' : ''}>#${esc(p.number)} · ${esc(p.name)}</option>`).join('')}`;
+const playerOptions = (t, cur, exclude) => t.players.filter(p => p.number !== exclude).map(p => `<option value="${esc(p.number)}" ${p.number === cur ? 'selected' : ''}>#${esc(p.number)} · ${esc(p.name)}</option>`).join('');
+const saveOptions = (shootingId, sel = '') => { const t = match.teams.find(t => t.id !== shootingId); return `<option value="">Not assigned</option>${t ? playerOptions(t, sel) : ''}`; };
+const swatches = (color, side, scope = 'setup') => `<div class="swatches" role="group" aria-label="Jersey colour, team ${side + 1}">${COLORS.map(c => `<button class="swatch ${c.id === color ? 'chosen' : ''}" style="--swatch:${c.hex};--swatch-ink:${c.ink}" data-do="color" data-scope="${scope}" data-side="${side}" data-color="${c.id}" aria-label="${c.name}, team ${side + 1}" aria-pressed="${c.id === color}" title="${c.name}"><span>${c.id === color ? '✓' : ''}</span></button>`).join('')}</div>`;
+const fieldPicker = (scope, sel) => `<section class="field-select" aria-label="Select playing field"><span>Playing field</span><div class="field-buttons">${[1, 2].map(n => `<button data-do="${scope === 'setup' ? 'setup-field' : 'field'}" data-field="${n}" class="${String(sel ?? '') === String(n) ? 'selected' : ''}" aria-pressed="${String(sel ?? '') === String(n)}" ${scope === 'match' && draft ? 'disabled' : ''}>Field ${n}</button>`).join('')}</div></section>`;
+const offenseOptions = (sel = '') => '<option value="">Choose offense…</option>' + Object.entries(OFFENSES).map(([g, list]) => `<optgroup label="${g}">${list.map(o => `<option ${o === sel ? 'selected' : ''}>${esc(o)}</option>`).join('')}</optgroup>`).join('');
+const cardButtons = card => `<div class="card-options" role="group" aria-label="Card given">${[null, 'green', 'yellow', 'red'].map(c => `<button data-do="penalty-card" data-card="${c ?? ''}" class="${(card ?? null) === c ? 'chosen' : ''}" aria-pressed="${(card ?? null) === c}"><i style="background:${c ? CARDS[c].hex : 'transparent'}"></i>${c ? CARDS[c].name : 'No card'}</button>`).join('')}</div>`;
+const periodButtons = () => {
+  const last = periodsInPlay(), list = Array.from({ length: last }, (_, i) => i + 1);
+  const btn = q => `<button data-do="period" data-period="${q}" class="${currentPeriod() === q ? 'selected' : ''}" aria-pressed="${currentPeriod() === q}" ${draft ? 'disabled' : ''} aria-label="${periodLabel(q)}">${periodLabel(q)}</button>`;
+  const add = last < maxPeriod() ? `<button data-do="add-ot" class="add-ot" ${draft ? 'disabled' : ''} aria-label="Add overtime period">+OT</button>` : '';
+  return `<section class="period-picker" aria-label="Period"><span>Period</span><div class="period-buttons">${list.map(btn).join('')}${add}</div></section>`;
+};
+
+/* ---------- Setup screen ---------- */
+// Status bar classes/text under the data panel, mirroring the Pointbench form.
+function setupStatusBar() {
+  const m = setupStatus.match(/^(ok|err|busy):(.*)$/s);
+  const cls = m ? m[1] : '';
+  const txt = m ? m[2] : (pbFiles ? `${Object.keys(pbFiles).length} files loaded for ${esc(data.competition)}.` : `No tournament loaded yet. Download or load one to list its games.`);
+  return `<div class="data-statusbar ${cls}">${txt}</div>`;
+}
+function renderSetup() {
+  draft = null; document.body.classList.remove('in-match'); syncPlayit();
+  const sourceOpts = PB_SOURCES.map(s => `<option value="${s.id}" ${activeSourceId === s.id ? 'selected' : ''}>${esc(s.label)}</option>`).join('');
+  // Schedule for the game picker — only available after a download/load this session.
+  gameListCache = pbFiles ? parseGameList(pbFiles) : [];
+  const importedNos = new Set(db.matches.filter(x => x.imported).map(x => String(x.gameNo)));
+  const gameOpts = gameListCache.length
+    ? '<option value="">Choose a game…</option>' + gameListCache.map(g => {
+        const has = !!gameFileFor(pbFiles, g.id), done = importedNos.has(String(Number(g.id)));
+        const label = `${String(g.id).padStart(2, ' ')}.  ${teamNameFor(g.home)} — ${teamNameFor(g.visiting)}`;
+        const tail = done ? ' ✓' : has ? '' : ' (no data yet)';
+        return `<option value="${esc(g.id)}" ${String(setupGameId) === String(g.id) ? 'selected' : ''}>${esc(label + tail)}</option>`;
+      }).join('')
+    : '<option value="">— load a tournament first —</option>';
+  const g = gameListCache.find(x => String(x.id) === String(setupGameId));
+  const hasData = g && !!gameFileFor(pbFiles, g.id);
+  const done = g && importedNos.has(String(Number(g.id)));
+  const when = g && g.day ? `${String(g.day).padStart(2,'0')}/${String(g.month).padStart(2,'0')}/${g.year}` : '';
+  const gameMeta = g ? `<p class="game-meta"><b>${esc(teamNameFor(g.home))}</b> vs <b>${esc(teamNameFor(g.visiting))}</b>${[g.pool, g.field ? 'Field ' + g.field : '', when].filter(Boolean).length ? ' · ' + [g.pool, g.field ? 'Field ' + g.field : '', when].filter(Boolean).map(esc).join(' · ') : ''}${done ? ' · already imported — Start opens it to continue' : hasData ? ' · game data available' : ' · not played yet — Start begins a fresh match'}</p>` : '';
+  const ready = !!g;
+  const manualReady = setupPicks[0] && setupPicks[1] && setupPicks[0] !== setupPicks[1] && setupField;
+  main.innerHTML = `<section class="setup"><p class="eyebrow">Watch. Call. Review.</p><h1>New match.</h1><p class="intro">Pick the tournament and the game. If the game has already been played, Start opens it so you can review or keep scoring; otherwise it begins a fresh match with the right teams. Change the active goalkeeper in Roster.</p>
+    <div class="datapanel">
+      <div class="datafield"><label for="setup-source">Tournament</label><div class="row"><select id="setup-source">${sourceOpts}</select><button class="btn-ghost" data-do="setup-download">Download</button><button class="btn-ghost" data-do="setup-loadfile">Load file…</button></div><p class="hint">Fetches the rosters and games from stats.pointbench.com. If the download is blocked, use <b>Load file</b> with the ZIP (or XML files) from your Pointbench downloader.</p></div>
+      <input id="setup-file-input" type="file" accept=".zip,.xml" multiple hidden>
+      <div class="datafield"><label for="setup-game">Game</label><div class="row"><select id="setup-game" ${gameListCache.length ? '' : 'disabled'}>${gameOpts}</select></div>${gameMeta}</div>
+      <button class="primary start-big" data-do="start" ${ready ? '' : 'disabled'}>${done ? 'Open match' : 'Start match'} <span style="color:var(--green);font-size:20px">↗</span></button>
+      ${setupStatusBar()}
+    </div>
+    <div class="manual-setup">
+      <p class="manual-divider">or choose teams manually</p>
+      <div class="team-selectors">${[0, 1].map(i => {
+        const t = data.teams.find(t => t.id === setupPicks[i]);
+        return `<div class="team-pick" style="${paletteStyle({ color: setupColors[i] }, i)}"><label for="pick-${i}">Team ${i + 1}</label><select id="pick-${i}">${teamOptions(setupPicks[i], setupPicks[1 - i])}</select>${t?.goalie ? `<p class="goalie-default">Starting goalkeeper · #${esc(t.goalie.number)} · ${esc(t.goalie.name)}</p>` : ''}<p class="color-label">Jersey colour</p>${swatches(setupColors[i], i)}<p class="roster-summary">${t ? `${t.players.length} jersey numbers available` : 'Select a team to load its roster'}</p></div>`;
+      }).join('')}</div>
+      ${fieldPicker('setup', setupField)}
+      <label class="game-no"><span>Game number <small>(optional, used in the XML export)</small></span><input id="game-no" inputmode="numeric" maxlength="4" placeholder="e.g. 59" value="${esc(setupGameNo)}"></label>
+      <button class="primary start" data-do="start-manual" ${manualReady ? '' : 'disabled'}>Start manual match <span>↗</span></button>
+    </div>
+    ${db.matches.length ? `<button class="secondary" style="width:100%;margin-top:16px" data-do="archives">Match archive (${db.matches.length})</button>` : ''}
+    <p class="setup-note">${esc(data.competition)} · rosters from <a href="${esc(data.source)}" target="_blank" rel="noopener">World Lacrosse / Pointbench ↗</a>, loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}. Jersey numbers can be edited during the match.</p>
+  </section>`;
+}
+
+/* ---------- Match screen ---------- */
+function actionButtons(t, side) {
+  const inactive = !match.field, goalie = t.players.find(p => p.number === match.goalies?.[t.id]);
+  const codes = Object.keys(ACTIONS), spanPenalty = codes.filter(c => c !== 'G').length % 2 === 1;
+  return `<div style="${paletteStyle(t, side)}" class="team-actions ${inactive ? 'inactive' : ''}"><div class="action-grid">${Object.entries(ACTIONS).map(([code, label]) => `<button class="action ${code === 'G' ? 'goal' : code === 'PEN' ? 'penalty' + (spanPenalty ? ' span' : '') : ''}" data-do="action" data-team="${t.id}" data-action="${code}" ${inactive ? 'disabled' : ''} aria-label="${esc(t.name)} — ${label}"><strong>${code === 'G' ? 'Goal' : code === 'PEN' ? 'Penalty' : code}</strong><small>${code === 'G' ? 'Scorer, then assist' : code === 'PEN' ? 'Foul · card' : label}</small></button>`).join('')}</div><button class="change-goalie" data-do="change-goalie" data-team="${t.id}" aria-label="Goalie · ${esc(t.name)}"><span>Goalie</span><small>${goalie ? `#${esc(goalie.number)} · ${esc(goalie.name)}` : 'Select goalkeeper'}</small></button></div>`;
+}
+function numberSide(t, side) {
+  if (t.id !== draft.teamId) return `<div class="waiting"><span>· · ·</span>${esc(t.name)}</div>`;
+  if (draft.stage === 'assist-choice') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">Goal: <b>#${esc(draft.player)}</b><br>Assist?</div><div class="assist-options"><button data-do="assist-yes">Assist</button><button class="no" data-do="assist-no">No</button></div></div>`;
+  if (draft.stage === 'game-time') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">${esc(ACTIONS[draft.action] || draft.action)}: <b>#${esc(draft.player)}</b><br>Game clock when it happened</div><input id="draft-gametime" class="time-input" inputmode="numeric" placeholder="MM:SS" autocomplete="off" value="${esc(draft.timeText ?? '')}" aria-label="Game clock time, type four digits, minutes then seconds"><button class="primary confirm-time" data-do="time-confirm">Save to events log</button></div>`;
+  if (draft.stage === 'penalty') return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="draft-details">Penalty: <b>#${esc(draft.player)}</b><br>Card given?</div>${cardButtons(draft.card)}<label class="offense-label" for="draft-offense">Offense</label><select id="draft-offense" class="offense-select">${offenseOptions(draft.offense)}</select><label class="offense-label" for="draft-pentime">Penalty time <small>(MM:SS, optional)</small></label><input id="draft-pentime" class="time-input" inputmode="numeric" placeholder="e.g. 1:00" value="${esc(draft.penTime ?? '')}"><button class="primary confirm-penalty" data-do="penalty-confirm" ${draft.offense ? '' : 'disabled'}>Save penalty</button></div>`;
+  const assist = draft.stage === 'assist-player';
+  return `<div style="${paletteStyle(t, side)}" class="number-side"><div class="number-head"><span>${assist ? 'ASSIST' : 'NUMBER'}</span><span>${assist ? 'A' : draft.action}</span></div><div class="jerseys">${t.players.map(p => `<button class="jersey" data-do="number" data-number="${esc(p.number)}" ${assist && p.number === draft.player ? 'disabled' : ''} title="${esc(p.name)}" aria-label="Jersey number ${esc(p.number)}, ${esc(p.name)}">${esc(p.number)}</button>`).join('')}</div></div>`;
+}
+function eventRow(e, index) {
+  const c = e.clock, clockLine = c ? `Field ${c.field ?? '—'} · ${c.gameTime ?? '--:--'}${c.shotTime ? ` · shot ${c.shotTime}` : ''}` : '';
+  const row = (t, number, label, detail, isSave = false) => {
+    const pal = teamPalette(t, match.teams.indexOf(t));
+    return `<button class="event" data-do="edit" data-id="${esc(e.id)}" aria-label="Edit action ${index + 1}, ${esc(t?.name ?? 'Unknown team')}, ${esc(label)}"><span class="event-index">${isSave ? '↳' : String(index + 1).padStart(2, '0')}<small class="event-period">${periodLabel(e.period, '—')}</small></span><span class="event-code" style="color:${pal.accent};border-bottom:3px solid ${pal.hex}">${esc(t?.id?.toUpperCase() ?? '—')}</span><span class="event-action">${esc(label)}${!isSave && CARDS[e.penalty?.card] ? `<i class="card-chip" style="background:${CARDS[e.penalty.card].hex}" title="${cardName(e.penalty.card)}"></i>` : ''}${detail ? `<small>${esc(detail)}</small>` : ''}${c && !isSave ? `<small class="event-clock">${esc(clockLine)}</small>` : ''}</span><span class="event-num">${number == null ? '—' : `<small>#</small>${esc(number)}`}</span></button>`;
+  };
+  const shooting = team(e.teamId), shooter = shooting?.players.find(p => p.number === e.player);
+  const detail = e.action === 'G' ? (e.assist !== null ? `Assist #${e.assist}` : 'No assist') : e.action === 'PEN' ? penaltyText(e.penalty) : shooter?.name ?? '';
+  const first = row(shooting, e.player, ACTIONS[e.action], detail);
+  if (e.action !== 'SS') return first;
+  const defending = match.teams.find(t => e.save ? t.id === e.save.teamId : t.id !== e.teamId), goalie = defending?.players.find(p => p.number === e.save?.player);
+  return first + row(defending, e.save?.player ?? null, 'Save', goalie?.name ?? 'Goalkeeper not assigned', true);
+}
+function teamHeading(t, side) {
+  const c = teamPalette(t, side);
+  return `<div class="score-team" style="${paletteStyle(t, side)}"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div>`;
+}
+function renderMatch() {
+  const [a, b] = match.teams, n = match.events.length;
+  const clockHtml = `<section class="clock-panel" id="clock-panel">${clockPanel()}</section>`;
+  let hint = !match.field ? 'Choose Field 1 or Field 2 before recording actions' : 'Select an action';
+  if (draft) hint = draft.stage === 'game-time' ? 'Type the game clock, e.g. 0734 = 07:34, then save' : draft.stage === 'assist-choice' ? 'Confirm the assist' : draft.stage === 'assist-player' ? 'Select the assisting player' : draft.stage === 'penalty' ? 'Card, offense and time' : draft.action === 'SS' ? 'Select the shooter' : 'Select the player';
+  // Each half lists that team's own actions, most recent first; tapping one opens the editor.
+  const listFor = t => { const rows = match.events.map((e, i) => ({ e, i })).filter(x => x.e.teamId === t.id).reverse(); if (!rows.length) return '<p class="half-log-empty">No actions yet</p>'; return rows.map(({ e, i }) => { const p = team(e.teamId)?.players.find(p => p.number === e.player); const detail = e.action === 'G' ? (e.assist !== null ? `Assist #${e.assist}` : 'No assist') : e.action === 'PEN' ? penaltyText(e.penalty) : p?.name ?? ''; return `<button class="half-log-row" data-do="edit" data-id="${esc(e.id)}" aria-label="Edit action ${i + 1}, ${esc(ACTIONS[e.action] || e.action)}"><span class="hl-period">${periodLabel(e.period, '—')}</span><span class="hl-action">${esc(ACTIONS[e.action] || catalogByCode(e.action)?.label || e.action)}${CARDS[e.penalty?.card] ? `<i class="card-chip" style="background:${CARDS[e.penalty.card].hex}"></i>` : ''}${detail ? `<small>${esc(detail)}</small>` : ''}</span><span class="hl-num">${e.player == null ? '' : '#' + esc(e.player)}</span></button>`; }).join(''); };
+  const half = (t, side) => { const c = teamPalette(t, side); return `<section class="half side-${side}" style="${paletteStyle(t, side)}" aria-label="${esc(t.name)}"><header class="half-head"><div class="half-team"><div class="country-code">${esc(t.id.toUpperCase())}</div><div class="country-name">${esc(t.name)}</div><button class="kit-picker" data-do="choose-color" data-side="${side}" aria-label="${esc(t.name)} jersey colour: ${c.name}"><i style="background:${c.hex}"></i>${c.name}<span>⌄</span></button></div><div class="half-score" aria-label="${esc(t.name)} score ${score(t.id)}">${score(t.id)}</div></header><div class="half-body">${draft ? numberSide(t, side) : actionButtons(t, side)}</div><footer class="half-log" aria-label="${esc(t.name)} actions">${listFor(t)}</footer></section>`; };
+  const spine = `<aside class="spine" aria-label="Clock, period and tools"><button class="brand" data-do="home" aria-label="PointBench">${$('.topbar .brand-logo')?.outerHTML ?? ''}</button>${clockHtml}${periodButtons()}<div class="stage-label"><p>${draft ? `<b>${draft.action === 'G' ? 'Goal' : draft.action === 'PEN' ? 'Penalty' : draft.action}</b> · ` : ''}${hint}</p>${draft ? '<button class="cancel" data-do="cancel">Cancel</button>' : ''}</div><div class="spine-tools"><button class="tool undo" data-do="undo" ${!draft && !match.undo?.length ? 'disabled' : ''}>${undoIcon}Undo</button><button class="tool" data-do="history">Log (${n})</button><button class="tool" data-do="summary">Summary</button><div class="tool-row"><button class="tool" data-do="export" aria-label="Export PDF">PDF</button><button class="tool" data-do="export-csv" aria-label="Export CSV">CSV</button><button class="tool" data-do="export-xml" aria-label="Export XML">XML</button></div><button class="tool" data-do="rosters">Roster</button><button class="tool" data-do="settings">Settings</button><button class="tool full" data-do="new">New match</button></div><span class="local-status save-status">${statusHtml}</span></aside>`;
+  document.body.classList.add('in-match');
+  main.innerHTML = `<div class="split">${half(a, 0)}${spine}${half(b, 1)}</div>`;
+  syncPlayit(); paintPlayit();
+}
+// After the player (and, in manual mode, the game time) are set, go to the
+// action-specific sub-step or commit.
+function afterPlayer() {
+  if (draft.action === 'G') { draft.stage = 'assist-choice'; renderMatch(); }
+  else if (draft.action === 'PEN') { draft.stage = 'penalty'; draft.card = null; draft.offense = ''; draft.penTime = ''; renderMatch(); }
+  else finalize();
+}
+// The last gate before an event is saved. In manual timing the game clock is
+// asked here — always the final input, after player, assist, card, etc.
+function finalize() {
+  if (settings.autoClock) return commitDraft();
+  // Manual timing: only goals and penalties ask for the game clock.
+  if (!TIMED_ACTIONS.includes(draft.action)) { draft.clock = { ...draft.clock, gameTime: null, status: 'untimed', orderTime: orderTime(draft.period) }; return commitDraft(); }
+  draft.stage = 'game-time'; draft.timeText = match.lastTime?.text ?? ''; renderMatch();
+  setTimeout(() => { const i = $('#draft-gametime'); i?.focus(); i?.select(); }, 30);
+}
+function commitDraft() {
+  try {
+    if (!match.field) throw Error('Choose Field 1 or Field 2 before recording an action.');
+    const ev = validateEvent({ id: crypto.randomUUID(), teamId: draft.teamId, action: draft.action, player: draft.player, period: draft.period, assist: draft.assist ?? null, save: draft.action === 'SS' ? draft.save : null, penalty: draft.action === 'PEN' ? { offense: draft.offense, card: draft.card ?? null, time: draft.penTime || null } : null, clock: draft.clock }, match.teams);
+    match = applyChange(match, [...match.events, ev]); draft = null; persist(); renderMatch();
+  } catch (err) { notify(err.message); }
+}
+function undo() {
+  if (draft) { draft = null; renderMatch(); notify('Current entry cancelled'); return; }
+  if (!match.undo?.length) return;
+  match = undoChange(match); persist(); renderMatch(); notify('Last change undone');
+}
+
+/* ---------- Summary: counts per quarter under each category ---------- */
+function summaryHtml() {
+  const codes = Object.keys(ACTIONS), ids = match.teams.map(t => t.id), pal = match.teams.map((t, i) => teamPalette(t, i));
+  const periods = Array.from({ length: periodsInPlay() }, (_, i) => i + 1);
+  const count = (q, code, id) => match.events.filter(e => e.action === code && e.teamId === id && (q == null || e.period === q)).length;
+  const cell = (q, code) => ids.map((id, i) => { const n = count(q, code, id); return `<b class="${n ? '' : 'zero'}" style="--c:${pal[i].hex};--k:${pal[i].ink};--a:${pal[i].accent}">${n}</b>`; }).join('');
+  // Rows are categories; columns are each period plus a Total.
+  const bodyRow = code => `<tr><th scope="row">${ACTIONS[code]}</th>${periods.map(q => `<td class="${currentPeriod() === q ? 'now' : ''}">${cell(q, code)}</td>`).join('')}<td class="total">${cell(null, code)}</td></tr>`;
+  return `<section class="summary" aria-label="Summary by period"><div class="summary-title"><h2>Summary</h2><span>${match.teams.map((t, i) => `<b class="key" style="--c:${pal[i].hex};--k:${pal[i].ink}">${esc(t.id.toUpperCase())}</b>`).join('')}</span></div><div class="summary-scroll"><table><thead><tr><th></th>${periods.map(q => `<th scope="col" class="${currentPeriod() === q ? 'now' : ''}">${periodLabel(q)}</th>`).join('')}<th scope="col" class="total">Total</th></tr></thead><tbody>${codes.map(bodyRow).join('')}</tbody></table></div></section>`;
+}
+
+function setGoalie(teamId, number, typedTime) {
+  match.goalies = { ...(match.goalies || {}), [teamId]: number || null };
+  if (number) (match.goalieLog ||= []).push({ teamId, player: number, period: currentPeriod(), clock: typedTime ? { ...captureClock(), gameTime: typedTime } : captureClock(), at: new Date().toISOString() });
+  if (number && typedTime) rememberTime(typedTime, currentPeriod());
+}
+// Manual timing: a goalie change asks for the game clock in its dialog.
+const goalieTimeField = () => settings.autoClock ? '' : `<label>Game clock of the change<input id="goalie-time" inputmode="numeric" autocomplete="off" placeholder="MM:SS" value="${esc(match.lastTime?.text ?? '')}"></label>`;
+// Returns the typed time, undefined when none is needed, or false when invalid.
+const readGoalieTime = number => { if (settings.autoClock || !number) return undefined; const t = parseClockEntry($('#goalie-time')?.value); if (!t) notify(TIME_HELP); return t || false; };
+
+/* ---------- Dialogs ---------- */
+function showHistory() {
+  showModal(`${head('Match history')}<p class="dialog-note">${esc(match.teams[0].name)} — ${esc(match.teams[1].name)} · ${match.events.length} actions<br>Tap a row to edit an entry.</p><div class="full-events">${match.events.map((e, i) => eventRow(e, i)).join('') || '<p class="dialog-note">No actions recorded.</p>'}</div><div class="dialog-actions"><button class="primary" data-do="export">Export PDF</button><button class="secondary" data-do="export-csv">CSV</button><button class="secondary" data-do="export-xml">XML</button><button class="secondary" data-do="close">Back to match</button></div>`);
+}
+function showEdit(id) {
+  const e = match.events.find(e => e.id === id); if (!e) return;
+  showModal(`${head('Edit action')}<p class="dialog-note">Action ${match.events.indexOf(e) + 1} · This edit keeps the action in its original place in the history.</p><form id="edit-form" data-id="${e.id}"><div class="fields"><label>Team<select id="edit-team">${match.teams.map(t => `<option value="${t.id}" ${e.teamId === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</select></label><label>Period<select id="edit-period">${e.period == null ? '<option value="">Not recorded</option>' : ''}${Array.from({ length: Math.max(periodsInPlay(), e.period || 0) }, (_, i) => i + 1).map(q => `<option value="${q}" ${e.period === q ? 'selected' : ''}>${periodLabel(q)}</option>`).join('')}</select></label><label>Action<select id="edit-action">${Object.entries(ACTIONS).map(([c, l]) => `<option value="${c}" ${c === e.action ? 'selected' : ''}>${l}</option>`).join('')}</select></label><label>Player<select id="edit-player">${playerOptions(team(e.teamId), e.player)}</select></label><label id="save-field" ${e.action !== 'SS' ? 'hidden' : ''}>Opposing goalkeeper (save)<select id="edit-save">${saveOptions(e.teamId, e.save?.player ?? '')}</select></label><label id="card-field" ${e.action !== 'PEN' ? 'hidden' : ''}>Card given<select id="edit-card"><option value="">No card</option>${Object.entries(CARDS).map(([c, v]) => `<option value="${c}" ${e.penalty?.card === c ? 'selected' : ''}>${v.name} card</option>`).join('')}</select></label><label id="offense-field" ${e.action !== 'PEN' ? 'hidden' : ''}>Offense<select id="edit-offense">${offenseOptions(e.penalty?.offense ?? '')}</select></label><label id="pentime-field" ${e.action !== 'PEN' ? 'hidden' : ''}>Penalty time (MM:SS)<input id="edit-pentime" inputmode="numeric" placeholder="e.g. 1:00" value="${esc(e.penalty?.time ?? '')}"></label><label id="assist-field" ${e.action !== 'G' ? 'hidden' : ''}>Assist<select id="edit-assist"><option value="">No</option>${playerOptions(team(e.teamId), e.assist, e.player)}</select></label></div><p class="error" id="edit-error" role="alert"></p><div class="dialog-actions"><button class="primary" type="submit">Save changes</button><button class="secondary danger" type="button" data-do="delete" data-id="${e.id}">Delete</button></div></form>`);
+}
+function showQuickGoalie(teamId) {
+  const t = match.teams.find(t => t.id === teamId); if (!t) return;
+  showModal(`${head('Change the goalie')}<p class="dialog-note">${esc(t.name)} · Applies to the next saves.</p><div class="fields"><label>New goalkeeper<select id="quick-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label>${goalieTimeField()}</div><div class="dialog-actions"><button class="primary" data-do="save-quick-goalie" data-team="${t.id}">Confirm goalkeeper</button><button class="secondary" data-do="close">Cancel</button></div>`);
+}
+const rosterList = t => t.players.map(p => `#${esc(p.number)} ${esc(p.name)}`).join('<br>');
+function showRosters() {
+  const t = match.teams[0];
+  showModal(`${head('Edit roster')}<p class="dialog-note">Set the active goalkeeper. Shots saved against the opposing team will credit this goalkeeper automatically. A goalkeeper change applies to the next saves; edit earlier actions in the history if needed.</p><div class="fields"><label>Team<select id="roster-team">${match.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></label><label>Active goalkeeper<select id="roster-goalie">${goalieOptions(t, match.goalies?.[t.id] ?? '')}</select></label>${goalieTimeField()}</div><div class="dialog-actions"><button class="primary" data-do="save-goalie">Save goalkeeper</button></div><p class="dialog-note">Add or edit a player</p><div class="fields"><label>Jersey number<input id="roster-number" inputmode="numeric" maxlength="3" placeholder="e.g. 27"></label><label>Player name<input id="roster-name" maxlength="100" placeholder="First and last name"></label></div><p class="error" id="roster-error"></p><div class="dialog-actions"><button class="secondary" data-do="save-player">Add / edit player</button></div><p class="dialog-note" id="roster-list">${rosterList(t)}</p>`);
+}
+let settingsDraft = null;
+// Pull the number fields into the draft so they survive a re-render.
+function readSettingNumbers() {
+  if (!settingsDraft) return;
+  const read = (id, min, max, cur) => { const el = $('#' + id); if (!el) return cur; const n = Math.round(Number(el.value)); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : cur; };
+  settingsDraft.quarters = read('set-quarters', 1, 6, settingsDraft.quarters);
+  settingsDraft.quarterMinutes = read('set-qmin', 1, 60, settingsDraft.quarterMinutes);
+  settingsDraft.otMinutes = read('set-otmin', 1, 30, settingsDraft.otMinutes);
+  settingsDraft.shotClockSeconds = read('set-shot', 0, 120, settingsDraft.shotClockSeconds);
+}
+function showSettings() {
+  settingsDraft = settingsDraft || { ...settings, enabled: [...settings.enabled] };
+  const d = settingsDraft;
+  const num = (id, label, value, min, max, hint = '') => `<label class="set-num">${label}<input id="${id}" type="number" inputmode="numeric" min="${min}" max="${max}" value="${value}">${hint ? `<small>${hint}</small>` : ''}</label>`;
+  const toggle = (id, label, on, offLabel, onLabel) => `<div class="set-toggle"><span>${label}</span><div class="seg2" role="group" aria-label="${esc(label)}"><button data-do="set-flag" data-flag="${id}" data-val="0" class="${on ? '' : 'on'}" aria-pressed="${!on}">${esc(offLabel)}</button><button data-do="set-flag" data-flag="${id}" data-val="1" class="${on ? 'on' : ''}" aria-pressed="${on}">${esc(onLabel)}</button></div></div>`;
+  const discOptions = Object.entries(DISCIPLINES).map(([id, v]) => `<option value="${id}" ${d.discipline === id ? 'selected' : ''}>${esc(v.name)}</option>`).join('');
+  const events = ACTION_CATALOG.map(a => `<label class="set-check"><input type="checkbox" data-do="set-event" data-code="${a.code}" ${d.enabled.includes(a.code) ? 'checked' : ''}><span>${esc(a.label)}</span><small>${a.code}</small></label>`).join('');
+  const sourceOptions = PB_SOURCES.map(s => `<option value="${s.id}" ${activeSourceId === s.id ? 'selected' : ''}>${esc(s.label)}</option>`).join('');
+  let savedFolderName = ''; try { savedFolderName = localStorage.getItem('lax-observer-savedir-name') || ''; } catch {}
+  showModal(`${head('Settings')}
+    <p class="dialog-note">These apply to the next match you start. A match already in progress keeps the settings it began with.</p>
+    <div class="set-group"><h3>Tournament data (Pointbench)</h3>
+      <label class="set-num" style="grid-column:1/-1">Competition<select id="set-source">${sourceOptions}</select><small>Rosters, player numbers and games from stats.pointbench.com.</small></label>
+      <p class="dialog-note" id="data-status" style="margin:2px 0 10px">${esc(data.competition)} · ${data.teams.length} teams · loaded ${new Date(data.fetchedAt).toLocaleDateString('en-GB')}${pbFiles ? ` · ${Object.keys(pbFiles).length} files in this session` : ''}</p>
+      <div class="dialog-actions" style="margin-top:0"><button class="secondary" data-do="download-data">Download data</button><button class="secondary" data-do="pick-data-file">Load from file…</button><button class="secondary" data-do="import-games" ${pbFiles ? '' : 'disabled'}>Import games…</button></div>
+      <input id="data-file-input" type="file" accept=".zip,.xml" multiple hidden>
+      ${fsSupported() ? `<div class="set-toggle" style="margin-top:12px"><span>Save downloaded files to a folder${savedFolderName ? ` · <b>${esc(savedFolderName)}</b>` : ''}</span><div class="dialog-actions" style="margin:0"><button class="secondary" data-do="save-folder" ${pbFiles ? '' : 'disabled'}>${savedFolderName ? 'Save now' : 'Choose folder…'}</button>${savedFolderName ? '<button class="secondary" data-do="change-folder">Change</button>' : ''}</div></div>` : `<p class="dialog-note" style="margin-top:10px">Saving the files to a folder you choose needs desktop Chrome or Edge; this device can load them in-app but can't write them to a folder.</p>`}
+      <p class="dialog-note" style="margin-top:8px"><b>Download</b> fetches directly from Pointbench — the site must allow it, which it may not when the app is installed or hosted elsewhere. If the download is blocked, use <b>Load from file</b> with the ZIP (or the XML files) saved by your Pointbench downloader. <b>Import games</b> loads the tournament's games into your Match archive so you can open and keep scoring them.</p>
+    </div>
+    <div class="set-group"><h3>Discipline</h3>
+      <label class="set-num" style="grid-column:1/-1">Lacrosse discipline<select id="set-discipline" data-do="set-discipline">${discOptions}</select><small>Picking one fills the defaults below; you can still change any value.</small></label>
+    </div>
+    <div class="set-group"><h3>Periods &amp; time</h3>
+      <div class="set-grid">
+        ${num('set-quarters', 'Number of periods', d.quarters, 1, 6)}
+        ${num('set-qmin', 'Minutes per period', d.quarterMinutes, 1, 60)}
+        ${num('set-otmin', 'Minutes per OT period', d.otMinutes, 1, 30)}
+        ${num('set-shot', 'Shot clock (seconds)', d.shotClockSeconds, 0, 120, '0 = no shot clock')}
+      </div>
+    </div>
+    <div class="set-group"><h3>Clock</h3>
+      ${toggle('countUp', 'Time direction', d.countUp, 'Count down', 'Count up')}
+      ${toggle('autoClock', 'Timing', d.autoClock, 'Manual', 'Automatic')}
+      <p class="dialog-note" style="margin-top:4px">Manual timing hides Start/Stop; you set the clock yourself with “Set time”. The game clock is asked only for goals, penalties and goalie changes: type 0734 for 07:34.</p>
+      <div class="set-toggle" style="margin-top:12px"><span>Live clock (Playit)</span><div class="seg2" role="group" aria-label="Playit live clock">${[['off', 'Off'], ['demo', 'Demo'], ['live', 'Live']].map(([v, l]) => `<button type="button" data-do="set-playit" data-val="${v}" class="${(d.playit || 'off') === v ? 'on' : ''}" aria-pressed="${(d.playit || 'off') === v}">${l}</button>`).join('')}</div></div>
+      <p class="dialog-note" style="margin-top:4px">Drives the Game and Shot clock from the Playit scoreboard socket during a match. <b>Live</b> uses the reader the Playit server assigns to the match’s field (the field→reader map is read from the broadcast endpoint — tap <b>Read</b> on the clock to reconnect and refresh it); <b>Demo</b> uses Playit’s hosted test feed. Switch to <b>Off</b> for the manual clock with Start/Stop.</p>
+    </div>
+    <div class="set-group"><h3>Events to collect</h3>
+      <div class="set-events">${events}</div>
+    </div>
+    <div class="dialog-actions"><button class="primary" data-do="save-settings">Save settings</button><button class="secondary" data-do="close">Cancel</button></div>`);
+}
+function showArchives() {
+  showModal(`${head('Match archive')}<div class="fields">${[...db.matches].reverse().map(m => `<button class="secondary archive-item" data-do="resume" data-id="${m.id}">${esc(m.teams.map(t => t.name).join(' — '))}<small>${new Date(m.date).toLocaleDateString('en-GB')} · ${m.events.length} actions${m.imported ? ' · imported' : ''}</small></button>`).join('') || '<p class="dialog-note">No saved matches yet.</p>'}</div>`);
+}
+// Games read from the loaded tournament's schedule, cached for the import dialog.
+let gameListCache = [];
+const teamNameFor = id => (data.teams || []).find(t => t.id === id)?.name || id?.toUpperCase() || '?';
+function showImportGames() {
+  if (!pbFiles) { notify('Download or load a tournament first.'); return; }
+  gameListCache = parseGameList(pbFiles);
+  const importedKey = m => `${m.gameNo}`;
+  const importedNos = new Set(db.matches.filter(m => m.imported).map(importedKey));
+  const rows = gameListCache.map(g => {
+    const has = !!gameFileFor(pbFiles, g.id);
+    const done = importedNos.has(String(Number(g.id)));
+    const when = g.day ? `${String(g.day).padStart(2,'0')}/${String(g.month).padStart(2,'0')}` : '';
+    const meta = [g.pool, g.field ? `F${g.field}` : '', when].filter(Boolean).join(' · ');
+    return `<button class="secondary archive-item" data-do="import-game-one" data-id="${esc(g.id)}" ${has ? '' : 'disabled'}>${esc(String(g.id).padStart(2,' '))}. ${esc(teamNameFor(g.home))} — ${esc(teamNameFor(g.visiting))}<small>${esc(meta)}${done ? ' · ✓ imported' : has ? '' : ' · no data yet'}</small></button>`;
+  }).join('');
+  const n = gameListCache.filter(g => gameFileFor(pbFiles, g.id)).length;
+  showModal(`${head('Import games')}<p class="dialog-note">${esc(data.competition)} · ${n} game${n===1?'':'s'} available. Tap one to load it into your Match archive, where you can open it and keep scoring or editing. Re-importing refreshes that game.</p><div class="dialog-actions" style="margin-top:14px"><button class="primary" data-do="import-games-all" ${n ? '' : 'disabled'}>Import all ${n}</button><button class="secondary" data-do="close">Done</button></div><div class="fields" style="margin-top:14px;max-height:50dvh;overflow:auto">${rows || '<p class="dialog-note">No games found in this download.</p>'}</div>`);
+}
+
+/* ---------- Exports ---------- */
+const fileBase = () => `match_${match.teams.map(t => t.id).join('-')}_${match.date.slice(0, 10)}_${match.id.slice(0, 6)}`;
+function showExportText(title, text) {
+  showModal(`${head(title)}<p class="dialog-note">Copy the export and paste it into a file.</p><textarea class="export-text" id="export-text" readonly></textarea><div class="dialog-actions"><button class="primary" data-do="copy-export">Copy</button><button class="secondary" data-do="close">Back to match</button></div>`);
+  $('#export-text').value = text;
+}
+const standalone = !window.claude;
+async function nativeSave(filename, fileData, type, label) {
+  const file = new File([fileData], filename, { type });
+  try {
+    if (navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file], title: filename }); return; }
+  } catch (err) { if (err?.name === 'AbortError') return; }
+  const url = URL.createObjectURL(file), a = document.createElement('a');
+  a.href = url; a.download = filename; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000); notify(`${label} export downloaded`);
+}
+const MIME = { PDF: 'application/pdf', CSV: 'text/csv', XML: 'application/xml' };
+async function saveFile(filename, fileData, label, textFallback) {
+  if (standalone) return nativeSave(filename, fileData, MIME[label], label);
+  if (downloads) {
+    try { await downloads.save({ filename, data: fileData }); notify(`${label} export saved`); return; }
+    catch (err) { if (err?.code === 'declined') return; if (err?.code === 'rate_limited') { notify('A save is already waiting. Try again in a moment.'); return; } }
+  }
+  if (textFallback != null) showExportText(`${label} export`, textFallback);
+  else notify(`${label} export is unavailable in this view. Use CSV instead.`);
+}
+const exportPdf = () => saveFile(fileBase() + '.pdf', new Blob([createMatchPdf(match)]), 'PDF', null);
+const exportCsv = () => { const csv = csvFor(match); saveFile(fileBase() + '.csv', csv, 'CSV', csv.slice(1)); };
+const xmlName = () => match.gameNo ? `${match.date.slice(0, 4)}-${data.code}-game-${String(match.gameNo).padStart(3, '0')}.xml` : fileBase() + '.xml';
+const exportXml = () => standalone ? nativeSave(xmlName(), xmlFor(match), MIME.XML, 'XML') : showExportText('XML export', xmlFor(match));
+
+/* ---------- Events ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-do]'); if (!b || b.disabled) return;
+  const act = b.dataset.do;
+  switch (act) {
+    case 'close': closeModal(); break;
+    case 'home': if (!match) renderSetup(); break;
+    case 'setup-field': setupField = b.dataset.field; renderSetup(); break;
+    case 'field': match.field = b.dataset.field; persist(); renderMatch(); break;
+    case 'clock-toggle': clock.running = !clock.running; clock.at = Date.now(); persist(); $('#clock-panel').innerHTML = clockPanel(); break;
+    case 'clock-reset-game': clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); clock.running = false; persist(); $('#clock-panel').innerHTML = clockPanel(); break;
+    case 'clock-set-game': { const v = prompt('Game clock remaining (m:ss or seconds):', fmtGame(clock.game)); if (v != null) { const ms = parseGame(v); if (ms == null) notify('Enter a time like 6:30 or 390.'); else { clock.game = ms; clock.running = false; persist(); $('#clock-panel').innerHTML = clockPanel(); } } break; }
+    case 'clock-set-shot': { const v = prompt('Shot clock remaining (seconds):', fmtShot(clock.shot)); if (v != null) { const n = Number(v); if (!Number.isFinite(n) || n < 0) notify('Enter a number of seconds.'); else { clock.shot = Math.round(n) * 1000; clock.at = Date.now(); persist(); $('#clock-panel').innerHTML = clockPanel(); } } break; }
+    case 'clock-reset-shot': clock.shot = SHOT_MS(); clock.at = Date.now(); persist(); paintClock(); break;
+    case 'read-clock': {
+      if (settings.playit && settings.playit !== 'off') {
+        if (playit.stop) { try { playit.stop(); } catch {} playit.stop = null; }
+        playit.mode = 'off'; // force syncPlayit to open a fresh connection
+        syncPlayit();
+        if (settings.playit === 'live') fetchPlayitMap().then(() => paintPlayit());
+        notify('Reconnecting to Playit…');
+      }
+      break;
+    }
+    case 'color': {
+      const i = Number(b.dataset.side), color = b.dataset.color;
+      if (b.dataset.scope === 'setup') { setupColors[i] = color; renderSetup(); }
+      else { match.teams[i].color = color; persist(); closeModal(); renderMatch(); }
+      break;
+    }
+    case 'choose-color': { const i = Number(b.dataset.side), t = match.teams[i]; showModal(`${head('Jersey colour')}<p class="dialog-note">${esc(t.name)}</p>${swatches(teamPalette(t, i).id, i, 'match')}`); break; }
+    case 'period': if (!draft) { match.currentPeriod = Number(b.dataset.period); if (!clock.running && clockEnded()) { clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); } persist(); renderMatch(); } break;
+    case 'add-ot': if (!draft) { match.currentPeriod = Math.min(maxPeriod(), periodsInPlay() + 1); clock.game = startGame(currentPeriod()); clock.shot = SHOT_MS(); clock.running = false; persist(); renderMatch(); } break;
+    case 'start': {
+      const g = gameListCache.find(x => String(x.id) === String(setupGameId));
+      if (!g) { notify('Pick a game first.'); return; }
+      try {
+        // If this game is already in the archive, resume that copy (keeps any
+        // live edits) rather than re-parsing over it.
+        const sameIds = m => m.teams.map(t => t.id).sort().join();
+        const already = db.matches.find(m => m.imported && String(m.gameNo) === String(Number(g.id)) && sameIds(m) === [g.home, g.visiting].sort().join());
+        if (already) {
+          match = already; db.activeId = match.id;
+        } else if (gameFileFor(pbFiles, g.id)) {
+          // Game has data — import it and open to review/continue.
+          match = importOneGame(pbFiles, pbRules, g);
+          db.activeId = match.id;
+        } else {
+          // Not played yet — start a fresh live match with the scheduled teams.
+          match = freshMatchFromSchedule(g);
+          db.matches.push(match); db.activeId = match.id;
+        }
+        setupGameId = ''; draft = null; loadClock(); persist(); renderMatch();
+      } catch (err) { notify('Could not start: ' + err.message); }
+      break;
+    }
+    case 'start-manual': {
+      const [a, c] = setupPicks;
+      if (!a || !c || a === c || !setupField) { notify('Pick two different teams and a field.'); return; }
+      try {
+        match = {
+          id: crypto.randomUUID(), date: new Date().toISOString(), field: setupField,
+          teams: [a, c].map((id, i) => ({ ...structuredClone(data.teams.find(t => t.id === id)), color: setupColors[i] })),
+          goalies: { [a]: setupGoalies[0] || null, [c]: setupGoalies[1] || null },
+          currentPeriod: 1, events: [], undo: [],
+          gameNo: /^\d+$/.test(setupGameNo.trim()) ? String(Number(setupGameNo.trim())) : null,
+        };
+        match.goalieLog = match.teams.filter(t => match.goalies[t.id]).map(t => ({ teamId: t.id, player: match.goalies[t.id], period: 1, clock: null, at: match.date }));
+        db.matches.push(match); db.activeId = match.id;
+        setupGameId = ''; draft = null; loadClock(); persist(); renderMatch();
+      } catch (err) { notify('Could not start: ' + err.message); }
+      break;
+    }
+    case 'setup-download': {
+      const sel = $('#setup-source'), src = PB_SOURCES.find(s => s.id === sel?.value) || PB_SOURCES[0];
+      activeSourceId = src.id; setupStatus = `busy:Downloading ${esc(src.label)}…`; renderSetup();
+      loadPointbenchData(src).then(fresh => {
+        setupStatus = `ok:Loaded ${fresh.teams.length} teams and ${Object.keys(pbFiles).length} files for ${esc(fresh.competition)}. Pick a game to start.`;
+        renderSetup();
+      }).catch(err => { setupStatus = `err:Download failed: ${esc(err.message)} · try “Load file” with the ZIP from your Pointbench downloader.`; renderSetup(); });
+      break;
+    }
+    case 'setup-loadfile': $('#setup-file-input')?.click(); break;
+    case 'archives': showArchives(); break;
+    case 'settings': settingsDraft = { ...settings, enabled: [...settings.enabled] }; showSettings(); break;
+    case 'set-flag': { readSettingNumbers(); settingsDraft[b.dataset.flag] = b.dataset.val === '1'; showSettings(); break; }
+    case 'set-playit': { readSettingNumbers(); settingsDraft.playit = b.dataset.val; showSettings(); break; }
+    case 'download-data': {
+      const sel = $('#set-source'), src = PB_SOURCES.find(s => s.id === sel?.value) || PB_SOURCES[0];
+      activeSourceId = src.id;
+      const status = $('#data-status'); if (status) status.textContent = `Downloading ${src.label}…`;
+      b.disabled = true;
+      loadPointbenchData(src).then(fresh => {
+        notify(`Loaded ${fresh.teams.length} teams from Pointbench`);
+        if (modal.open && $('#data-status')) showSettings(); // refresh the dropdown + summary
+        if (!match) renderSetup();
+      }).catch(err => {
+        b.disabled = false;
+        if ($('#data-status')) $('#data-status').textContent = 'Download failed: ' + err.message + ' · try “Load from file”.';
+        notify('Could not load Pointbench data: ' + err.message);
+      });
+      break;
+    }
+    case 'pick-data-file': $('#data-file-input')?.click(); break;
+    case 'save-folder': case 'change-folder': {
+      b.disabled = true;
+      saveFilesToFolder(act === 'change-folder').then(r => {
+        notify(`Saved ${r.count} files to “${r.folder}”`);
+        if (modal.open) showSettings();
+      }).catch(err => { b.disabled = false; if (err?.name !== 'AbortError') notify('Could not save files: ' + err.message); });
+      break;
+    }
+    case 'import-games': showImportGames(); break;
+    case 'import-game-one': {
+      try {
+        const meta = gameListCache.find(g => String(g.id) === b.dataset.id);
+        const m = importOneGame(pbFiles, pbRules, meta);
+        persist(); notify(`Imported game ${meta.id}: ${m.teams.map(t => t.name).join(' — ')}`);
+        showImportGames();
+      } catch (err) { notify('Import failed: ' + err.message); }
+      break;
+    }
+    case 'import-games-all': {
+      let ok = 0, fail = 0;
+      for (const meta of gameListCache) { try { if (gameFileFor(pbFiles, meta.id)) { importOneGame(pbFiles, pbRules, meta); ok++; } } catch { fail++; } }
+      persist(); notify(`Imported ${ok} game${ok === 1 ? '' : 's'}${fail ? `, ${fail} skipped` : ''}`);
+      closeModal(); if (!match) renderSetup();
+      break;
+    }
+    case 'save-settings': {
+      readSettingNumbers();
+      if (!settingsDraft.enabled.length) { notify('Keep at least one event type.'); return; }
+      settingsDraft.enabled = ACTION_CATALOG.filter(a => settingsDraft.enabled.includes(a.code)).map(a => a.code);
+      settings = settingsDraft; settingsDraft = null; saveSettings();
+      closeModal();
+      if (!match) renderSetup(); else renderMatch();
+      syncPlayit();
+      notify('Settings saved');
+      break;
+    }
+    case 'resume': match = db.matches.find(m => m.id === b.dataset.id); draft = null; loadClock(); persist(); closeModal(); renderMatch(); break;
+    case 'action': {
+      if (!match.field) { notify('Choose Field 1 or Field 2 first.'); return; }
+      const teamId = b.dataset.team, code = b.dataset.action;
+      draft = { teamId, action: code, stage: 'player', player: null, period: currentPeriod(), clock: captureClock(), save: code === 'SS' ? saveForShot(match, teamId) : null };
+      renderMatch(); break;
+    }
+    case 'number':
+      if (draft.stage === 'assist-player') { draft.assist = b.dataset.number; finalize(); return; }
+      draft.player = b.dataset.number;
+      afterPlayer();
+      break;
+    case 'time-confirm': {
+      const typed = parseClockEntry($('#draft-gametime')?.value);
+      if (!typed) { notify(TIME_HELP); return; }
+      draft.timeText = typed;
+      draft.clock = { ...draft.clock, gameTime: typed };
+      rememberTime(typed, draft.period);
+      commitDraft();
+      break;
+    }
+    case 'assist-yes': draft.stage = 'assist-player'; renderMatch(); break;
+    case 'assist-no': draft.assist = null; finalize(); break;
+    case 'penalty-card': draft.card = b.dataset.card || null; renderMatch(); break;
+    case 'penalty-confirm': {
+      if (!draft.offense) { notify('Choose the offense.'); return; }
+      const raw = ($('#draft-pentime')?.value || '').trim();
+      if (raw) { const ms = parseGame(raw); if (ms == null) { notify('Penalty time looks like MM:SS, e.g. 1:00.'); return; } draft.penTime = fmtGame(ms); } else draft.penTime = '';
+      finalize();
+      break;
+    }
+    case 'cancel': draft = null; renderMatch(); break;
+    case 'undo': undo(); break;
+    case 'history': showHistory(); break;
+    case 'summary': showModal(`${head('Summary by period')}${summaryHtml()}<div class="dialog-actions"><button class="secondary" data-do="close">Back to match</button></div>`); break;
+    case 'edit': showEdit(b.dataset.id); break;
+    case 'export': exportPdf(); break;
+    case 'export-csv': exportCsv(); break;
+    case 'export-xml': exportXml(); break;
+    case 'copy-export': {
+      const ta = $('#export-text'), fail = () => { ta.focus(); ta.select(); notify('Select and copy the text'); };
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(ta.value).then(() => notify('Copied'), fail); else fail();
+      break;
+    }
+    case 'delete': match = applyChange(match, match.events.filter(x => x.id !== b.dataset.id)); persist(); closeModal(); renderMatch(); notify('Action deleted · tap Undo to restore it'); break;
+    case 'change-goalie': showQuickGoalie(b.dataset.team); break;
+    case 'save-quick-goalie': {
+      const t = match.teams.find(t => t.id === b.dataset.team), number = $('#quick-goalie').value;
+      const typed = readGoalieTime(number); if (typed === false) return;
+      setGoalie(t.id, number, typed); persist(); closeModal(); renderMatch();
+      notify(number ? `${t.name} · Goalkeeper #${number}` : `${t.name} · No active goalkeeper`); break;
+    }
+    case 'rosters': showRosters(); break;
+    case 'save-goalie': {
+      const teamId = $('#roster-team').value, goalie = $('#roster-goalie').value, t = team(teamId);
+      const typed = readGoalieTime(goalie); if (typed === false) return;
+      setGoalie(teamId, goalie, typed); persist(); closeModal(); renderMatch();
+      notify(goalie ? `Goalkeeper #${goalie} set for ${t.name}` : `Active goalkeeper cleared for ${t.name}`); break;
+    }
+    case 'save-player': {
+      const t = team($('#roster-team').value), n = $('#roster-number').value.trim(), name = $('#roster-name').value.trim();
+      if (!/^\d{1,3}$/.test(n) || !name) { $('#roster-error').textContent = 'Enter a jersey number (0–999) and a player name.'; return; }
+      const num = String(Number(n)), p = t.players.find(p => p.number === num);
+      if (p) p.name = name; else t.players.push({ number: num, name });
+      t.players.sort((x, y) => Number(x.number) - Number(y.number)); persist(); closeModal(); renderMatch(); notify('Roster saved'); break;
+    }
+    case 'new': showModal(`${head('Start a new match?')}<p class="dialog-note">This match stays saved in the Match archive. You can resume it and export it later.</p><div class="dialog-actions"><button class="primary" data-do="confirm-new">Set up another match</button><button class="secondary" data-do="close">Back</button></div>`); break;
+    case 'confirm-new':
+      clock.running = false; persist(); db.activeId = null; match = null; draft = null; persist(); closeModal();
+      setupGameId = ''; setupStatus = '';
+      setStatus('<i></i> Ready'); renderSetup(); break;
+  }
+});
+const TIME_FIELDS = ['draft-gametime', 'draft-pentime', 'edit-pentime', 'goalie-time'];
+document.addEventListener('focusin', e => { if (TIME_FIELDS.includes(e.target.id)) e.target.select(); });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'draft-gametime') { e.preventDefault(); $('[data-do="time-confirm"]')?.click(); } });
+document.addEventListener('input', e => { if (TIME_FIELDS.includes(e.target.id)) e.target.value = timeMask(e.target.value); if (e.target.id === 'game-no') setupGameNo = e.target.value; if (e.target.id === 'draft-gametime' && draft) draft.timeText = e.target.value; if (e.target.id === 'draft-pentime' && draft) draft.penTime = e.target.value; });
+document.addEventListener('change', e => {
+  const id = e.target.id;
+  if (id === 'set-source') { activeSourceId = e.target.value; return; }
+  if (id === 'data-file-input') { loadDataFromFiles([...e.target.files]); e.target.value = ''; return; }
+  if (id === 'setup-source') { activeSourceId = e.target.value; setupGameId = ''; renderSetup(); return; }
+  if (id === 'setup-game') { setupGameId = e.target.value; renderSetup(); return; }
+  if (id === 'setup-file-input') {
+    const files = [...e.target.files]; e.target.value = '';
+    setupStatus = 'busy:Reading file…'; renderSetup();
+    loadDataFromFiles(files).then(() => {
+      setupStatus = pbFiles ? `ok:Loaded ${data.teams.length} teams and ${Object.keys(pbFiles).length} files for ${esc(data.competition)}. Pick a game to start.` : setupStatus;
+      renderSetup();
+    });
+    return;
+  }
+  if (id === 'set-discipline') {
+    readSettingNumbers();
+    const preset = DISCIPLINES[e.target.value];
+    if (preset) { settingsDraft = { ...settingsDraft, discipline: e.target.value, quarters: preset.quarters, quarterMinutes: preset.quarterMinutes, otMinutes: preset.otMinutes, shotClockSeconds: preset.shotClockSeconds, enabled: [...preset.enabled] }; showSettings(); }
+    return;
+  }
+  if (e.target.dataset?.do === 'set-event') {
+    readSettingNumbers();
+    const code = e.target.dataset.code;
+    if (e.target.checked) { if (!settingsDraft.enabled.includes(code)) settingsDraft.enabled.push(code); }
+    else settingsDraft.enabled = settingsDraft.enabled.filter(c => c !== code);
+    return;
+  }
+  if (id === 'draft-offense') { if (draft) draft.offense = e.target.value; const c = $('.confirm-penalty'); if (c) c.disabled = !e.target.value; return; }
+  if (id.startsWith('pick-')) { const i = Number(id.at(-1)); setupPicks[i] = e.target.value; setupGoalies[i] = data.teams.find(t => t.id === e.target.value)?.goalie?.number || ''; renderSetup(); return; }
+  if (['edit-team', 'edit-player', 'edit-action'].includes(id)) {
+    const t = team($('#edit-team').value);
+    if (id === 'edit-team') $('#edit-player').innerHTML = playerOptions(t);
+    const old = $('#edit-assist').value;
+    $('#edit-assist').innerHTML = '<option value="">No</option>' + playerOptions(t, old, $('#edit-player').value);
+    $('#assist-field').hidden = $('#edit-action').value !== 'G';
+    $('#save-field').hidden = $('#edit-action').value !== 'SS';
+    $('#card-field').hidden = $('#offense-field').hidden = $('#pentime-field').hidden = $('#edit-action').value !== 'PEN';
+    if (id === 'edit-team') $('#edit-save').innerHTML = saveOptions(t.id, match.goalies?.[match.teams.find(x => x.id !== t.id)?.id] ?? '');
+  }
+  if (id === 'roster-team') { const t = team(e.target.value); $('#roster-list').innerHTML = rosterList(t); $('#roster-goalie').innerHTML = goalieOptions(t, match.goalies?.[t.id] ?? ''); }
+});
+document.addEventListener('submit', e => {
+  if (e.target.id !== 'edit-form') return;
+  e.preventDefault();
+  const id = e.target.dataset.id, old = match.events.find(x => x.id === id), action = $('#edit-action').value, teamId = $('#edit-team').value;
+  try {
+    const updated = validateEvent({ ...old, teamId, action, period: $('#edit-period').value ? Number($('#edit-period').value) : null, player: $('#edit-player').value, assist: action === 'G' ? ($('#edit-assist').value || null) : null, save: action === 'SS' ? { teamId: match.teams.find(t => t.id !== teamId).id, player: $('#edit-save').value || null } : null, penalty: action === 'PEN' ? { offense: $('#edit-offense').value, card: $('#edit-card').value || null, time: ($('#edit-pentime').value || '').trim() ? fmtGame(parseGame($('#edit-pentime').value) ?? 0) : null } : null }, match.teams);
+    match = applyChange(match, match.events.map(x => x.id === id ? updated : x)); draft = null; persist(); closeModal(); renderMatch(); notify('Action updated');
+  } catch (err) { $('#edit-error').textContent = err.message; }
+});
+modal.addEventListener('click', e => { if (e.target === modal) { const r = modal.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeModal(); } });
+modal.addEventListener('close', () => { modal.innerHTML = ''; });
+
+/* ---------- Tablet: keep the screen awake, follow rotation ---------- */
+let wakeLock = null;
+async function keepAwake() { try { if (match && !wakeLock && document.visibilityState === 'visible' && navigator.wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch { wakeLock = null; } }
+document.addEventListener('click', keepAwake);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { keepAwake(); if (clock.running) tick(); } else if (match) persist(); });
+wide.addEventListener('change', () => { if (match && !modal.open) renderMatch(); });
+
+/* ---------- Boot ---------- */
+// Restore the most recently downloaded Pointbench rosters, if any.
+let activeSourceId = PB_SOURCES[0].id;
+try {
+  const saved = JSON.parse(localStorage.getItem(DATA_KEY));
+  if (saved?.data?.teams?.length) { applyRosterData(saved.data); if (saved.sourceId) activeSourceId = saved.sourceId; }
+} catch {}
+match = db.matches.find(m => m.id === db.activeId) || null;
+if (match) { loadClock(); renderMatch(); setStatus('<i></i> Saved on this device'); notify('Match restored'); }
+else renderSetup();
+if (!storageOkay) notify('Saving unavailable. Remember to export your match.');
+if (window.claude?.use) window.claude.use('downloads').then(d => { downloads = d; }, () => {});
+</script>
+</body>
+</html>
